@@ -22,8 +22,8 @@
       <button class="asset-nav-btn" type="button" data-panel="filter">Filtrar</button>
     </nav>
 
-    <a class="asset-json-link" href="https://github.com/SinNombre-vr/ToolHub.github.io/edit/main/data/assets.json" target="_blank" rel="noopener noreferrer">
-      Editar assets.json ↗
+    <a class="asset-json-link" href="https://github.com/SinNombre-vr/ToolHub.github.io/blob/main/data/assets.json" target="_blank" rel="noopener noreferrer">
+      Ver assets.json ↗
     </a>
   </header>
 
@@ -55,12 +55,12 @@
             <span class="asset-panel-kicker">CREAR</span>
             <h2>Nueva ficha</h2>
           </div>
-          <span class="asset-local-badge">JSON</span>
+          <span class="asset-local-badge">GITHUB</span>
         </div>
 
         <div class="asset-static-notice">
-          <strong>📦 Sin Worker ni base de datos</strong>
-          <span>ToolHub no modifica GitHub automáticamente. Rellena la ficha y generará un <code>assets.json</code> completo listo para copiar o descargar.</span>
+          <strong>⚡ Publicación automática con GitHub Actions</strong>
+          <span>Rellena la ficha y pulsa <strong>Publicar asset</strong>. Se abrirá GitHub con la solicitud preparada; solo tienes que confirmar <strong>Submit new issue</strong>. Después GitHub Actions añadirá la ficha automáticamente a <code>data/assets.json</code>.</span>
         </div>
 
         <form id="assetForm" class="asset-form">
@@ -132,27 +132,10 @@
           </div>
 
           <div class="asset-form-actions">
-            <button class="asset-primary" id="assetPublishButton" type="submit">Generar assets.json</button>
+            <button class="asset-primary" id="assetPublishButton" type="submit">Publicar asset</button>
             <button class="asset-secondary" id="assetFormReset" type="reset">Limpiar</button>
           </div>
         </form>
-
-        <div class="asset-generated-wrap" id="generatedCatalogWrap" hidden>
-          <div class="asset-generated-head">
-            <div>
-              <span class="asset-panel-kicker">LISTO PARA GITHUB</span>
-              <h3>Catálogo completo generado</h3>
-            </div>
-            <div class="asset-generated-actions">
-              <button class="asset-secondary" id="copyGeneratedCatalog" type="button">Copiar assets.json</button>
-              <button class="asset-primary" id="downloadGeneratedCatalog" type="button">Descargar assets.json</button>
-            </div>
-          </div>
-          <textarea id="generatedCatalogJson" class="asset-generated-json" readonly spellcheck="false"></textarea>
-          <p class="asset-generated-help">
-            Sustituye el contenido de <code>data/assets.json</code> por este JSON y guarda el cambio en GitHub. Cuando GitHub Pages actualice, todos verán la nueva ficha.
-          </p>
-        </div>
       </article>
 
       <article class="asset-panel" id="panel-search" data-panel-name="search">
@@ -223,7 +206,7 @@
       <div class="asset-empty" id="assetEmpty">
         <div>📦</div>
         <h3 id="assetEmptyTitle">El catálogo está vacío</h3>
-        <p id="assetEmptyText">Añade la primera ficha desde Crear y guarda el JSON generado en data/assets.json.</p>
+        <p id="assetEmptyText">Usa Crear para preparar la primera ficha. GitHub la añadirá automáticamente al confirmar la solicitud.</p>
       </div>
 
       <div class="asset-grid" id="assetGrid"></div>
