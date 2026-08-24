@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Biblioteca de Assets VRChat · ToolHub</title>
+  <meta name="description" content="Biblioteca visual de assets para Unity y VRChat.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library.css">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-static.css">
+</head>
+<body class="asset-library-page">
+  <header class="asset-topbar">
+    <a class="asset-brand" href="index.html" aria-label="Volver a ToolHub">
+      <span class="asset-brand-mark">⬡</span>
+      <strong>TOOLHUB</strong>
+    </a>
+
+    <nav class="asset-nav" aria-label="Acciones de biblioteca">
+      <button class="asset-nav-btn" type="button" data-panel="create">Crear</button>
+      <button class="asset-nav-btn" type="button" data-panel="search">Buscar</button>
+      <button class="asset-nav-btn" type="button" data-panel="filter">Filtrar</button>
+    </nav>
+
+    <a class="asset-json-link" href="https://github.com/SinNombre-vr/ToolHub.github.io/issues" target="_blank" rel="noopener noreferrer">
+      Solicitudes ↗
+    </a>
+  </header>
+
+  <main class="asset-shell">
+    <section class="asset-hero">
+      <div>
+        <span class="asset-eyebrow">UNITY · VRCHAT · CATÁLOGO</span>
+        <h1>Biblioteca de Assets</h1>
+        <p>
+          Catálogo ligero de avatares, ropa, shaders, texturas, prefabs, herramientas
+          y otros recursos. El catálogo se lee directamente desde <code>data/assets.json</code>.
+        </p>
+      </div>
+
+      <div>
+        <div class="asset-stats" aria-label="Resumen de la biblioteca">
+          <div><strong id="assetCount">0</strong><span>Assets</span></div>
+          <div><strong id="tagCount">0</strong><span>Tags</span></div>
+          <div><strong id="categoryCount">0</strong><span>Categorías</span></div>
+        </div>
+        <div class="asset-sync-status" id="catalogSyncStatus" aria-live="polite">📄 Cargando data/assets.json…</div>
+      </div>
+    </section>
+
+    <section class="asset-control-deck">
+      <article class="asset-panel" id="panel-create" data-panel-name="create">
+        <div class="asset-panel-head">
+          <div>
+            <span class="asset-panel-kicker">CREAR</span>
+            <h2>Nueva ficha</h2>
+          </div>
+          <span class="asset-local-badge">GITHUB</span>
+        </div>
+
+        <div class="asset-static-notice">
+          <strong>⚡ Publicación automática con GitHub Actions</strong>
+          <span>Rellena la ficha y pulsa <strong>Publicar asset</strong>. Se abrirá GitHub con la solicitud preparada; solo confirma <strong>Submit new issue</strong>. Después GitHub Actions añadirá la ficha automáticamente a <code>data/assets.json</code>.</span>
+        </div>
+
+        <form id="assetForm" class="asset-form">
+          <div class="asset-form-grid">
+            <label><span>Nombre *</span><input id="assetName" type="text" maxlength="90" required placeholder="Ej. Cyber Jacket"></label>
+            <label><span>Categoría *</span><select id="assetCategory" required><option value="">Seleccionar</option><option>Avatar</option><option>Ropa</option><option>Pelo</option><option>Accesorio</option><option>Shader</option><option>Textura</option><option>Prefab</option><option>Animación</option><option>Herramienta</option><option>Otro</option></select></label>
+            <label><span>Autor / creador</span><input id="assetAuthor" type="text" maxlength="70" placeholder="Nombre del creador"></label>
+            <label><span>Compatibilidad</span><select id="assetPlatform"><option>PC</option><option>Quest / Android</option><option>PC + Quest</option><option>No especificado</option></select></label>
+            <label class="asset-form-wide"><span>Enlace de autor / origen *</span><input id="assetAuthorUrl" type="url" required placeholder="https://... página original del creador"><small>Página original del asset, tienda, perfil del creador o publicación de origen.</small></label>
+            <label class="asset-form-wide"><span>Preview / imagen</span><input id="assetPreview" type="url" placeholder="https://.../preview.png"></label>
+            <label class="asset-form-wide"><span>Enlace de descarga *</span><input id="assetDownloadUrl" type="url" required placeholder="https://... enlace de descarga"><small>Puede ser un enlace de descarga directa o la página donde se obtiene el archivo.</small></label>
+            <label class="asset-form-wide"><span>Tags</span><input id="assetTags" type="text" placeholder="avatar, ropa, cyber, pc"><small>Sepáralos con comas.</small></label>
+            <label class="asset-form-wide"><span>Descripción / notas</span><textarea id="assetDescription" rows="4" maxlength="500" placeholder="Detalles, dependencias, versión, notas..."></textarea></label>
+          </div>
+
+          <div class="asset-form-actions">
+            <button class="asset-primary" id="assetPublishButton" type="submit">Publicar asset ↗</button>
+            <button class="asset-secondary" id="assetFormReset" type="reset">Limpiar</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="asset-panel" id="panel-search" data-panel-name="search">
+        <div class="asset-panel-head"><div><span class="asset-panel-kicker">BUSCAR</span><h2>Encuentra un asset</h2></div></div>
+        <label class="asset-search-field"><span>Buscar por nombre, autor, descripción o tag</span><div><span aria-hidden="true">⌕</span><input id="assetSearch" type="search" autocomplete="off" placeholder="Ej. poiyomi, ropa, avatar..."></div></label>
+        <div class="asset-search-suggestions" id="searchTags"></div>
+      </article>
+
+      <article class="asset-panel" id="panel-filter" data-panel-name="filter">
+        <div class="asset-panel-head"><div><span class="asset-panel-kicker">FILTRAR</span><h2>Refina la biblioteca</h2></div></div>
+        <div class="asset-filter-grid">
+          <label><span>Categoría</span><select id="filterCategory"><option value="">Todas</option></select></label>
+          <label><span>Compatibilidad</span><select id="filterPlatform"><option value="">Todas</option><option>PC</option><option>Quest / Android</option><option>PC + Quest</option><option>No especificado</option></select></label>
+        </div>
+        <div><span class="asset-filter-label">Tags</span><div class="asset-tag-cloud" id="filterTags"></div></div>
+        <button class="asset-secondary" id="clearFilters" type="button">Restablecer filtros</button>
+      </article>
+    </section>
+
+    <section class="asset-library-content">
+      <div class="asset-library-toolbar"><div><span class="asset-panel-kicker">CATÁLOGO</span><h2>Assets guardados</h2></div><span class="asset-result-count" id="resultCount">0 resultados</span></div>
+      <div class="asset-empty" id="assetEmpty"><div>📦</div><h3 id="assetEmptyTitle">El catálogo está vacío</h3><p id="assetEmptyText">Usa Crear para preparar la primera ficha. GitHub la añadirá automáticamente al confirmar la solicitud.</p></div>
+      <div class="asset-grid" id="assetGrid"></div>
+    </section>
+  </main>
+
+  <template id="assetCardTemplate">
+    <article class="asset-card">
+      <div class="asset-preview-wrap"><img class="asset-preview" alt=""><div class="asset-preview-fallback" aria-hidden="true"></div><span class="asset-platform-badge"></span></div>
+      <div class="asset-card-body">
+        <div class="asset-card-topline"><span class="asset-category"></span><span class="asset-created"></span></div>
+        <h3 class="asset-title"></h3><p class="asset-author"></p><p class="asset-description"></p><div class="asset-card-tags"></div>
+        <div class="asset-card-actions"><a class="asset-secondary asset-author-link" target="_blank" rel="noopener noreferrer">Autor / Origen ↗</a><a class="asset-primary asset-download-link" target="_blank" rel="noopener noreferrer">Descargar ↗</a></div>
+      </div>
+    </article>
+  </template>
+
+  <script src="herramientas/assets-library/assets-library.js?v=20260824-2250"></script>
+</body>
+</html>
