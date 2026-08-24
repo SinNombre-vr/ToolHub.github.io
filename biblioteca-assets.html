@@ -7,6 +7,7 @@
   <meta name="description" content="Biblioteca visual de assets para Unity y VRChat.">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="herramientas/assets-library/assets-library.css">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-static.css">
 </head>
 <body class="asset-library-page">
   <header class="asset-topbar">
@@ -21,9 +22,9 @@
       <button class="asset-nav-btn" type="button" data-panel="filter">Filtrar</button>
     </nav>
 
-    <button class="asset-admin-trigger" id="adminTrigger" type="button" aria-haspopup="dialog">
-      🔒 Administrador
-    </button>
+    <a class="asset-json-link" href="https://github.com/SinNombre-vr/ToolHub.github.io/edit/main/data/assets.json" target="_blank" rel="noopener noreferrer">
+      Editar assets.json ↗
+    </a>
   </header>
 
   <main class="asset-shell">
@@ -32,8 +33,8 @@
         <span class="asset-eyebrow">UNITY · VRCHAT · CATÁLOGO</span>
         <h1>Biblioteca de Assets</h1>
         <p>
-          Guarda referencias de avatares, ropa, shaders, texturas, prefabs, herramientas
-          y otros recursos mediante fichas con enlaces, previews y tags.
+          Catálogo ligero de avatares, ropa, shaders, texturas, prefabs, herramientas
+          y otros recursos. Todo se lee directamente desde <code>data/assets.json</code> en GitHub Pages.
         </p>
       </div>
 
@@ -43,7 +44,7 @@
           <div><strong id="tagCount">0</strong><span>Tags</span></div>
           <div><strong id="categoryCount">0</strong><span>Categorías</span></div>
         </div>
-        <div class="asset-sync-status" id="catalogSyncStatus" aria-live="polite">☁️ Cargando catálogo compartido…</div>
+        <div class="asset-sync-status" id="catalogSyncStatus" aria-live="polite">📄 Cargando data/assets.json…</div>
       </div>
     </section>
 
@@ -54,12 +55,12 @@
             <span class="asset-panel-kicker">CREAR</span>
             <h2>Nueva ficha</h2>
           </div>
-          <span class="asset-local-badge">PÚBLICO</span>
+          <span class="asset-local-badge">JSON</span>
         </div>
 
-        <div class="asset-shared-notice">
-          <strong>☁️ Publicación compartida y pública</strong>
-          <span>Cualquier visitante puede publicar una ficha. Se guarda en <code>data/assets.json</code> y será visible para todos. Solo el administrador puede borrar publicaciones.</span>
+        <div class="asset-static-notice">
+          <strong>📦 Sin Worker ni base de datos</strong>
+          <span>ToolHub no modifica GitHub automáticamente. Rellena la ficha y generará un <code>assets.json</code> completo listo para copiar o descargar.</span>
         </div>
 
         <form id="assetForm" class="asset-form">
@@ -121,7 +122,7 @@
             <label class="asset-form-wide">
               <span>Tags</span>
               <input id="assetTags" type="text" placeholder="avatar, ropa, cyber, pc">
-              <small>Sepáralos con comas. Se normalizan automáticamente.</small>
+              <small>Sepáralos con comas.</small>
             </label>
 
             <label class="asset-form-wide">
@@ -131,10 +132,27 @@
           </div>
 
           <div class="asset-form-actions">
-            <button class="asset-primary" id="assetPublishButton" type="submit">＋ Publicar asset</button>
+            <button class="asset-primary" id="assetPublishButton" type="submit">Generar assets.json</button>
             <button class="asset-secondary" id="assetFormReset" type="reset">Limpiar</button>
           </div>
         </form>
+
+        <div class="asset-generated-wrap" id="generatedCatalogWrap" hidden>
+          <div class="asset-generated-head">
+            <div>
+              <span class="asset-panel-kicker">LISTO PARA GITHUB</span>
+              <h3>Catálogo completo generado</h3>
+            </div>
+            <div class="asset-generated-actions">
+              <button class="asset-secondary" id="copyGeneratedCatalog" type="button">Copiar assets.json</button>
+              <button class="asset-primary" id="downloadGeneratedCatalog" type="button">Descargar assets.json</button>
+            </div>
+          </div>
+          <textarea id="generatedCatalogJson" class="asset-generated-json" readonly spellcheck="false"></textarea>
+          <p class="asset-generated-help">
+            Sustituye el contenido de <code>data/assets.json</code> por este JSON y guarda el cambio en GitHub. Cuando GitHub Pages actualice, todos verán la nueva ficha.
+          </p>
+        </div>
       </article>
 
       <article class="asset-panel" id="panel-search" data-panel-name="search">
@@ -204,57 +222,16 @@
 
       <div class="asset-empty" id="assetEmpty">
         <div>📦</div>
-        <h3>El catálogo compartido está vacío</h3>
-        <p>Cualquier visitante puede usar <strong>Crear</strong> para publicar la primera ficha.</p>
+        <h3 id="assetEmptyTitle">El catálogo está vacío</h3>
+        <p id="assetEmptyText">Añade la primera ficha desde Crear y guarda el JSON generado en data/assets.json.</p>
       </div>
 
       <div class="asset-grid" id="assetGrid"></div>
     </section>
   </main>
 
-  <dialog class="asset-admin-dialog" id="adminDialog">
-    <form method="dialog" class="asset-admin-card" id="adminForm">
-      <button class="asset-dialog-close" value="cancel" aria-label="Cerrar">×</button>
-
-      <span class="asset-panel-kicker">ADMINISTRADOR</span>
-      <h2>Gestión del catálogo compartido</h2>
-
-      <p>
-        El modo administrador sirve únicamente para habilitar el botón de borrar en las publicaciones.
-        Ver, buscar, filtrar y publicar assets no requiere contraseña. El token de GitHub nunca se guarda dentro de ToolHub.
-      </p>
-
-      <div class="asset-admin-status" id="adminStatus">🔒 Modo administrador bloqueado</div>
-
-      <label>
-        <span>URL del Cloudflare Worker</span>
-        <input id="assetApiBase" type="url" autocomplete="url" placeholder="https://toolhub-assets-api.tu-cuenta.workers.dev">
-        <small>Se guarda solo en este navegador. Tus amigos no necesitan configurarlo para leer el catálogo.</small>
-      </label>
-
-      <label>
-        <span>Contraseña</span>
-        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña de administrador">
-      </label>
-
-      <div class="asset-admin-actions">
-        <button class="asset-primary" id="adminUnlock" type="button">Conectar y desbloquear</button>
-        <button class="asset-secondary" id="adminLock" type="button">Bloquear</button>
-      </div>
-
-      <div class="asset-admin-message" id="adminMessage" aria-live="polite"></div>
-
-      <div class="asset-legacy-migration" id="legacyMigration" hidden>
-        <strong>Publicaciones locales detectadas</strong>
-        <p id="legacyMigrationText">Hay assets guardados por la versión anterior en este navegador.</p>
-        <button class="asset-secondary" id="migrateLegacyAssets" type="button">Migrar a GitHub</button>
-      </div>
-    </form>
-  </dialog>
-
   <template id="assetCardTemplate">
     <article class="asset-card">
-      <button class="asset-delete-x" type="button" hidden aria-label="Eliminar publicación" title="Eliminar publicación">×</button>
       <div class="asset-preview-wrap">
         <img class="asset-preview" alt="">
         <div class="asset-preview-fallback" aria-hidden="true"></div>
