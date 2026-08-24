@@ -54,12 +54,12 @@
             <span class="asset-panel-kicker">CREAR</span>
             <h2>Nueva ficha</h2>
           </div>
-          <span class="asset-local-badge">LOCAL</span>
+          <span class="asset-local-badge">PÚBLICO</span>
         </div>
 
         <div class="asset-shared-notice">
-          <strong>☁️ Publicación compartida</strong>
-          <span>Los assets publicados aquí se guardan en <code>data/assets.json</code> de GitHub y serán visibles para todos.</span>
+          <strong>☁️ Publicación compartida y pública</strong>
+          <span>Cualquier visitante puede publicar una ficha. Se guarda en <code>data/assets.json</code> y será visible para todos. Solo el administrador puede borrar publicaciones.</span>
         </div>
 
         <form id="assetForm" class="asset-form">
@@ -205,7 +205,7 @@
       <div class="asset-empty" id="assetEmpty">
         <div>📦</div>
         <h3>El catálogo compartido está vacío</h3>
-        <p>El propietario puede usar <strong>Crear</strong> para publicar la primera ficha.</p>
+        <p>Cualquier visitante puede usar <strong>Crear</strong> para publicar la primera ficha.</p>
       </div>
 
       <div class="asset-grid" id="assetGrid"></div>
@@ -220,8 +220,8 @@
       <h2>Gestión del catálogo compartido</h2>
 
       <p>
-        El modo administrador permite publicar y eliminar assets del catálogo de GitHub.
-        La contraseña y el token de GitHub nunca se guardan dentro de ToolHub.
+        El modo administrador sirve únicamente para habilitar el botón de borrar en las publicaciones.
+        Ver, buscar, filtrar y publicar assets no requiere contraseña. El token de GitHub nunca se guarda dentro de ToolHub.
       </p>
 
       <div class="asset-admin-status" id="adminStatus">🔒 Modo administrador bloqueado</div>

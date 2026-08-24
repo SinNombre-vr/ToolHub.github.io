@@ -32,7 +32,8 @@ export default {
       }
 
       if (request.method === "POST" && url.pathname === "/assets") {
-        await requireAdmin(request, env);
+        // Publicación pública: cualquier visitante puede añadir una ficha.
+        // El modo administrador queda reservado exclusivamente al borrado.
         const input = await request.json().catch(() => null);
         const asset = validateAsset(input);
 
@@ -281,7 +282,7 @@ async function readGithubJsonFile(env, path, fallback) {
 
 async function writeGithubJsonFile(env, path, value, sha, message, cfg = null) {
   cfg ||= githubConfig(env);
-  const endpoint = `https://api.github.com/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodePath(path)}`;
+  const endpoint = `https://api.github.com/repo/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${encodePath(path)}`;
   const body = {
     message,
     content: utf8ToBase64(JSON.stringify(value, null, 2) + "\n"),
