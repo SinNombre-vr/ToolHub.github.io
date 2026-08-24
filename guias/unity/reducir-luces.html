@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Cómo localizar componentes Light en un avatar, entender su coste y sustituirlos por efectos visuales más adecuados.">
+  <title>Reducir luces - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Reducir luces</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · PERFORMANCE</span>
+        <h1>Reducir luces</h1>
+        <p>Cómo localizar componentes Light en un avatar, entender su coste y sustituirlos por efectos visuales más adecuados.</p>
+        <div class="hero-tags"><span class="hero-tag">Lights</span><span class="hero-tag">Performance</span><span class="hero-tag">Emission</span><span class="hero-tag">Rim</span><span class="hero-tag">MatCap</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Avatar PC</strong><span>0 para Good</span></div><div class="hero-stat"><strong>Quest</strong><span>Lights deshabilitadas</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Resumen</a>
+<a href="#buscar">Encontrarlas</a>
+<a href="#limites">Límites</a>
+<a href="#alternativas">Alternativas</a>
+<a href="#mundos">Mundos</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">💡 Resumen</span>
+  <h2>En avatares, una Light real casi nunca es la primera opción</h2>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🚫</div><strong>PC</strong><p>El Performance Rank de VRChat es muy estricto con componentes Light en avatares.</p></div>
+    <div class="summary-card"><div class="icon">📱</div><strong>Mobile</strong><p>VRChat deshabilita Lights en avatares Android/Quest.</p></div>
+    <div class="summary-card"><div class="icon">✨</div><strong>Alternativas</strong><p>Emission, rim, MatCap y efectos del shader pueden dar sensación de luz sin componente Light.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="buscar">
+  <span class="section-kicker">🔍 Encontrar Lights</span>
+  <h2>Localízalas antes de decidir qué borrar</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Hierarchy Search</h3><p>Usa el buscador de Hierarchy para localizar objetos con componentes Light o nombres típicos como Light, Lamp, Glow.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Inspector</h3><p>Selecciona el objeto y confirma que realmente tenga un componente Light. No confundas “Emission” de un material con una luz real.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>SDK Build Control</h3><p>Revisa el resumen de performance del avatar para ver si Lights está perjudicando el rank.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="limites">
+  <span class="section-kicker">📊 Performance Rank</span>
+  <h2>Referencia de VRChat para PC</h2>
+
+  <table class="data-table">
+    <thead><tr><th>Rank</th><th>Lights</th></tr></thead>
+    <tbody>
+      <tr><td>Excellent</td><td>0</td></tr>
+      <tr><td>Good</td><td>0</td></tr>
+      <tr><td>Medium</td><td>0</td></tr>
+      <tr><td>Poor</td><td>1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice danger">
+    <strong>🔴 Android/Quest:</strong> los componentes Light están deshabilitados en avatares.
+  </div>
+</section>
+
+<section class="guide-section" id="alternativas">
+  <span class="section-kicker">✨ Sustituciones</span>
+  <h2>Cómo conseguir el aspecto sin una Light</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">🌟</div><h3>Emission</h3><p>Hace que una zona se vea luminosa aunque no ilumine físicamente el entorno.</p></div>
+    <div class="compare-card"><div class="icon">⭕</div><h3>Rim Light</h3><p>Añade brillo en bordes según el ángulo de cámara.</p></div>
+    <div class="compare-card"><div class="icon">🔮</div><h3>MatCap</h3><p>Simula una respuesta de luz/reflejo basada en la orientación de la superficie.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="mundos">
+  <span class="section-kicker">🌍 Mundos</span>
+  <h2>Avatar y mundo son casos distintos</h2>
+  <p>
+    En mundos sí existen escenarios donde las luces son necesarias, pero el enfoque suele ser
+    combinar iluminación baked, light probes y un número controlado de luces realtime.
+    Esta guía está centrada principalmente en avatares.
+  </p>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Problemas</span>
+  <h2>Preguntas habituales</h2>
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Si borro la Light, ¿desaparece el brillo?</span><span>+</span></button><div class="accordion-panel">Solo si ese brillo dependía realmente del componente Light. Emission, MatCap o Rim del material pueden seguir funcionando sin él.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>¿Una textura Emission ilumina a otros?</span><span>+</span></button><div class="accordion-panel">Normalmente no funciona como una luz dinámica que ilumina objetos cercanos; hace que el material parezca autoiluminado.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>¿Puedo dejar una Light en PC?</span><span>+</span></button><div class="accordion-panel">Puedes, pero afectará al Performance Rank. Decide si el efecto justifica ese coste.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://creators.vrchat.com/avatars/avatar-performance-ranking-system/" target="_blank" rel="noopener noreferrer"><strong>Performance Ranks</strong><p>Métrica Lights para avatares PC.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/platforms/android/quest-content-limitations/" target="_blank" rel="noopener noreferrer"><strong>Android Limitations</strong><p>Componentes deshabilitados y restricciones móviles.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/Lighting.html" target="_blank" rel="noopener noreferrer"><strong>Unity Lighting</strong><p>Conceptos generales de iluminación.</p><small>Unity ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Guía visual de ToolHub para entender las formas de conectar un visor VR al PC.">
+  <title>Conectividad y PCVR - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="vr-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>VR</span><span>›</span><span>Conectividad y PCVR</span>
+    </nav>
+
+    <section class="guide-hero">
+      <div>
+        <span class="eyebrow green">VR · CONECTIVIDAD</span>
+        <h1>Conectividad y PCVR</h1>
+        <p>Entiende qué cambia entre cable, vídeo nativo y streaming inalámbrico. Compara métodos, prepara la red y diagnostica problemas sin convertir la guía en una pared de texto.</p>
+        <div class="hero-tags"><span class="hero-tag">Cable</span><span class="hero-tag">Air Link</span><span class="hero-tag">Steam Link</span><span class="hero-tag">Virtual Desktop</span><span class="hero-tag">PCVR</span></div>
+      </div>
+      <div class="hero-side"><div class="hero-stat"><strong>Formato</strong><span>Guía visual</span></div><div class="hero-stat"><strong>Enfoque</strong><span>Decisión + diagnóstico</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Resumen</a>
+<a href="#visor">Tu visor</a>
+<a href="#metodos">Métodos</a>
+<a href="#red">Red Wi‑Fi</a>
+<a href="#flujo">Diagnóstico</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">⚡ Resumen rápido</span>
+  <h2>Elige la conexión por lo que priorizas</h2>
+  <p class="section-intro">No existe una única opción mejor para todos los visores. Primero separa PCVR nativo, conexión USB y streaming inalámbrico.</p>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🖥️</div><strong>Vídeo nativo</strong><p>Visores PCVR con salida de vídeo dedicada. Evita la compresión propia del streaming, pero dependes del cableado del visor.</p></div>
+    <div class="summary-card"><div class="icon">🔌</div><strong>USB / Link</strong><p>El PC renderiza y el visor recibe vídeo comprimido por USB. Útil cuando quieres estabilidad sin depender tanto de la red Wi‑Fi.</p></div>
+    <div class="summary-card"><div class="icon">📡</div><strong>Streaming Wi‑Fi</strong><p>Air Link, Steam Link o soluciones de terceros. Ganas libertad de movimiento a cambio de depender más de red, codificación y latencia.</p></div>
+  </div>
+  <div class="notice green"><strong>🟢 Regla práctica:</strong> para streaming inalámbrico, una buena base es PC por Ethernet al router y el visor en una banda rápida y poco congestionada. Steam Link especifica 5 GHz / Wi‑Fi 5 como mínimo y recomienda el PC cableado al router.</div>
+</section>
+
+<section class="guide-section" id="visor">
+  <span class="section-kicker">🧭 Decisión rápida</span>
+  <h2>¿Qué visor utilizas?</h2>
+  <p class="section-intro">Selecciona una familia de visor y ToolHub te muestra por dónde empezar.</p>
+  <div class="choice-grid">
+    <button class="choice-button active" type="button" data-visor="quest">🥽 Quest 2 / 3 / Pro</button>
+    <button class="choice-button" type="button" data-visor="native">🎯 Index / VIVE</button>
+    <button class="choice-button" type="button" data-visor="standalone">📶 PICO / HTC standalone</button>
+    <button class="choice-button" type="button" data-visor="other">❓ Otro</button>
+  </div>
+  <div class="choice-result" id="visorResult"><strong>Quest 2 / 3 / Pro</strong><p>Tienes varias rutas PCVR: conexión por USB/Quest Link o streaming inalámbrico mediante Air Link, Steam Link o una solución de terceros como Virtual Desktop. Si vas por Wi‑Fi, prioriza que el PC esté conectado al router por Ethernet y que el visor use una banda rápida y poco congestionada.</p></div>
+</section>
+
+<section class="guide-section" id="metodos">
+  <span class="section-kicker">🔀 Comparación</span>
+  <h2>Las rutas más comunes hacia PCVR</h2>
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">🔌</div><h3>USB / Quest Link</h3><p>Conexión física para visores standalone compatibles. Reduce la dependencia del Wi‑Fi, aunque el vídeo sigue siendo codificado.</p><div class="compare-meta"><div class="compare-row"><span>Libertad</span><b>Media</b></div><div class="compare-row"><span>Dependencia de red</span><b>Baja</b></div><div class="compare-row"><span>Ideal si</span><b>quieres estabilidad</b></div></div></div>
+    <div class="compare-card"><div class="icon">📡</div><h3>Air Link</h3><p>Ruta inalámbrica del ecosistema Meta para PCVR. La experiencia depende mucho de la calidad y congestión de tu red local.</p><div class="compare-meta"><div class="compare-row"><span>Libertad</span><b>Alta</b></div><div class="compare-row"><span>Dependencia de red</span><b>Alta</b></div><div class="compare-row"><span>Ideal si</span><b>usas Quest</b></div></div></div>
+    <div class="compare-card"><div class="icon">🎮</div><h3>Steam Link</h3><p>Streaming inalámbrico gratuito de Valve hacia visores compatibles, orientado a entrar rápidamente en Steam y SteamVR.</p><div class="compare-meta"><div class="compare-row"><span>Libertad</span><b>Alta</b></div><div class="compare-row"><span>Dependencia de red</span><b>Alta</b></div><div class="compare-row"><span>Ideal si</span><b>vives en SteamVR</b></div></div></div>
+    <div class="compare-card"><div class="icon">🖥️</div><h3>Virtual Desktop</h3><p>Solución de terceros con muchas opciones de streaming y escritorio. Conviene revisar compatibilidad y configuración para tu visor concreto.</p><div class="compare-meta"><div class="compare-row"><span>Libertad</span><b>Alta</b></div><div class="compare-row"><span>Ajustes</span><b>Amplios</b></div><div class="compare-row"><span>Ideal si</span><b>quieres controlar más</b></div></div></div>
+    <div class="compare-card"><div class="icon">🎯</div><h3>DisplayPort / vídeo nativo</h3><p>Ruta típica de visores PCVR nativos como Index y familias VIVE compatibles. El visor recibe una señal de vídeo dedicada.</p><div class="compare-meta"><div class="compare-row"><span>Compresión de streaming</span><b>No</b></div><div class="compare-row"><span>Cable</span><b>Sí</b></div><div class="compare-row"><span>Ideal si</span><b>tu visor es PCVR</b></div></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="red">
+  <span class="section-kicker">📶 Wi‑Fi</span>
+  <h2>Cómo preparar la red para VR inalámbrica</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>PC → router por Ethernet</h3><p>Evita que el trayecto PC→router compita también por radio. Es una de las mejoras más claras para estabilizar el streaming.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Visor cerca del punto de acceso</h3><p>Las paredes, distancia y redes vecinas reducen capacidad útil. El objetivo es un enlace local estable, no simplemente “tener Internet rápido”.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Usa una banda rápida y limpia</h3><p>5 GHz es la base común; Wi‑Fi 6/6E puede aportar más margen si tanto tu visor como tu red lo soportan. Evita mezclar demasiados dispositivos activos en la misma banda.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Ajusta bitrate después</h3><p>No empieces al máximo. Primero consigue estabilidad; después sube calidad progresivamente hasta encontrar el punto donde no aparecen cortes o latencia extra.</p></div></div>
+  </div>
+  <div class="notice blue"><strong>🔵 Importante:</strong> la velocidad contratada con tu ISP no determina por sí sola la calidad del streaming PC→visor. Lo crítico es la red local entre PC, router/punto de acceso y visor.</div>
+</section>
+
+<section class="guide-section" id="flujo">
+  <span class="section-kicker">🪜 Flujo de trabajo</span>
+  <h2>Orden recomendado para diagnosticar</h2>
+  <div class="flow-map">
+    <div class="flow-node">1. Comprueba el visor</div><span class="flow-arrow">→</span>
+    <div class="flow-node">2. Comprueba SteamVR / runtime</div><span class="flow-arrow">→</span>
+    <div class="flow-node">3. Valida USB o red</div><span class="flow-arrow">→</span>
+    <div class="flow-node">4. Ajusta calidad</div><span class="flow-arrow">→</span>
+    <div class="flow-node">5. Revisa latencia / frames</div>
+  </div>
+  <div class="notice purple"><strong>🟣 Consejo ToolHub:</strong> cambia una sola variable cada vez. Si modificas resolución, bitrate, codec, router y refresco al mismo tiempo, después no sabrás qué ajuste arregló —o rompió— la experiencia.</div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Solución de problemas</span>
+  <h2>Problemas frecuentes</h2>
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>La imagen se ve bien pero tengo tirones</span><span>+</span></button><div class="accordion-panel">Separa el problema en dos: rendimiento del PC y transporte hacia el visor. Reduce temporalmente resolución/calidad para ver si desaparece. Si sigue igual, revisa red/USB; si mejora, probablemente estabas superando el margen de GPU o codificación.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El Wi‑Fi marca mucha velocidad pero VR va mal</span><span>+</span></button><div class="accordion-panel">La cifra máxima del enlace no garantiza latencia estable. Revisa congestión, distancia, ancho de canal, interferencias y que el PC esté cableado al router. En VR importa mucho la consistencia, no solo el pico de Mbps.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>SteamVR no detecta el visor</span><span>+</span></button><div class="accordion-panel">Primero confirma que el software puente del visor está funcionando y que el visor ya está conectado al PC. Después abre SteamVR. Un visor standalone no siempre aparece directamente en SteamVR sin Air Link, Steam Link, Virtual Desktop u otra capa compatible.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Con cable USB carga pero no conecta a PCVR</span><span>+</span></button><div class="accordion-panel">No todos los cables o puertos ofrecen el mismo enlace de datos. Prueba otro puerto USB de alta velocidad, evita hubs durante la prueba y verifica que el software del fabricante reconoce el visor antes de abrir SteamVR.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales para comprobar cambios</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://help.steampowered.com/en/faqs/view/0E2C-406B-9135-38A4" target="_blank" rel="noopener noreferrer"><strong>Steam Link para visores VR</strong><p>Compatibilidad y requisitos actuales del streaming VR de Valve.</p><small>Steam Support ↗</small></a>
+    <a class="source-card" href="https://store.steampowered.com/app/250820/SteamVR/" target="_blank" rel="noopener noreferrer"><strong>SteamVR</strong><p>Página oficial de SteamVR y hardware compatible.</p><small>Steam ↗</small></a>
+    <a class="source-card" href="https://help.meta.com/" target="_blank" rel="noopener noreferrer"><strong>Meta Help</strong><p>Consulta Link/Air Link y requisitos según la versión actual de Horizon OS.</p><small>Meta ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">
+      ToolHub organiza esta información como guía práctica. Las interfaces, compatibilidades y requisitos
+      pueden cambiar con las actualizaciones del fabricante; revisa las fuentes oficiales cuando vayas a instalar o configurar hardware.
+    </p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button" aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías VR</strong>
+    </div>
+    <div class="footer-links">
+      <a href="conectividad.html">Conectividad</a>
+      <a href="steamvr.html">SteamVR</a>
+      <a href="fbt.html">FBT</a>
+    </div>
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="vr-guides.js"></script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Una introducción visual para entender qué es un shader, cómo importarlo, crear materiales, animarlo y evitar problemas de rendimiento.">
+  <title>Shaders: crearlos y usarlos - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Shaders: crearlos y usarlos</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · SHADERS</span>
+        <h1>Shaders: crearlos y usarlos</h1>
+        <p>Una introducción visual para entender qué es un shader, cómo importarlo, crear materiales, animarlo y evitar problemas de rendimiento.</p>
+        <div class="hero-tags"><span class="hero-tag">HLSL</span><span class="hero-tag">Material</span><span class="hero-tag">Animation</span><span class="hero-tag">Rendering</span><span class="hero-tag">PC / Quest</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Salida</strong><span>.shader</span></div><div class="hero-stat"><strong>ToolHub</strong><span>Shader Studio</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#concepto">Qué es</a>
+<a href="#usar">Usarlo</a>
+<a href="#crear">Crearlo</a>
+<a href="#animados">Animados</a>
+<a href="#rendimiento">Rendimiento</a>
+<a href="#quest">Quest</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="concepto">
+  <span class="section-kicker">🧪 Concepto</span>
+  <h2>Qué hace realmente un shader</h2>
+  <p class="section-intro">
+    Un shader es código que decide cómo se dibuja una superficie: qué color sale,
+    cómo responde a normales, luz, texturas, transparencia y tiempo.
+  </p>
+
+  <div class="unity-flow">
+    <div class="flow-node">Mesh</div>
+    <div class="flow-node">UV / Normals</div>
+    <div class="flow-node">Material</div>
+    <div class="flow-node">Shader</div>
+    <div class="flow-node">Pixels</div>
+  </div>
+</section>
+
+<section class="guide-section" id="usar">
+  <span class="section-kicker">📦 Usar un .shader</span>
+  <h2>Desde archivo hasta avatar</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Importa el archivo</h3><p>Coloca el .shader y sus includes/dependencias dentro de Assets.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Crea un Material</h3><p>Selecciona el shader desde el selector del Material.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Configura propiedades</h3><p>Asigna texturas, colores, speeds, masks y demás parámetros.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Asigna al Renderer</h3><p>Coloca el Material en el slot correspondiente de tu mesh.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="crear">
+  <span class="section-kicker">⌨️ Crear</span>
+  <h2>Partes básicas de un shader personalizado</h2>
+
+  <div class="term-grid">
+    <div class="term-card"><h3>Properties</h3><p>Parámetros visibles en el Inspector del Material.</p></div>
+    <div class="term-card"><h3>Vertex stage</h3><p>Procesa vértices y puede modificar posición, normales o datos enviados al fragment.</p></div>
+    <div class="term-card"><h3>Fragment stage</h3><p>Calcula el color final de los píxeles/fragments.</p></div>
+    <div class="term-card"><h3>Render State</h3><p>Blend, culling, depth, queue y otras decisiones de render.</p></div>
+  </div>
+
+  <div class="code-sample">Shader "ToolHub/Example"
+{
+    Properties
+    {
+        _Color ("Color", Color) = (1,1,1,1)
+    }
+
+    SubShader
+    {
+        // Passes + HLSL
+    }
+}</div>
+
+  <div class="notice purple">
+    <strong>🟣 ToolHub Shader Studio:</strong>
+    <a class="guide-inline-link" href="../../herramientas/unity/shader-generator.html">
+      abre el Generador de Shaders
+    </a>
+    para crear una base visual sin escribir todo desde cero.
+  </div>
+</section>
+
+<section class="guide-section" id="animados">
+  <span class="section-kicker">🎞️ Animados</span>
+  <h2>Animación por tiempo vs Animation Clip</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">⏱️</div><h3>Tiempo del shader</h3><p>UV scroll, pulse, hue shift o waves pueden avanzar automáticamente usando tiempo.</p></div>
+    <div class="compare-card"><div class="icon">🎬</div><h3>Animation Clip</h3><p>Una propiedad expuesta puede animarse desde Unity y controlarse mediante Animator/FX.</p></div>
+    <div class="compare-card"><div class="icon">🎛️</div><h3>Parámetros</h3><p>Velocidad, intensidad y color deberían ser propiedades editables en lugar de valores fijos.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="rendimiento">
+  <span class="section-kicker">⚡ Rendimiento</span>
+  <h2>Qué suele encarecer un shader</h2>
+
+  <ul class="checklist">
+    <li>Múltiples passes para outline, grab pass o efectos adicionales.</li>
+    <li>Transparencia y mucho overdraw.</li>
+    <li>Muestras de muchas texturas por píxel.</li>
+    <li>Cálculos complejos repetidos en fragment shader.</li>
+    <li>Efectos que no aportan nada visible pero permanecen activos.</li>
+  </ul>
+</section>
+
+<section class="guide-section" id="quest">
+  <span class="section-kicker">📱 Quest / Android</span>
+  <h2>Restricción crítica para avatares</h2>
+  <p>
+    VRChat solo permite en avatares Android/Quest los shaders móviles suministrados por el SDK.
+    Un shader personalizado generado para PC no debe considerarse automáticamente compatible con Quest.
+  </p>
+
+  <div class="notice danger">
+    <strong>🔴 Regla:</strong> crea una variante/material móvil separado cuando prepares el avatar para Android/Quest.
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Problemas</span>
+  <h2>Cuando el shader no funciona</h2>
+
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Todo sale rosa</span><span>+</span></button><div class="accordion-panel">Unity no encuentra o no puede compilar el shader. Abre Console y corrige el primer error real, no los veinte errores secundarios.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>La textura está negra o blanca</span><span>+</span></button><div class="accordion-panel">Comprueba propiedades, sampler, UV y si la textura está realmente asignada.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>La transparencia se ordena mal</span><span>+</span></button><div class="accordion-panel">Es un problema clásico de transparent rendering. Revisa render queue, depth writing y si Cutout sería suficiente.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/Shaders.html" target="_blank" rel="noopener noreferrer"><strong>Unity Shaders</strong><p>Documentación general del sistema de shaders.</p><small>Unity ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/platforms/android/quest-content-limitations/" target="_blank" rel="noopener noreferrer"><strong>Android Shaders</strong><p>Restricciones de shaders para avatares móviles.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://lilxyzw.github.io/lilToon/ja_JP/dev/custom_shader.html" target="_blank" rel="noopener noreferrer"><strong>lilToon Custom Shader</strong><p>Ejemplo de arquitectura de extensión sobre un shader existente.</p><small>lilToon ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

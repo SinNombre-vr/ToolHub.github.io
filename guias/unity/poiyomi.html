@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Guía visual para entender Poiyomi, ordenar un material, animarlo y evitar configuraciones innecesariamente pesadas.">
+  <title>Poiyomi - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Poiyomi</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · SHADER</span>
+        <h1>Poiyomi</h1>
+        <p>Guía visual para entender Poiyomi, ordenar un material, animarlo y evitar configuraciones innecesariamente pesadas.</p>
+        <div class="hero-tags"><span class="hero-tag">Toon</span><span class="hero-tag">MatCap</span><span class="hero-tag">Emission</span><span class="hero-tag">Rim</span><span class="hero-tag">Animation</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Plataforma</strong><span>PC</span></div><div class="hero-stat"><strong>Quest</strong><span>Shader móvil aparte</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Qué es</a>
+<a href="#instalar">Instalar</a>
+<a href="#bloques">Bloques</a>
+<a href="#optimizar">Optimizar</a>
+<a href="#animacion">Animación</a>
+<a href="#quest">Quest</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">🎨 Resumen</span>
+  <h2>Qué es Poiyomi y para qué sirve</h2>
+  <p class="section-intro">
+    Poiyomi es una familia de shaders orientada a avatares con estilos toon, realistas y efectos avanzados.
+    Su editor agrupa muchas funciones dentro de un mismo material.
+  </p>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🌈</div><strong>Shading</strong><p>Toon, realista, cloth, skin y otras formas de controlar luz y sombra.</p></div>
+    <div class="summary-card"><div class="icon">✨</div><strong>Efectos</strong><p>Emission, MatCap, Rim, outlines, decals, dissolve, AudioLink y más.</p></div>
+    <div class="summary-card"><div class="icon">🧰</div><strong>Editor</strong><p>Presets, búsqueda, packing de máscaras y herramientas para gestionar materiales.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="instalar">
+  <span class="section-kicker">📦 Instalación</span>
+  <h2>Forma limpia de instalarlo</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Usa VCC/VPM</h3><p>Para proyectos VRChat, una instalación mediante repositorio VCC/VPM facilita versiones y dependencias.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Evita mezclar versiones</h3><p>No importes encima paquetes viejos de procedencias distintas sin revisar. Mezclar archivos del shader suele acabar en errores de compilación.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Haz backup antes de actualizar</h3><p>Especialmente si tienes materiales complejos, presets propios o animaciones sobre propiedades del shader.</p></div></div>
+  </div>
+
+  <div class="notice purple">
+    <strong>🟣 ToolHub:</strong> actualmente VRChat usa Unity 2022.3.22f1. Mantén el proyecto en la versión soportada por VRChat.
+  </div>
+</section>
+
+<section class="guide-section" id="bloques">
+  <span class="section-kicker">🧱 Bloques principales</span>
+  <h2>Orden recomendado al crear un material</h2>
+
+  <div class="unity-flow">
+    <div class="flow-node">1 · Color & Normals</div>
+    <div class="flow-node">2 · Shading</div>
+    <div class="flow-node">3 · Reflections / MatCap</div>
+    <div class="flow-node">4 · Emission / FX</div>
+    <div class="flow-node">5 · Rendering</div>
+  </div>
+
+  <div class="term-grid">
+    <div class="term-card"><h3>Color & Normals</h3><p>Textura principal, color, normal maps y detalles de superficie.</p></div>
+    <div class="term-card"><h3>Shading</h3><p>Decide cómo responde el material a la iluminación del mundo.</p></div>
+    <div class="term-card"><h3>MatCap / Specular</h3><p>Reflejos y apariencia metálica o estilizada sin necesitar geometría extra.</p></div>
+    <div class="term-card"><h3>Emission</h3><p>Permite zonas autoiluminadas y efectos visuales que siguen visibles en ambientes oscuros.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="optimizar">
+  <span class="section-kicker">⚡ Optimización</span>
+  <h2>Activa solo lo que realmente necesitas</h2>
+
+  <ul class="checklist">
+    <li>Evita transparencias si una solución Opaque/Cutout funciona igual.</li>
+    <li>No añadas cuatro MatCaps, varios rims y múltiples emisiones solo porque están disponibles.</li>
+    <li>Reutiliza máscaras y empaqueta canales cuando tenga sentido.</li>
+    <li>Reduce material slots del avatar; cada slot termina creando trabajo adicional de render.</li>
+    <li>Prueba el material en mundos claros y oscuros antes de considerarlo terminado.</li>
+  </ul>
+
+  <div class="notice green">
+    <strong>🟢 Consejo:</strong> un material “simple” bien configurado suele verse mejor que uno cargado con efectos que compiten entre sí.
+  </div>
+</section>
+
+<section class="guide-section" id="animacion">
+  <span class="section-kicker">🎞️ Animación</span>
+  <h2>Propiedades animadas</h2>
+  <p>
+    Poiyomi puede exponer propiedades del material para que Animation/Animator las modifiquen:
+    emission, colores, máscaras, UV, dissolve y muchas otras. Anima solo lo necesario y evita
+    crear estados que cambian decenas de propiedades sin motivo.
+  </p>
+
+  <div class="flow-map">
+    <div class="flow-node">Material</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Propiedad</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Animation Clip</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Animator / FX</div>
+  </div>
+</section>
+
+<section class="guide-section" id="quest">
+  <span class="section-kicker">📱 Quest / Android</span>
+  <h2>Poiyomi no es el shader del avatar móvil</h2>
+  <p class="section-intro">
+    VRChat restringe los shaders de avatares Android/Quest a los shaders móviles incluidos en el SDK.
+    La versión móvil del avatar debe usar materiales compatibles con esas restricciones.
+  </p>
+
+  <div class="notice danger">
+    <strong>🔴 No hagas esto:</strong> asumir que porque un material Poiyomi funciona en PC también funcionará en Quest.
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Diagnóstico</span>
+  <h2>Problemas habituales</h2>
+
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El material sale rosa</span><span>+</span></button><div class="accordion-panel">Normalmente indica shader ausente o error de compilación. Comprueba que Poiyomi esté instalado correctamente y revisa Console.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Todo se ve demasiado brillante</span><span>+</span></button><div class="accordion-panel">Revisa emission, reflections/specular, light data y MatCap antes de culpar a la textura.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Una animación dejó de funcionar después de cambiar el material</span><span>+</span></button><div class="accordion-panel">Comprueba que la propiedad animada siga existiendo con el mismo nombre y que el material asignado sea el correcto.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://www.poiyomi.com/" target="_blank" rel="noopener noreferrer"><strong>Poiyomi Docs</strong><p>Documentación oficial, instalación y módulos.</p><small>Poiyomi Labs ↗</small></a>
+    <a class="source-card" href="https://poiyomi.github.io/vpm/" target="_blank" rel="noopener noreferrer"><strong>Poiyomi VPM</strong><p>Repositorio para añadir Poiyomi a VCC.</p><small>VPM ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/platforms/android/quest-content-limitations/" target="_blank" rel="noopener noreferrer"><strong>Shaders en Android</strong><p>Restricciones oficiales para avatares Quest/Android.</p><small>VRChat ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

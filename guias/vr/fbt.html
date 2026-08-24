@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Guía visual de ToolHub para SlimeVR, VIVE Trackers, FBT y tracking híbrido.">
+  <title>Full Body Tracking - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="vr-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>VR</span><span>›</span><span>Full Body Tracking</span>
+    </nav>
+
+    <section class="guide-hero">
+      <div>
+        <span class="eyebrow green">VR · FULL BODY TRACKING</span>
+        <h1>Full Body Tracking</h1>
+        <p>Compara SlimeVR y Lighthouse, visualiza la colocación de trackers y sigue una ruta de calibración clara antes de llegar a VRChat.</p>
+        <div class="hero-tags"><span class="hero-tag">SlimeVR</span><span class="hero-tag">VIVE Trackers</span><span class="hero-tag">Lighthouse</span><span class="hero-tag">Quest + Lighthouse</span><span class="hero-tag">VRChat</span></div>
+      </div>
+      <div class="hero-side"><div class="hero-stat"><strong>Formato</strong><span>Guía interactiva</span></div><div class="hero-stat"><strong>Incluye</strong><span>Selector de trackers</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Sistemas</a>
+<a href="#selector">Colocación</a>
+<a href="#slimevr">SlimeVR</a>
+<a href="#vive">VIVE</a>
+<a href="#hibrido">Híbrido</a>
+<a href="#vrchat">VRChat</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">⚡ Resumen rápido</span>
+  <h2>Dos familias muy distintas de FBT</h2>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🧭</div><strong>SlimeVR / IMU</strong><p>Estima el cuerpo a partir de sensores inerciales y un modelo corporal. No necesita estaciones Lighthouse para funcionar.</p></div>
+    <div class="summary-card"><div class="icon">📍</div><strong>VIVE / Lighthouse</strong><p>Los trackers son posicionados por un sistema de seguimiento externo compatible con estaciones base.</p></div>
+    <div class="summary-card"><div class="icon">🔗</div><strong>Sistema híbrido</strong><p>Cuando el visor y los trackers usan espacios diferentes, hay que alinear ambos universos para que coincidan.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="selector">
+  <span class="section-kicker">🦵 Colocación visual</span>
+  <h2>¿Qué cambia al usar más trackers SlimeVR?</h2>
+  <p class="section-intro">Pulsa una configuración. El esquema resalta una colocación recomendada basada en la documentación de SlimeVR.</p>
+  <div class="fbt-layout">
+    <div class="body-stage" aria-label="Esquema corporal con posiciones de trackers">
+      <div class="body-figure">
+        <div class="body-head"></div><div class="body-torso"></div>
+        <div class="body-arm left"></div><div class="body-arm right"></div>
+        <div class="body-leg left"></div><div class="body-leg right"></div>
+        <span class="tracker-dot dot-chest" data-part="chest" data-label="Pecho"></span>
+        <span class="tracker-dot dot-hip" data-part="hip" data-label="Cadera"></span>
+        <span class="tracker-dot dot-larm" data-part="larm" data-label="Brazo I"></span>
+        <span class="tracker-dot dot-rarm" data-part="rarm" data-label="Brazo D"></span>
+        <span class="tracker-dot dot-lthigh" data-part="lthigh" data-label="Muslo I"></span>
+        <span class="tracker-dot dot-rthigh" data-part="rthigh" data-label="Muslo D"></span>
+        <span class="tracker-dot dot-lankle" data-part="lankle" data-label="Pierna I"></span>
+        <span class="tracker-dot dot-rankle" data-part="rankle" data-label="Pierna D"></span>
+        <span class="tracker-dot dot-lfoot" data-part="lfoot" data-label="Pie I"></span>
+        <span class="tracker-dot dot-rfoot" data-part="rfoot" data-label="Pie D"></span>
+      </div>
+    </div>
+    <div class="tracker-controls">
+      <div class="tracker-buttons">
+        <button class="tracker-choice" type="button" data-trackers="5">5 trackers</button>
+        <button class="tracker-choice active" type="button" data-trackers="6">6 trackers</button>
+        <button class="tracker-choice" type="button" data-trackers="8">8 trackers</button>
+        <button class="tracker-choice" type="button" data-trackers="10">10 trackers</button>
+      </div>
+      <div class="tracker-summary">
+        <h3 id="trackerSetTitle">6 trackers · añade cadera</h3>
+        <p id="trackerSetText">Pecho, cadera, ambos muslos y ambas piernas inferiores. La cadera añade una referencia directa del centro del cuerpo.</p>
+      </div>
+      <div class="notice blue"><strong>🔵 No es “más siempre es mejor”:</strong> una mala sujeción, roles incorrectos o proporciones mal calibradas pueden degradar el resultado aunque tengas muchos trackers.</div>
+      <div class="notice green"><strong>🟢 Montaje:</strong> el tracker debe quedar firme y con el rol/orientación correctos. En SlimeVR, la documentación permite diferentes posiciones alrededor de cada zona corporal siempre que el movimiento se capture bien.</div>
+    </div>
+  </div>
+</section>
+
+<section class="guide-section" id="slimevr">
+  <span class="section-kicker">🧭 SlimeVR</span>
+  <h2>Flujo correcto de configuración</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Conecta y reconoce trackers</h3><p>Abre SlimeVR Server y confirma que cada tracker aparece antes de asignarlo al cuerpo.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Asigna cada rol</h3><p>Pecho, cadera, muslos, piernas, pies o brazos según tu conjunto. Sacudir un tracker puede ayudarte a identificar cuál estás configurando.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Define orientación de montaje</h3><p>El software necesita saber hacia qué dirección física apunta cada sensor. Un mounting incorrecto se nota como rotaciones absurdas o segmentos que no siguen al cuerpo.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Calibra proporciones</h3><p>Las proporciones son críticas: el servidor usa longitudes corporales para transformar rotaciones de sensores en una pose completa.</p></div></div>
+    <div class="step"><div class="step-num">5</div><div><h3>Haz reset antes de jugar</h3><p>Colócate en la pose indicada y realiza el reset correspondiente. Cuando vuelvas a ponerte los trackers otro día, el reset/mounting vuelve a ser parte de la rutina.</p></div></div>
+  </div>
+  <div class="notice purple"><strong>🟣 Consejo ToolHub:</strong> si las piernas “se doblan raro”, no empieces moviendo sliders al azar. Comprueba en orden: roles → mounting → proporciones → reset → calibración dentro de VRChat.</div>
+</section>
+
+<section class="guide-section" id="vive">
+  <span class="section-kicker">📍 VIVE / Lighthouse</span>
+  <h2>Qué necesitas para trackers Lighthouse</h2>
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">📡</div><h3>Base Stations</h3><p>Crean la referencia de seguimiento Lighthouse. Deben ser compatibles con la generación de tus trackers y estar colocadas con buena cobertura.</p></div>
+    <div class="compare-card"><div class="icon">🔑</div><h3>Dongles</h3><p>Cada tracker necesita una vía de radio compatible hacia el PC. Evita apilar dongles pegados entre sí o detrás de una torre que bloquee señal.</p></div>
+    <div class="compare-card"><div class="icon">🦵</div><h3>Trackers</h3><p>Empareja, asigna roles y confirma que SteamVR los muestra con tracking estable antes de abrir VRChat.</p></div>
+  </div>
+  <div class="flow-map">
+    <div class="flow-node">Base Stations activas</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Dongles conectados</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Trackers emparejados</div><span class="flow-arrow">→</span>
+    <div class="flow-node">SteamVR los ve</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Calibración FBT</div>
+  </div>
+</section>
+
+<section class="guide-section" id="hibrido">
+  <span class="section-kicker">🔗 Quest + Lighthouse</span>
+  <h2>Por qué un sistema híbrido necesita calibración espacial</h2>
+  <p class="section-intro">Un Quest inside‑out y unos VIVE Trackers Lighthouse no comparten automáticamente el mismo origen. Cada sistema cree que “0,0,0” está en un sitio distinto.</p>
+  <div class="flow-map">
+    <div class="flow-node">Espacio Quest / SLAM</div><span class="flow-arrow">⇄</span>
+    <div class="flow-node">Calibrador de espacios</div><span class="flow-arrow">⇄</span>
+    <div class="flow-node">Espacio Lighthouse</div>
+  </div>
+  <div class="notice warn"><strong>🟡 Drift:</strong> si uno de los dos sistemas cambia ligeramente su referencia con el tiempo, los trackers pueden quedar desplazados respecto al cuerpo. La calibración continua o repetir la calibración puede ser necesaria según el montaje.</div>
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>¿Por qué SteamVR ve mis trackers pero están lejos de mí?</span><span>+</span></button><div class="accordion-panel">Porque “ser visible” y “estar en el mismo espacio” son dos problemas distintos. SteamVR puede recibir ambos dispositivos y aun así sus coordenadas pertenecer a universos diferentes. Necesitas una transformación/calibración entre espacios.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>¿Mover una Base Station obliga a recalibrar?</span><span>+</span></button><div class="accordion-panel">Si alteras físicamente la referencia Lighthouse, tu relación entre espacios puede cambiar. Trata un cambio de posición/orientación de las bases como motivo para revisar la calibración.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="vrchat">
+  <span class="section-kicker">🕺 VRChat</span>
+  <h2>Antes de pulsar Calibrate FBT</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Suelo correcto</h3><p>Comprueba primero la altura del suelo del visor/SteamVR. Un error aquí se propaga al cuerpo entero.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Trackers estables</h3><p>No calibres mientras un tracker está reconectándose, sin línea de tracking o desplazado por un mal reset.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Avatar razonable</h3><p>Proporciones extremas pueden requerir más cuidado. Primero valida que el sistema funciona con una pose neutra y después afina el avatar.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Repite con método</h3><p>Si algo sale mal, identifica si el error ya existe en SteamVR/SlimeVR o aparece solo después de calibrar dentro de VRChat.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Problemas frecuentes</span>
+  <h2>Diagnóstico por síntomas</h2>
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>SlimeVR se mueve, pero los trackers no aparecen en SteamVR</span><span>+</span></button><div class="accordion-panel">Revisa la configuración de salida hacia SteamVR y el add-on/driver de SlimeVR. La documentación recomienda comprobar SteamVR → Manage Add-ons si el driver está instalado pero deshabilitado.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Mis trackers Lighthouse pierden señal</span><span>+</span></button><div class="accordion-panel">Comprueba cobertura visual de las estaciones, reflejos problemáticos y posición de dongles. Para probar, separa dongles con sus extensores/cradles y evita bloquearlos detrás del PC.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El avatar deriva aunque la calibración empezó bien</span><span>+</span></button><div class="accordion-panel">En un sistema híbrido puede existir deriva entre los dos espacios. Revisa si el visor ha reajustado su boundary/origen, si se movieron bases y si tu solución de space calibration sigue aplicada.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Las piernas de SlimeVR hacen cosas raras</span><span>+</span></button><div class="accordion-panel">Verifica roles, orientación física de mounting y proporciones antes de tocar filtros avanzados. Un tracker flojo o asignado a la pierna incorrecta también puede simular un problema de software.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Documentación útil</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://docs.slimevr.dev/quick-setup" target="_blank" rel="noopener noreferrer"><strong>SlimeVR · Quick Setup</strong><p>Asignación, mounting, proporciones y puesta en marcha.</p><small>SlimeVR Docs ↗</small></a>
+    <a class="source-card" href="https://docs.slimevr.dev/server/putting-on-trackers.html" target="_blank" rel="noopener noreferrer"><strong>SlimeVR · Colocación</strong><p>Posiciones recomendadas según número de trackers.</p><small>SlimeVR Docs ↗</small></a>
+    <a class="source-card" href="https://www.vive.com/" target="_blank" rel="noopener noreferrer"><strong>HTC VIVE</strong><p>Soporte y documentación de trackers y estaciones base.</p><small>VIVE ↗</small></a>
+    <a class="source-card" href="https://github.com/pushrax/OpenVR-SpaceCalibrator" target="_blank" rel="noopener noreferrer"><strong>OpenVR Space Calibrator</strong><p>Proyecto de referencia para alinear sistemas de tracking distintos. Revisa el estado/forks antes de instalar.</p><small>GitHub ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">
+      ToolHub organiza esta información como guía práctica. Las interfaces, compatibilidades y requisitos
+      pueden cambiar con las actualizaciones del fabricante; revisa las fuentes oficiales cuando vayas a instalar o configurar hardware.
+    </p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button" aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías VR</strong>
+    </div>
+    <div class="footer-links">
+      <a href="conectividad.html">Conectividad</a>
+      <a href="steamvr.html">SteamVR</a>
+      <a href="fbt.html">FBT</a>
+    </div>
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="vr-guides.js"></script>
+</body>
+</html>

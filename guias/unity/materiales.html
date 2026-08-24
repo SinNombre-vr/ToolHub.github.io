@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Entiende la relación entre shader, material, textura, renderer y material slots para trabajar sin perderte en Unity.">
+  <title>Materiales - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Materiales</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · MATERIALES</span>
+        <h1>Materiales</h1>
+        <p>Entiende la relación entre shader, material, textura, renderer y material slots para trabajar sin perderte en Unity.</p>
+        <div class="hero-tags"><span class="hero-tag">Shader</span><span class="hero-tag">Material</span><span class="hero-tag">Slots</span><span class="hero-tag">Atlas</span><span class="hero-tag">Rendering</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Clave</strong><span>Menos slots</span></div><div class="hero-stat"><strong>Uso</strong><span>Avatar / Unity</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#conceptos">Conceptos</a>
+<a href="#crear">Crear</a>
+<a href="#slots">Material Slots</a>
+<a href="#atlas">Atlas</a>
+<a href="#render">Render Mode</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="conceptos">
+  <span class="section-kicker">🧱 Conceptos</span>
+  <h2>Shader, Material y Textura no son lo mismo</h2>
+
+  <div class="flow-map">
+    <div class="flow-node">Shader<br><small>reglas de render</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">Material<br><small>valores del shader</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">Texturas<br><small>datos visuales</small></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">Renderer<br><small>muestra el mesh</small></div>
+  </div>
+
+  <div class="notice green">
+    <strong>🟢 Forma simple:</strong> el shader define qué se puede hacer; el material guarda cómo
+    quieres usarlo; las texturas aportan información visual.
+  </div>
+</section>
+
+<section class="guide-section" id="crear">
+  <span class="section-kicker">➕ Crear</span>
+  <h2>Flujo limpio para un material nuevo</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Crea el Material asset</h3><p>Guárdalo en una carpeta clara, por ejemplo Materials/Body o Materials/Clothes.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Selecciona shader</h3><p>Poiyomi, lilToon, un shader propio u otro compatible con tu plataforma.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Asigna texturas</h3><p>Base color, normals, masks, MatCap, emission, etc., solo si realmente se usan.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Asigna al Renderer</h3><p>Arrastra el material al slot correcto del Skinned Mesh Renderer/Mesh Renderer.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="slots">
+  <span class="section-kicker">📊 Material Slots</span>
+  <h2>Por qué muchos materiales pueden ser caros</h2>
+  <p>
+    En VRChat se contabilizan los slots de material del avatar. Unity divide la geometría en submeshes
+    según esos slots, lo que añade trabajo de render.
+  </p>
+
+  <table class="data-table">
+    <thead><tr><th>Performance Rank</th><th>PC</th><th>Mobile</th></tr></thead>
+    <tbody>
+      <tr><td>Excellent</td><td>4 slots</td><td>1 slot</td></tr>
+      <tr><td>Good</td><td>8 slots</td><td>1 slot</td></tr>
+      <tr><td>Medium</td><td>16 slots</td><td>2 slots</td></tr>
+      <tr><td>Poor</td><td>32 slots</td><td>4 slots</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="guide-section" id="atlas">
+  <span class="section-kicker">🗺️ Atlas</span>
+  <h2>Combinar materiales cuando tiene sentido</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">✅</div><h3>Conviene combinar</h3><p>Ropa con varias pequeñas piezas que comparten el mismo tipo de shader y pueden usar un atlas.</p></div>
+    <div class="compare-card"><div class="icon">⚠️</div><h3>No combinar a ciegas</h3><p>Si necesitas shaders/render modes totalmente distintos, fusionarlo todo puede complicar más de lo que ayuda.</p></div>
+    <div class="compare-card"><div class="icon">🎯</div><h3>Prioridad</h3><p>Reduce slots duplicados y separaciones innecesarias antes de rediseñar todo el avatar.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="render">
+  <span class="section-kicker">🪟 Render Mode</span>
+  <h2>Opaque, Cutout y Transparent</h2>
+
+  <table class="data-table">
+    <thead><tr><th>Modo</th><th>Uso</th><th>Coste / problema típico</th></tr></thead>
+    <tbody>
+      <tr><td>Opaque</td><td>Superficies sólidas</td><td>Generalmente la opción más sencilla y estable.</td></tr>
+      <tr><td>Cutout</td><td>Pelo, hojas, recortes duros</td><td>Descarta píxeles por umbral; útil cuando no necesitas semitransparencia.</td></tr>
+      <tr><td>Transparent</td><td>Cristal, telas translúcidas, FX</td><td>Más problemas de orden y fill-rate; úsalo con intención.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Problemas</span>
+  <h2>Diagnóstico rápido</h2>
+
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El material está rosa</span><span>+</span></button><div class="accordion-panel">El shader no está disponible o no compila. Revisa instalación del shader y Console.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Una parte del avatar tiene el material equivocado</span><span>+</span></button><div class="accordion-panel">Revisa el orden de Material Slots del Renderer. El orden debe coincidir con los submeshes exportados.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Tengo el mismo material repetido muchas veces</span><span>+</span></button><div class="accordion-panel">Distingue entre “mismo asset repetido en slots” y varios materiales duplicados. Ambos pueden indicar que el modelo necesita reorganización.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/Materials.html" target="_blank" rel="noopener noreferrer"><strong>Materials</strong><p>Conceptos de materiales en Unity.</p><small>Unity ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/avatars/avatar-performance-ranking-system/" target="_blank" rel="noopener noreferrer"><strong>Performance Ranks</strong><p>Material slots y otras métricas.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/avatars/avatar-optimizing-tips/" target="_blank" rel="noopener noreferrer"><strong>Avatar Optimization Tips</strong><p>Consejos oficiales para reducir materiales y meshes.</p><small>VRChat ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

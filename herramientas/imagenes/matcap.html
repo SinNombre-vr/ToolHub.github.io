@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <meta name="description" content="MatCap Studio Pro de ToolHub: generador procedural avanzado para Unity y VRChat, con presets, textura overlay, configuración local e IA opcional.">
+  <title>MatCap Studio Pro - ToolHub</title>
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") document.documentElement.classList.add("privacy-pending");
+    } catch (error) { document.documentElement.classList.add("privacy-pending"); }
+  </script>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="image-tools.css">
+  <link rel="stylesheet" href="matcap.css">
+</head>
+<body data-image-tool="matcap">
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio"><span class="brand-icon">⬡</span><span class="brand-text"><strong>TOOL</strong>HUB</span></a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+    <div class="header-actions"><a class="button secondary" href="../../index.html#imagenes">← Volver</a><button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button></div>
+  </header>
+
+  <main class="tool-main matcap-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta"><a href="../../index.html#inicio">Inicio</a><span>›</span><a href="../../index.html#herramientas">Herramientas</a><span>›</span><a href="../../index.html#imagenes">Imágenes</a><span>›</span><span>MatCap Studio Pro</span></nav>
+
+    <section class="tool-page-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · MATCAP STUDIO</span>
+        <h1>MatCap Studio Pro</h1>
+        <p>
+          Diseña MatCaps procedurales con control avanzado de iluminación, reflejos, metal, bordes,
+          patrones, distorsión, iridiscencia, textura overlay y exportación de alta resolución.
+        </p>
+      </div>
+      <div class="local-processing-badge">🔒 Local por defecto · IA gratuita/local opcional</div>
+    </section>
+
+    <section class="matcap-layout">
+      <aside class="tool-panel matcap-preview-panel">
+        <div class="panel-title-row">
+          <div><h2>Vista previa</h2><p class="panel-description">La textura se recalcula en tiempo real al modificar los controles.</p></div>
+          <span class="pro-pill">PRO</span>
+        </div>
+
+        <div class="matcap-canvas-wrap"><canvas id="matcapCanvas" width="512" height="512" aria-label="Vista previa del MatCap"></canvas></div>
+
+        <div class="matcap-preset-row" aria-label="Presets">
+          <button class="preset-button" type="button" data-preset="wineCorrosive">🍷 Corrosivo vino</button>
+          <button class="preset-button" type="button" data-preset="cyberBlue">🔷 Cyber azul</button>
+          <button class="preset-button" type="button" data-preset="darkMetal">⚙️ Metal oscuro</button>
+          <button class="preset-button" type="button" data-preset="toxic">☣️ Tóxico</button>
+          <button class="preset-button" type="button" data-preset="pearl">🫧 Perla</button>
+          <button class="preset-button" type="button" data-preset="holographic">🌈 Holográfico</button>
+          <button class="preset-button" type="button" data-preset="lava">🌋 Lava</button>
+          <button class="preset-button" type="button" data-preset="ice">❄️ Hielo</button>
+          <button class="preset-button" type="button" data-preset="gold">🏆 Oro</button>
+          <button class="preset-button" type="button" data-preset="soft">✨ Suave</button>
+        </div>
+
+        <div class="preview-quick-actions">
+          <button class="mini-button" id="randomizeMatcap" type="button">🎲 Aleatorio</button>
+          <button class="mini-button" id="resetMatcap" type="button">↻ Restablecer</button>
+          <button class="mini-button" id="savePresetLocal" type="button">💾 Guardar local</button>
+          <button class="mini-button" id="loadPresetLocal" type="button">📂 Recuperar</button>
+        </div>
+
+        <div class="matcap-export-row">
+          <div class="control-group"><label for="exportSize">Resolución</label><select id="exportSize"><option value="512">512 × 512</option><option value="1024" selected>1024 × 1024</option><option value="2048">2048 × 2048</option><option value="4096">4096 × 4096</option></select></div>
+          <div class="control-group"><label for="outsideMode">Exterior</label><select id="outsideMode"><option value="transparent" selected>Transparente</option><option value="solid">Color sólido</option></select></div>
+          <div class="control-group"><label for="outsideColor">Color exterior</label><input id="outsideColor" type="color" value="#000000"></div>
+        </div>
+        <div class="export-buttons"><button class="button success" id="downloadMatcap" type="button">Descargar PNG</button><button class="button secondary" id="downloadMatcapConfig" type="button">Config JSON</button><label class="button secondary file-button">Cargar JSON<input id="loadMatcapConfig" type="file" accept="application/json,.json"></label></div>
+
+        <div class="status-box" id="matcapStatus" aria-live="polite">MatCap preparado. Ajusta controles, usa un preset o escribe una descripción.</div>
+
+        <div class="unity-tips">
+          <div class="unity-tip"><strong>Texture Type</strong><span>Default</span></div>
+          <div class="unity-tip"><strong>Wrap Mode</strong><span>Clamp</span></div>
+          <div class="unity-tip"><strong>Filter Mode</strong><span>Trilinear si buscas suavidad.</span></div>
+          <div class="unity-tip"><strong>Uso</strong><span>Asigna el PNG al slot MatCap de Poiyomi, lilToon u otro shader compatible.</span></div>
+        </div>
+      </aside>
+
+      <div class="matcap-editor-column">
+        <section class="tool-panel accent">
+          <div class="panel-title-row"><div><h2>Controles profesionales</h2><p class="panel-description">Los bloques están separados por función para poder construir estilos simples o muy agresivos.</p></div><span id="activeFeatureCount" class="feature-count">0 efectos</span></div>
+
+          <div class="matcap-controls-section">
+            <h3>🎨 Paleta</h3>
+            <div class="matcap-control-grid color-grid">
+              <div class="control-group"><label for="primaryColor">Principal</label><div class="matcap-color"><input id="primaryColor" type="color" value="#731526"><code id="primaryColorText">#731526</code></div></div>
+              <div class="control-group"><label for="secondaryColor">Secundario</label><div class="matcap-color"><input id="secondaryColor" type="color" value="#1f4cff"><code id="secondaryColorText">#1F4CFF</code></div></div>
+              <div class="control-group"><label for="highlightColor">Reflejo</label><div class="matcap-color"><input id="highlightColor" type="color" value="#f8fbff"><code id="highlightColorText">#F8FBFF</code></div></div>
+              <div class="control-group"><label for="shadowColor">Sombra</label><div class="matcap-color"><input id="shadowColor" type="color" value="#03050a"><code id="shadowColorText">#03050A</code></div></div>
+              <div class="control-group"><label for="rimColor">Rim</label><div class="matcap-color"><input id="rimColor" type="color" value="#8135ff"><code id="rimColorText">#8135FF</code></div></div>
+              <div class="control-group"><label for="accentColor">Acento</label><div class="matcap-color"><input id="accentColor" type="color" value="#ff244f"><code id="accentColorText">#FF244F</code></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>💡 Iluminación y reflejo</h3>
+            <div class="matcap-control-grid">
+              <div class="control-group"><label for="lightX">Luz horizontal</label><div class="matcap-slider"><input id="lightX" type="range" min="-100" max="100" value="-34"><output id="lightXValue">-0.34</output></div></div>
+              <div class="control-group"><label for="lightY">Luz vertical</label><div class="matcap-slider"><input id="lightY" type="range" min="-100" max="100" value="-52"><output id="lightYValue">-0.52</output></div></div>
+              <div class="control-group"><label for="lightSize">Tamaño del reflejo</label><div class="matcap-slider"><input id="lightSize" type="range" min="5" max="100" value="38"><output id="lightSizeValue">0.38</output></div></div>
+              <div class="control-group"><label for="lightFalloff">Caída de luz</label><div class="matcap-slider"><input id="lightFalloff" type="range" min="20" max="300" value="120"><output id="lightFalloffValue">1.20</output></div></div>
+              <div class="control-group"><label for="ambient">Ambiente</label><div class="matcap-slider"><input id="ambient" type="range" min="0" max="120" value="18"><output id="ambientValue">0.18</output></div></div>
+              <div class="control-group"><label for="diffuse">Difuso</label><div class="matcap-slider"><input id="diffuse" type="range" min="0" max="200" value="92"><output id="diffuseValue">0.92</output></div></div>
+              <div class="control-group"><label for="specular">Especular</label><div class="matcap-slider"><input id="specular" type="range" min="0" max="250" value="115"><output id="specularValue">1.15</output></div></div>
+              <div class="control-group"><label for="shininess">Dureza</label><div class="matcap-slider"><input id="shininess" type="range" min="4" max="240" value="88"><output id="shininessValue">88</output></div></div>
+              <div class="control-group"><label for="secondaryLight">Reflejo secundario</label><div class="matcap-slider"><input id="secondaryLight" type="range" min="0" max="150" value="25"><output id="secondaryLightValue">0.25</output></div></div>
+              <div class="control-group"><label for="secondaryLightOffset">Separación reflejo 2</label><div class="matcap-slider"><input id="secondaryLightOffset" type="range" min="0" max="100" value="38"><output id="secondaryLightOffsetValue">0.38</output></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>⚙️ Superficie</h3>
+            <div class="matcap-control-grid">
+              <div class="control-group"><label for="rim">Rim / borde</label><div class="matcap-slider"><input id="rim" type="range" min="0" max="180" value="38"><output id="rimValue">0.38</output></div></div>
+              <div class="control-group"><label for="rimPower">Dureza del rim</label><div class="matcap-slider"><input id="rimPower" type="range" min="20" max="800" value="220"><output id="rimPowerValue">2.20</output></div></div>
+              <div class="control-group"><label for="metallic">Metálico</label><div class="matcap-slider"><input id="metallic" type="range" min="0" max="100" value="72"><output id="metallicValue">0.72</output></div></div>
+              <div class="control-group"><label for="roughness">Rugosidad</label><div class="matcap-slider"><input id="roughness" type="range" min="0" max="100" value="28"><output id="roughnessValue">0.28</output></div></div>
+              <div class="control-group"><label for="contrast">Contraste</label><div class="matcap-slider"><input id="contrast" type="range" min="40" max="280" value="138"><output id="contrastValue">1.38</output></div></div>
+              <div class="control-group"><label for="saturation">Saturación</label><div class="matcap-slider"><input id="saturation" type="range" min="0" max="280" value="128"><output id="saturationValue">1.28</output></div></div>
+              <div class="control-group"><label for="exposure">Exposición</label><div class="matcap-slider"><input id="exposure" type="range" min="-100" max="150" value="0"><output id="exposureValue">0.00</output></div></div>
+              <div class="control-group"><label for="gamma">Gamma</label><div class="matcap-slider"><input id="gamma" type="range" min="40" max="220" value="100"><output id="gammaValue">1.00</output></div></div>
+              <div class="control-group"><label for="gradientBias">Mezcla de color</label><div class="matcap-slider"><input id="gradientBias" type="range" min="-100" max="100" value="0"><output id="gradientBiasValue">0.00</output></div></div>
+              <div class="control-group"><label for="vignette">Viñeta</label><div class="matcap-slider"><input id="vignette" type="range" min="0" max="100" value="10"><output id="vignetteValue">0.10</output></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>🌀 Patrón y deformación</h3>
+            <div class="matcap-control-grid">
+              <div class="control-group"><label for="distortion">Distorsión</label><div class="matcap-slider"><input id="distortion" type="range" min="0" max="150" value="42"><output id="distortionValue">0.42</output></div></div>
+              <div class="control-group"><label for="swirl">Remolino</label><div class="matcap-slider"><input id="swirl" type="range" min="-200" max="200" value="18"><output id="swirlValue">0.18</output></div></div>
+              <div class="control-group"><label for="noise">Textura / ruido</label><div class="matcap-slider"><input id="noise" type="range" min="0" max="150" value="17"><output id="noiseValue">0.17</output></div></div>
+              <div class="control-group"><label for="noiseScale">Escala del ruido</label><div class="matcap-slider"><input id="noiseScale" type="range" min="10" max="500" value="160"><output id="noiseScaleValue">1.60</output></div></div>
+              <div class="control-group"><label for="rings">Anillos</label><div class="matcap-slider"><input id="rings" type="range" min="0" max="150" value="0"><output id="ringsValue">0.00</output></div></div>
+              <div class="control-group"><label for="ringFrequency">Frecuencia anillos</label><div class="matcap-slider"><input id="ringFrequency" type="range" min="10" max="800" value="260"><output id="ringFrequencyValue">2.60</output></div></div>
+              <div class="control-group"><label for="bands">Bandas</label><div class="matcap-slider"><input id="bands" type="range" min="0" max="150" value="0"><output id="bandsValue">0.00</output></div></div>
+              <div class="control-group"><label for="bandAngle">Ángulo bandas</label><div class="matcap-slider"><input id="bandAngle" type="range" min="0" max="360" value="45"><output id="bandAngleValue">45°</output></div></div>
+              <div class="control-group"><label for="scratches">Microarañazos</label><div class="matcap-slider"><input id="scratches" type="range" min="0" max="100" value="0"><output id="scratchesValue">0.00</output></div></div>
+              <div class="control-group"><label for="spots">Manchas / células</label><div class="matcap-slider"><input id="spots" type="range" min="0" max="100" value="0"><output id="spotsValue">0.00</output></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>🌈 Color avanzado y óptica</h3>
+            <div class="matcap-control-grid">
+              <div class="control-group"><label for="hueShift">Hue Shift</label><div class="matcap-slider"><input id="hueShift" type="range" min="-180" max="180" value="0"><output id="hueShiftValue">0°</output></div></div>
+              <div class="control-group"><label for="iridescence">Iridiscencia</label><div class="matcap-slider"><input id="iridescence" type="range" min="0" max="150" value="0"><output id="iridescenceValue">0.00</output></div></div>
+              <div class="control-group"><label for="iridescenceScale">Escala iridiscencia</label><div class="matcap-slider"><input id="iridescenceScale" type="range" min="10" max="800" value="280"><output id="iridescenceScaleValue">2.80</output></div></div>
+              <div class="control-group"><label for="chromatic">Aberración cromática</label><div class="matcap-slider"><input id="chromatic" type="range" min="0" max="100" value="0"><output id="chromaticValue">0.00</output></div></div>
+              <div class="control-group"><label for="posterize">Posterización</label><div class="matcap-slider"><input id="posterize" type="range" min="0" max="12" value="0"><output id="posterizeValue">Off</output></div></div>
+              <div class="control-group"><label for="fresnelTint">Fresnel tint</label><div class="matcap-slider"><input id="fresnelTint" type="range" min="0" max="150" value="25"><output id="fresnelTintValue">0.25</output></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>🎯 Posición y encuadre</h3>
+            <div class="matcap-control-grid">
+              <div class="control-group"><label for="centerX">Centro X</label><div class="matcap-slider"><input id="centerX" type="range" min="-50" max="50" value="0"><output id="centerXValue">0.00</output></div></div>
+              <div class="control-group"><label for="centerY">Centro Y</label><div class="matcap-slider"><input id="centerY" type="range" min="-50" max="50" value="0"><output id="centerYValue">0.00</output></div></div>
+              <div class="control-group"><label for="zoom">Zoom</label><div class="matcap-slider"><input id="zoom" type="range" min="50" max="180" value="100"><output id="zoomValue">1.00</output></div></div>
+              <div class="control-group"><label for="rotation">Rotación patrón</label><div class="matcap-slider"><input id="rotation" type="range" min="-180" max="180" value="0"><output id="rotationValue">0°</output></div></div>
+            </div>
+          </div>
+
+          <div class="matcap-controls-section">
+            <h3>🖼️ Textura overlay</h3>
+            <div class="overlay-upload-row">
+              <label class="overlay-drop"><strong>Arrastra o selecciona una textura</strong><span>PNG, JPG o WEBP. Solo se usa dentro del navegador.</span><input id="overlayTexture" type="file" accept="image/png,image/jpeg,image/webp"><small id="overlayTextureName">Sin textura overlay</small></label>
+              <button class="button secondary" id="clearOverlayTexture" type="button">Quitar textura</button>
+            </div>
+            <div class="matcap-control-grid overlay-controls">
+              <div class="control-group"><label for="overlayBlend">Modo de mezcla</label><select id="overlayBlend"><option value="softlight" selected>Soft Light</option><option value="multiply">Multiply</option><option value="screen">Screen</option><option value="add">Add</option><option value="overlay">Overlay</option></select></div>
+              <div class="control-group"><label for="overlayOpacity">Opacidad overlay</label><div class="matcap-slider"><input id="overlayOpacity" type="range" min="0" max="100" value="0"><output id="overlayOpacityValue">0.00</output></div></div>
+              <div class="control-group"><label for="overlayScale">Escala overlay</label><div class="matcap-slider"><input id="overlayScale" type="range" min="25" max="500" value="100"><output id="overlayScaleValue">1.00</output></div></div>
+              <div class="control-group"><label for="overlayRotation">Rotación overlay</label><div class="matcap-slider"><input id="overlayRotation" type="range" min="-180" max="180" value="0"><output id="overlayRotationValue">0°</output></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel assistant-panel">
+          <div class="assistant-head">
+            <div><span class="eyebrow blue">ASISTENTE DE MATCAP</span><h2>Describe el resultado que quieres</h2></div><span class="assistant-status" id="assistantStatus">Local gratis</span>
+          </div>
+          <p class="panel-description">El modo local gratuito funciona sin API y sin pagar. Para IA generativa real puedes usar Ollama en tu propio PC o, opcionalmente, OpenAI.</p>
+
+          <div class="assistant-mode-grid">
+            <label class="control-group"><span>Modo</span><select id="assistantMode"><option value="local" selected>Gratis local · sin modelo generativo</option><option value="ollama">Ollama · IA local gratuita</option><option value="openai">OpenAI · API opcional</option></select></label>
+            <label class="control-group" id="ollamaModelWrap" hidden><span>Modelo Ollama</span><select id="ollamaModel"><option value="">Detectar modelos…</option></select></label>
+          </div>
+
+          <label class="control-group"><span>Describe tu MatCap</span><textarea class="ai-textarea" id="aiPrompt" placeholder="Ejemplo: rojo vino agresivo, metal negro, reflejo azul eléctrico, borde fuerte, algo corrosivo y con pequeños arañazos"></textarea></label>
+
+          <div class="assistant-actions">
+            <button class="button primary" id="applyAssistant" type="button">✨ Generar configuración</button>
+            <button class="button secondary" id="checkAssistant" type="button">Comprobar modo</button>
+            <a class="button secondary" id="ollamaHelp" href="https://ollama.com/download/windows" target="_blank" rel="noopener noreferrer" hidden>Instalar Ollama ↗</a>
+          </div>
+
+          <div class="assistant-free-note">
+            <strong>Sin gastar dinero:</strong> el modo <em>Gratis local</em> interpreta colores, materiales y estilos con reglas dentro de ToolHub. Ollama es la opción para usar un modelo de lenguaje real en tu PC sin clave de API; la primera vez tendrás que instalar Ollama y descargar un modelo.
+          </div>
+
+          <label class="privacy-check"><input id="rememberMatcap" type="checkbox" checked><span>Guardar localmente mis preferencias de MatCap en este navegador.</span></label>
+          <div class="memory-box"><div class="memory-box-head"><strong>Memoria local</strong><button class="memory-clear" id="clearMatcapMemory" type="button">Borrar memoria</button></div><p id="matcapMemoryText">Sin preferencias guardadas todavía.</p></div>
+          <div class="ai-result" id="aiResult" aria-live="polite">Puedes utilizar el generador completo sin conectar ninguna IA.</div>
+        </section>
+      </div>
+    </section>
+
+    <section class="tool-switcher" aria-label="Otras herramientas de imagen"><h2>Herramientas de imagen</h2><div class="tool-switcher-grid"><a class="tool-switcher-link" href="conversor.html">🖼️ Conversor</a><a class="tool-switcher-link" href="redimensionar.html">↔️ Redimensionar</a><a class="tool-switcher-link" href="comprimir.html">📦 Comprimir</a><a class="tool-switcher-link" href="gradientes.html">🎨 Gradientes</a><a class="tool-switcher-link active" href="matcap.html">🔮 MatCap</a><a class="tool-switcher-link" href="normal-map.html">🧭 Normal Map</a></div></section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-owner"><a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a><span>Propietario único</span><strong>匚尺丨丂</strong></div>
+    <div class="footer-links" aria-label="Información legal y del sitio"><button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button><button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button><button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button></div>
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.<br>Todos los derechos reservados.</p>
+  </footer>
+
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle"><span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span><h2 id="pdfPrivacyTitle">Antes de continuar</h2><div class="privacy-notice"><p>El generador de MatCap funciona localmente. La textura overlay y los PNG generados no se envían a ToolHub.</p><dl class="privacy-details"><div><dt>Modo local</dt><dd>Los controles, presets y el asistente local sin modelo se ejecutan en el navegador.</dd></div><div><dt>Ollama</dt><dd>Si lo eliges, el texto se procesa con un modelo instalado en tu propio PC mediante el servidor local de ToolHub.</dd></div><div><dt>OpenAI</dt><dd>Solo si eliges ese modo, el texto y los parámetros del MatCap se envían a la API configurada.</dd></div><div><dt>Normativa de referencia</dt><dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd></div></dl></div><label class="privacy-check privacy-check-required"><input id="pdfPrivacyCheck" type="checkbox"><span>He leído y comprendido la información de privacidad.</span></label><div class="privacy-actions privacy-actions-gate"><button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button></div></section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden><section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle"><button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button><span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span><h2 id="infoModalTitle">Información</h2><div class="privacy-notice legal-content" id="infoModalBody"></div><div class="privacy-actions"><button class="button primary" id="infoModalOk" type="button">Entendido</button></div></section></div>
+
+  <script src="tool-common.js"></script>
+  <script src="matcap.js"></script>
+</body>
+</html>

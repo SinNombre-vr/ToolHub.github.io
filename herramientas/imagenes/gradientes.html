@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <meta name="description" content="Crea gradientes lineales o radiales, modifica colores, posiciones y ángulo, copia el CSS y descarga una versión PNG.">
+  <title>Generador de gradientes - ToolHub</title>
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="image-tools.css">
+</head>
+
+<body data-image-tool="gradient">
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#imagenes">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main class="tool-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#herramientas">Herramientas</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#imagenes">Imágenes</a>
+      <span aria-hidden="true">›</span>
+      <span>Generador de gradientes</span>
+    </nav>
+
+    <section class="tool-page-hero">
+      <div>
+        <span class="eyebrow purple">CSS · PNG</span>
+        <h1>Generador de gradientes</h1>
+        <p>Crea gradientes lineales o radiales, modifica colores, posiciones y ángulo, copia el CSS y descarga una versión PNG.</p>
+      </div>
+      <div class="local-processing-badge">🔒 Procesamiento local · No se sube al servidor</div>
+    </section>
+
+    
+    <section class="tool-workspace">
+      <div class="tool-panel accent">
+        <h2>1. Diseña el gradiente</h2>
+        <p class="panel-description">Genera un gradiente CSS y expórtalo como PNG.</p>
+
+        <div class="controls-grid">
+          <div class="control-group">
+            <label for="gradientType">Tipo</label>
+            <select id="gradientType">
+              <option value="linear" selected>Lineal</option>
+              <option value="radial">Radial</option>
+            </select>
+          </div>
+
+          <div class="control-group" id="angleGroup">
+            <label for="gradientAngle">Ángulo</label>
+            <div class="range-row">
+              <input id="gradientAngle" type="range" min="0" max="360" value="135">
+              <span class="range-value" id="angleValue">135°</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="color1">Color 1</label>
+            <div class="color-control">
+              <input id="color1" type="color" value="#3394ff">
+              <span class="color-hex" id="color1Hex">#3394FF</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="position1">Posición color 1 (%)</label>
+            <input id="position1" type="number" min="0" max="100" value="0">
+          </div>
+
+          <div class="control-group">
+            <label for="color2">Color 2</label>
+            <div class="color-control">
+              <input id="color2" type="color" value="#9b68ff">
+              <span class="color-hex" id="color2Hex">#9B68FF</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="position2">Posición color 2 (%)</label>
+            <input id="position2" type="number" min="0" max="100" value="100">
+          </div>
+
+          <div class="control-group">
+            <label for="gradientWidth">Ancho PNG</label>
+            <input id="gradientWidth" type="number" min="1" max="12000" value="1920">
+          </div>
+
+          <div class="control-group">
+            <label for="gradientHeight">Alto PNG</label>
+            <input id="gradientHeight" type="number" min="1" max="12000" value="1080">
+          </div>
+
+          <div class="control-group full">
+            <label for="cssOutput">Código CSS</label>
+            <textarea id="cssOutput" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="tool-actions compact-actions">
+          <button class="button secondary" id="randomBtn" type="button">🎲 Colores aleatorios</button>
+          <button class="button primary" id="copyBtn" type="button">Copiar CSS</button>
+          <button class="button success" id="downloadGradientBtn" type="button">Descargar PNG</button>
+        </div>
+
+        <div class="status-box" id="status" aria-live="polite">Edita los colores y el gradiente se actualizará al instante.</div>
+      </div>
+
+      <div class="tool-panel">
+        <h2>2. Vista previa</h2>
+        <p class="panel-description">El resultado cambia en tiempo real.</p>
+
+        <div class="gradient-preview" id="gradientPreview" role="img" aria-label="Vista previa del gradiente"></div>
+
+        <div class="tool-note">
+          <strong>Uso:</strong> puedes copiar el CSS para una web o descargar el
+          gradiente como imagen PNG en las dimensiones que elijas.
+        </div>
+      </div>
+    </section>
+
+
+    
+    <section class="tool-switcher" aria-label="Otras herramientas de imagen">
+      <h2>Herramientas de imagen</h2>
+      <div class="tool-switcher-grid">
+        <a class="tool-switcher-link " href="conversor.html">🖼️ Conversor</a>
+        <a class="tool-switcher-link " href="redimensionar.html">↔️ Redimensionar</a>
+        <a class="tool-switcher-link " href="comprimir.html">📦 Comprimir</a>
+        <a class="tool-switcher-link active" href="gradientes.html">🎨 Gradientes</a>
+        <a class="tool-switcher-link" href="matcap.html">🔮 MatCap</a><a class="tool-switcher-link" href="normal-map.html">🧭 Normal Map</a>
+      </div>
+    </section>
+
+  </main>
+
+  
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+
+    <p class="copyright">
+      © <span id="currentYear"></span> 匚尺丨丂.<br>
+      Todos los derechos reservados.
+    </p>
+  </footer>
+
+  
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle" aria-describedby="pdfPrivacyDescription">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+
+      <div class="privacy-notice" id="pdfPrivacyDescription">
+        <p>
+          Antes de utilizar esta web debes leer esta información, especialmente si vas a manipular documentos PDF que puedan contener datos personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Tratamiento de PDF</dt>
+            <dd>Las herramientas PDF están diseñadas para procesar los archivos localmente en tu navegador, sin enviarlos ni almacenarlos en servidores de esta web.</dd>
+          </div>
+          <div>
+            <dt>Tratamiento de imágenes</dt>
+            <dd>Las herramientas de imagen de esta versión también procesan los archivos localmente en el navegador.</dd>
+          </div>
+          <div>
+            <dt>Finalidad</dt>
+            <dd>Ejecutar únicamente la operación sobre el archivo que el usuario solicite.</dd>
+          </div>
+          <div>
+            <dt>Normativa de referencia</dt>
+            <dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd>
+          </div>
+          <div>
+            <dt>Recordatorio de aceptación</dt>
+            <dd>La web guarda únicamente en este navegador una marca local que recuerda que este aviso ya fue aceptado.</dd>
+          </div>
+          <div>
+            <dt>Funciones de IA opcionales</dt>
+            <dd>El Generador de MatCap funciona localmente por defecto. El modo gratuito no envía datos y Ollama puede ejecutarse en el propio PC. Solo si seleccionas OpenAI se envían a esa API el texto, la configuración actual y la memoria seleccionada; no se envían imágenes ni archivos.</dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning">
+          Si un archivo contiene datos personales, información confidencial o datos de terceros,
+          asegúrate de tener autorización o una base jurídica válida para utilizarlo.
+        </p>
+      </div>
+
+      <label class="privacy-check privacy-check-required">
+        <input id="pdfPrivacyCheck" type="checkbox">
+        <span>He leído y comprendido la información de privacidad y protección de datos.</span>
+      </label>
+
+      <div class="privacy-actions privacy-actions-gate">
+        <button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle" aria-describedby="infoModalBody">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions">
+        <button class="button primary" id="infoModalOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+
+  <script src="tool-common.js"></script>
+  <script src="image-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+name = "toolhub-assets-api"
+main = "src/index.js"
+compatibility_date = "2026-08-24"
+
+[vars]
+# Sustituye estos valores antes de desplegar el Worker.
+GITHUB_OWNER = "TU_USUARIO_GITHUB"
+GITHUB_REPO = "TU_REPOSITORIO_TOOLHUB"
+GITHUB_BRANCH = "main"
+CATALOG_PATH = "data/assets.json"
+ASSET_CONFIG_PATH = "data/assets-config.json"
+# Puedes separar varios orígenes con comas.
+ALLOWED_ORIGIN = "https://TU_USUARIO_GITHUB.github.io,http://localhost:3000"

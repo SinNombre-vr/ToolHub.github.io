@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Mapa visual de las ventanas principales de Unity y del flujo que conecta objetos, materiales, animaciones y el SDK de VRChat.">
+  <title>Hierarchy, Scene, Inspector, Animation, Animator, Project, SDK y más - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Hierarchy, Scene, Inspector, Animation, Animator, Project, SDK y más</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · INTERFAZ · SDK</span>
+        <h1>Hierarchy, Scene, Inspector, Animation, Animator, Project, SDK y más</h1>
+        <p>Mapa visual de las ventanas principales de Unity y del flujo que conecta objetos, materiales, animaciones y el SDK de VRChat.</p>
+        <div class="hero-tags"><span class="hero-tag">Hierarchy</span><span class="hero-tag">Inspector</span><span class="hero-tag">Project</span><span class="hero-tag">Animator</span><span class="hero-tag">SDK</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Unity</strong><span>2022.3.22f1</span></div><div class="hero-stat"><strong>Enfoque</strong><span>Entender el editor</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#version">Versión</a>
+<a href="#ventanas">Ventanas</a>
+<a href="#animation">Animation / Animator</a>
+<a href="#sdk">SDK</a>
+<a href="#flujo">Flujo mental</a>
+<a href="#organizar">Organizar</a>
+<a href="#problemas">Diagnóstico</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="version">
+  <span class="section-kicker">🧩 Versión</span>
+  <h2>Empieza por la versión correcta de Unity</h2>
+
+  <div class="notice purple">
+    <strong>🟣 VRChat actual:</strong> la versión soportada es <strong>Unity 2022.3.22f1</strong>.
+    La forma más sencilla de crear proyectos correctos es usar VRChat Creator Companion.
+  </div>
+
+  <div class="notice warn">
+    <strong>🟡 No actualices el editor porque Unity Hub diga que existe uno más nuevo:</strong>
+    VRChat advierte que subir contenido desde una versión no soportada puede hacer que no cargue correctamente.
+  </div>
+</section>
+
+<section class="guide-section" id="ventanas">
+  <span class="section-kicker">🪟 Ventanas</span>
+  <h2>Las partes que debes reconocer</h2>
+
+  <div class="term-grid">
+    <div class="term-card"><h3>Hierarchy</h3><p>Lista de GameObjects de la Scene. Aquí ves padres, hijos y la estructura real del avatar.</p></div>
+    <div class="term-card"><h3>Scene</h3><p>Vista de edición 3D. Sirve para mover, rotar, escalar y revisar visualmente objetos.</p></div>
+    <div class="term-card"><h3>Inspector</h3><p>Muestra componentes y propiedades del objeto o asset seleccionado.</p></div>
+    <div class="term-card"><h3>Project</h3><p>Navegador de archivos dentro de Assets/Packages: materiales, texturas, animaciones, prefabs, etc.</p></div>
+    <div class="term-card"><h3>Console</h3><p>Errores, warnings y logs. Cuando el SDK deja de funcionar, empieza aquí.</p></div>
+    <div class="term-card"><h3>Game</h3><p>Vista renderizada por una cámara durante Play Mode. No es lo mismo que Scene View.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="animation">
+  <span class="section-kicker">🎞️ Animation vs Animator</span>
+  <h2>No son la misma ventana</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="icon">🎬</div>
+      <h3>Animation</h3>
+      <p>Edita Animation Clips: curvas, keyframes y propiedades que cambian con el tiempo.</p>
+    </div>
+    <div class="compare-card">
+      <div class="icon">🧠</div>
+      <h3>Animator</h3>
+      <p>Organiza estados, transiciones y parámetros que deciden qué Animation Clip se reproduce.</p>
+    </div>
+    <div class="compare-card">
+      <div class="icon">🎛️</div>
+      <h3>FX Controller</h3>
+      <p>En avatares VRChat suele usarse para toggles, cambios de material, blendshapes y efectos.</p>
+    </div>
+  </div>
+
+  <div class="flow-map">
+    <div class="flow-node">Animation Clip</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Animator State</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Parameter</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Expression Menu</div>
+  </div>
+</section>
+
+<section class="guide-section" id="sdk">
+  <span class="section-kicker">🧰 VRChat SDK</span>
+  <h2>Qué papel tiene el SDK</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Descriptor</h3><p>El avatar necesita un VRC Avatar Descriptor correctamente configurado.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Builder</h3><p>El SDK revisa errores, performance y requisitos antes de Build/Test/Publish.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Platform</h3><p>PC y Android/Quest pueden tener builds y materiales distintos.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Build & Test</h3><p>Prueba antes de publicar; VRChat también ofrece testing para Android en dispositivos compatibles.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="flujo">
+  <span class="section-kicker">🧭 Flujo mental</span>
+  <h2>Cómo orientarte cuando haces una modificación</h2>
+
+  <div class="unity-flow">
+    <div class="flow-node">Project<br><small>encuentro asset</small></div>
+    <div class="flow-node">Hierarchy<br><small>encuentro objeto</small></div>
+    <div class="flow-node">Inspector<br><small>edito componente</small></div>
+    <div class="flow-node">Scene<br><small>veo resultado</small></div>
+    <div class="flow-node">SDK<br><small>valido / pruebo</small></div>
+  </div>
+</section>
+
+<section class="guide-section" id="organizar">
+  <span class="section-kicker">📁 Organización</span>
+  <h2>Una estructura simple evita perder archivos</h2>
+
+  <div class="code-sample">Assets/
+├─ Avatar/
+│  ├─ Materials/
+│  ├─ Textures/
+│  ├─ Animations/
+│  ├─ Controllers/
+│  └─ Prefabs/
+├─ Packages / Tools
+└─ ThirdParty/</div>
+
+  <div class="notice green">
+    <strong>🟢 Consejo:</strong> no muevas carpetas internas de paquetes de terceros si su documentación
+    indica que deben permanecer en una ruta concreta.
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Diagnóstico</span>
+  <h2>Dónde mirar según el problema</h2>
+
+  <table class="data-table">
+    <thead><tr><th>Problema</th><th>Primera ventana</th><th>Qué revisar</th></tr></thead>
+    <tbody>
+      <tr><td>SDK no abre / no deja subir</td><td>Console</td><td>Errores rojos de scripts o paquetes.</td></tr>
+      <tr><td>Objeto no se ve</td><td>Hierarchy + Inspector</td><td>Activo, Renderer, material, escala.</td></tr>
+      <tr><td>Toggle no funciona</td><td>Animator + Animation</td><td>Parámetro, transición, clip y ruta.</td></tr>
+      <tr><td>Material equivocado</td><td>Inspector</td><td>Renderer y Material Slots.</td></tr>
+      <tr><td>Asset perdido</td><td>Project</td><td>Buscar por nombre/tipo y referencias missing.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+
+  <div class="source-grid">
+    <a class="source-card" href="https://creators.vrchat.com/sdk/upgrade/current-unity-version/" target="_blank" rel="noopener noreferrer"><strong>Current Unity Version</strong><p>Versión de Unity soportada actualmente por VRChat.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://creators.vrchat.com/getting-started/" target="_blank" rel="noopener noreferrer"><strong>VRChat Getting Started</strong><p>VCC, proyectos, SDK y flujo inicial.</p><small>VRChat ↗</small></a>
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/UsingTheEditor.html" target="_blank" rel="noopener noreferrer"><strong>Using the Editor</strong><p>Conceptos principales de la interfaz Unity.</p><small>Unity ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

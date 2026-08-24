@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <meta name="description" content="Convierte imágenes entre PNG, JPG y WEBP directamente desde el navegador, con control de calidad para los formatos con compresión.">
+  <title>Conversor de imágenes - ToolHub</title>
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="image-tools.css">
+</head>
+
+<body data-image-tool="converter">
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#imagenes">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main class="tool-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#herramientas">Herramientas</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#imagenes">Imágenes</a>
+      <span aria-hidden="true">›</span>
+      <span>Conversor de imágenes</span>
+    </nav>
+
+    <section class="tool-page-hero">
+      <div>
+        <span class="eyebrow purple">PNG · JPG · WEBP</span>
+        <h1>Conversor de imágenes</h1>
+        <p>Convierte imágenes entre PNG, JPG y WEBP directamente desde el navegador, con control de calidad para los formatos con compresión.</p>
+      </div>
+      <div class="local-processing-badge">🔒 Procesamiento local · No se sube al servidor</div>
+    </section>
+
+    
+    <section class="tool-workspace">
+      <div class="tool-panel accent">
+        <h2>1. Selecciona una imagen</h2>
+        <p class="panel-description">Compatible con PNG, JPG/JPEG y WEBP.</p>
+
+        <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Seleccionar imagen">
+          <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp">
+          <div>
+            <span class="drop-icon">🖼️</span>
+            <strong>Arrastra una imagen aquí</strong>
+            <small>o haz clic para elegir un archivo · PNG / JPG / WEBP</small>
+          </div>
+        </div>
+
+        <div class="file-summary" id="fileSummary" hidden>
+          <strong id="fileName"></strong>
+          <div class="file-meta" id="fileMeta"></div>
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-group">
+            <label for="outputFormat">Formato de salida</label>
+            <select id="outputFormat">
+              <option value="image/png">PNG</option>
+              <option value="image/jpeg">JPG</option>
+              <option value="image/webp" selected>WEBP</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="quality">Calidad</label>
+            <div class="range-row">
+              <input id="quality" type="range" min="10" max="100" value="92">
+              <span class="range-value" id="qualityValue">92%</span>
+            </div>
+          </div>
+
+          <div class="control-group full">
+            <small class="panel-description" id="qualityNote"></small>
+          </div>
+        </div>
+
+        <div class="tool-actions">
+          <button class="button primary" id="convertBtn" type="button" disabled>Convertir imagen</button>
+          <button class="button success" id="downloadBtn" type="button" disabled>Descargar resultado</button>
+        </div>
+
+        <div class="status-box" id="status" aria-live="polite">Selecciona una imagen para empezar.</div>
+      </div>
+
+      <div class="tool-panel">
+        <h2>2. Vista previa</h2>
+        <p class="panel-description">Compara el archivo original con el resultado.</p>
+
+        <div class="preview-shell">
+          <span class="control-label">Original</span>
+          <div class="preview-frame">
+            <div class="preview-placeholder" id="previewPlaceholder">Aquí aparecerá la imagen original.</div>
+            <img id="previewImg" alt="Vista previa de la imagen original" hidden>
+          </div>
+
+          <span class="control-label">Resultado</span>
+          <div class="preview-frame">
+            <div class="preview-placeholder" id="resultPlaceholder">El resultado aparecerá después de convertir.</div>
+            <img id="resultImg" alt="Vista previa de la imagen convertida" hidden>
+          </div>
+        </div>
+
+        <div class="result-stats" id="resultStats" hidden></div>
+
+        <div class="tool-note">
+          <strong>Privacidad:</strong> la conversión utiliza Canvas en tu navegador.
+          La imagen no se envía a ToolHub.
+        </div>
+      </div>
+    </section>
+
+
+    
+    <section class="tool-switcher" aria-label="Otras herramientas de imagen">
+      <h2>Herramientas de imagen</h2>
+      <div class="tool-switcher-grid">
+        <a class="tool-switcher-link active" href="conversor.html">🖼️ Conversor</a>
+        <a class="tool-switcher-link " href="redimensionar.html">↔️ Redimensionar</a>
+        <a class="tool-switcher-link " href="comprimir.html">📦 Comprimir</a>
+        <a class="tool-switcher-link " href="gradientes.html">🎨 Gradientes</a>
+        <a class="tool-switcher-link" href="matcap.html">🔮 MatCap</a><a class="tool-switcher-link" href="normal-map.html">🧭 Normal Map</a>
+      </div>
+    </section>
+
+  </main>
+
+  
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+
+    <p class="copyright">
+      © <span id="currentYear"></span> 匚尺丨丂.<br>
+      Todos los derechos reservados.
+    </p>
+  </footer>
+
+  
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle" aria-describedby="pdfPrivacyDescription">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+
+      <div class="privacy-notice" id="pdfPrivacyDescription">
+        <p>
+          Antes de utilizar esta web debes leer esta información, especialmente si vas a manipular documentos PDF que puedan contener datos personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Tratamiento de PDF</dt>
+            <dd>Las herramientas PDF están diseñadas para procesar los archivos localmente en tu navegador, sin enviarlos ni almacenarlos en servidores de esta web.</dd>
+          </div>
+          <div>
+            <dt>Tratamiento de imágenes</dt>
+            <dd>Las herramientas de imagen de esta versión también procesan los archivos localmente en el navegador.</dd>
+          </div>
+          <div>
+            <dt>Finalidad</dt>
+            <dd>Ejecutar únicamente la operación sobre el archivo que el usuario solicite.</dd>
+          </div>
+          <div>
+            <dt>Normativa de referencia</dt>
+            <dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd>
+          </div>
+          <div>
+            <dt>Recordatorio de aceptación</dt>
+            <dd>La web guarda únicamente en este navegador una marca local que recuerda que este aviso ya fue aceptado.</dd>
+          </div>
+          <div>
+            <dt>Funciones de IA opcionales</dt>
+            <dd>El Generador de MatCap funciona localmente por defecto. El modo gratuito no envía datos y Ollama puede ejecutarse en el propio PC. Solo si seleccionas OpenAI se envían a esa API el texto, la configuración actual y la memoria seleccionada; no se envían imágenes ni archivos.</dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning">
+          Si un archivo contiene datos personales, información confidencial o datos de terceros,
+          asegúrate de tener autorización o una base jurídica válida para utilizarlo.
+        </p>
+      </div>
+
+      <label class="privacy-check privacy-check-required">
+        <input id="pdfPrivacyCheck" type="checkbox">
+        <span>He leído y comprendido la información de privacidad y protección de datos.</span>
+      </label>
+
+      <div class="privacy-actions privacy-actions-gate">
+        <button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle" aria-describedby="infoModalBody">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions">
+        <button class="button primary" id="infoModalOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+
+  <script src="tool-common.js"></script>
+  <script src="image-tools.js"></script>
+</body>
+</html>

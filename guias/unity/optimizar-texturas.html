@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Cómo reducir memoria y tamaño de las texturas sin destruir la calidad visual de un avatar.">
+  <title>Optimizar texturas - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Optimizar texturas</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · OPTIMIZACIÓN</span>
+        <h1>Optimizar texturas</h1>
+        <p>Cómo reducir memoria y tamaño de las texturas sin destruir la calidad visual de un avatar.</p>
+        <div class="hero-tags"><span class="hero-tag">Resolución</span><span class="hero-tag">Compresión</span><span class="hero-tag">Atlas</span><span class="hero-tag">Masks</span><span class="hero-tag">PC / Quest</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Objetivo</strong><span>Menos memoria</span></div><div class="hero-stat"><strong>Método</strong><span>Medir → ajustar</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Resumen</a>
+<a href="#resolucion">Resolución</a>
+<a href="#importacion">Import Settings</a>
+<a href="#atlas">Atlas / Packing</a>
+<a href="#pcquest">PC vs Mobile</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">⚡ Resumen rápido</span>
+  <h2>Una textura grande no siempre se ve mejor</h2>
+  <p class="section-intro">
+    La resolución, el formato, la compresión, el canal alfa y la cantidad de texturas
+    influyen directamente en memoria, tamaño del avatar y tiempo de carga.
+  </p>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="icon">🖼️</div>
+      <strong>Resolución</strong>
+      <p>Usa la resolución más baja que conserve el detalle visible a la distancia real del avatar.</p>
+    </div>
+    <div class="summary-card">
+      <div class="icon">🧠</div>
+      <strong>Memoria</strong>
+      <p>Una textura comprimida para descarga puede seguir ocupando bastante memoria cuando está cargada.</p>
+    </div>
+    <div class="summary-card">
+      <div class="icon">📦</div>
+      <strong>Menos archivos</strong>
+      <p>Atlases y máscaras empaquetadas reducen duplicados y ayudan a controlar materiales y slots.</p>
+    </div>
+  </div>
+
+  <div class="notice green">
+    <strong>🟢 Objetivo práctico:</strong> optimiza primero las texturas que más memoria consumen.
+    Bajar una 4K innecesaria a 2K suele aportar mucho más que tocar diez texturas pequeñas.
+  </div>
+</section>
+
+<section class="guide-section" id="resolucion">
+  <span class="section-kicker">🔍 Resolución</span>
+  <h2>4K, 2K, 1K y 512: cuándo usar cada una</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr><th>Tamaño</th><th>Uso típico</th><th>Consejo</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>4096</td><td>Detalles muy cercanos o atlas grandes</td><td>No la uses por costumbre. Comprueba si 2K se ve igual en VR.</td></tr>
+      <tr><td>2048</td><td>Cuerpo, ropa principal, cabello detallado</td><td>Buen punto de partida para PC si el detalle realmente lo necesita.</td></tr>
+      <tr><td>1024</td><td>Accesorios, máscaras, texturas secundarias</td><td>Muy útil para Quest/Android y assets menos visibles.</td></tr>
+      <tr><td>512 o menos</td><td>Máscaras simples, LUT, detalles pequeños</td><td>Perfecto cuando la información de la textura es sencilla.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice warn">
+    <strong>🟡 Android / Quest:</strong> VRChat recomienda mantener las texturas pequeñas y
+    apunta a 1K como máximo práctico en muchos casos. En móvil el presupuesto de memoria es mucho más estricto.
+  </div>
+</section>
+
+<section class="guide-section" id="importacion">
+  <span class="section-kicker">⚙️ Unity Import Settings</span>
+  <h2>Qué revisar al seleccionar una textura</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div><h3>Max Size</h3><p>Limita la resolución que Unity importa. El archivo original puede seguir siendo 4K, pero Unity puede trabajar con una versión 2K o 1K.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div><h3>Texture Type</h3><p>Marca Normal Map cuando corresponda. Unity trata los normales de forma distinta a una imagen de color.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div><h3>Alpha</h3><p>Si no necesitas transparencia, evita almacenar un canal alfa inútil. Puede aumentar coste y forzar formatos menos eficientes.</p></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div><h3>Compression</h3><p>Busca equilibrio entre artefactos visibles y memoria/tamaño. Comprueba el resultado en el avatar, no solo en el archivo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="guide-section" id="atlas">
+  <span class="section-kicker">🧩 Atlas y packing</span>
+  <h2>Combinar información sin perder control</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="icon">🗺️</div>
+      <h3>Texture Atlas</h3>
+      <p>Combina varias zonas en una sola textura para compartir un material y reducir material slots.</p>
+    </div>
+    <div class="compare-card">
+      <div class="icon">🎚️</div>
+      <h3>Channel Packing</h3>
+      <p>Una sola máscara RGBA puede guardar hasta cuatro señales distintas si el shader permite leer canales separados.</p>
+    </div>
+    <div class="compare-card">
+      <div class="icon">♻️</div>
+      <h3>Reutilización</h3>
+      <p>No dupliques una misma textura solo porque dos materiales la usan. Referenciar el mismo asset es más limpio.</p>
+    </div>
+  </div>
+
+  <div class="flow-map">
+    <div class="flow-node">R = Metallic</div><span class="flow-arrow">+</span>
+    <div class="flow-node">G = Smoothness</div><span class="flow-arrow">+</span>
+    <div class="flow-node">B = Emission Mask</div><span class="flow-arrow">+</span>
+    <div class="flow-node">A = Detail Mask</div>
+  </div>
+</section>
+
+<section class="guide-section" id="pcquest">
+  <span class="section-kicker">🖥️ PC vs 📱 Mobile</span>
+  <h2>No uses el mismo presupuesto para ambas plataformas</h2>
+
+  <table class="data-table">
+    <thead><tr><th>Referencia VRChat</th><th>PC Good</th><th>Mobile Good</th></tr></thead>
+    <tbody>
+      <tr><td>Texture Memory</td><td>75 MB</td><td>18 MB</td></tr>
+      <tr><td>Material Slots</td><td>8</td><td>1</td></tr>
+      <tr><td>Triangles</td><td>70.000</td><td>10.000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice blue">
+    <strong>🔵 Importante:</strong> esos valores son parte del sistema de Performance Rank,
+    no una invitación a llegar siempre al límite. Cuanto más margen dejes, mejor.
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Problemas frecuentes</span>
+  <h2>Errores típicos al “optimizar”</h2>
+
+  <div class="accordion-list">
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false"><span>La textura se ve borrosa después de bajarla</span><span>+</span></button>
+      <div class="accordion-panel">Sube solo esa textura un nivel o reorganiza el atlas para dedicar más píxeles a la zona importante. No vuelvas todo el avatar a 4K.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false"><span>Crunch redujo el archivo pero la memoria sigue alta</span><span>+</span></button>
+      <div class="accordion-panel">Crunch ayuda principalmente al tamaño comprimido/descarga. VRChat advierte que no reduce el tamaño en memoria de la misma forma.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false"><span>El Normal Map se ve extraño</span><span>+</span></button>
+      <div class="accordion-panel">Comprueba Texture Type = Normal Map, la intensidad del shader y que no estés usando una imagen normal como si fuera una textura de color.</div>
+    </div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+
+  <div class="source-grid">
+    <a class="source-card" href="https://creators.vrchat.com/avatars/avatar-performance-ranking-system/" target="_blank" rel="noopener noreferrer">
+      <strong>VRChat Performance Ranks</strong>
+      <p>Límites y métricas de rendimiento de avatares para PC y móvil.</p>
+      <small>VRChat ↗</small>
+    </a>
+    <a class="source-card" href="https://creators.vrchat.com/platforms/android/quest-content-optimization/" target="_blank" rel="noopener noreferrer">
+      <strong>Android Content Optimization</strong>
+      <p>Recomendaciones de VRChat para texturas, materiales y contenido móvil.</p>
+      <small>VRChat ↗</small>
+    </a>
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/class-TextureImporter.html" target="_blank" rel="noopener noreferrer">
+      <strong>Texture Importer</strong>
+      <p>Documentación de Unity sobre importación y configuración de texturas.</p>
+      <small>Unity ↗</small>
+    </a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

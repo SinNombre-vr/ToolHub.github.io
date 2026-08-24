@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <meta name="description" content="Añade texto, tapa visualmente zonas o rota páginas desde una vista previa del documento.">
+  <title>Editar PDF - ToolHub</title>
+
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../imagenes/image-tools.css">
+  <link rel="stylesheet" href="pdf-tools.css">
+</head>
+
+<body class="pdf-page" data-pdf-tool="edit">
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#pdf">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main class="tool-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#herramientas">Herramientas</a>
+      <span aria-hidden="true">›</span>
+      <a href="../../index.html#pdf">PDF</a>
+      <span aria-hidden="true">›</span>
+      <span>Editar PDF</span>
+    </nav>
+
+    <section class="tool-page-hero">
+      <div>
+        <span class="eyebrow purple">PDF · EDITAR</span>
+        <h1>Editar PDF</h1>
+        <p>Añade texto, tapa visualmente zonas o rota páginas desde una vista previa del documento.</p>
+        
+      </div>
+      <div>
+        <div class="local-processing-badge">🔒 PDF procesado localmente</div>
+        <div class="protected-pdf-note">
+          <strong>Modo de compatibilidad:</strong> si un PDF tiene restricciones internas, ToolHub reconstruirá automáticamente una copia procesable en el navegador. En ese caso la copia puede perder texto seleccionable porque las páginas se regeneran visualmente. Los PDF con contraseña siguen necesitando desbloqueo previo.
+        </div>
+
+        <div class="protected-pdf-note compatibility-quality-note">
+          <strong>Calidad del modo compatible:</strong> si el PDF tiene restricciones internas,
+          ToolHub reconstruirá sus páginas a alta resolución para priorizar la legibilidad.
+          En ese caso el PDF puede pesar más y el contenido original quedará rasterizado.
+        </div>
+      </div>
+    </section>
+
+    
+    
+    <section class="tool-workspace">
+      <div class="tool-panel accent">
+        <h2>1. Edita el PDF</h2>
+
+        <div class="drop-zone pdf-drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Seleccionar PDF">
+          <input id="fileInput" type="file" accept="application/pdf,.pdf">
+          <div>
+            <span class="drop-icon">✏️</span>
+            <strong>Selecciona un PDF</strong>
+            <small>Después podrás añadir varios cambios antes de descargar</small>
+          </div>
+        </div>
+
+        <div class="file-summary" id="fileSummary" hidden>
+          <strong id="fileName"></strong>
+          <div class="file-meta" id="fileMeta"></div>
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-group">
+            <label for="pageNumber">Página</label>
+            <input id="pageNumber" type="number" min="1" value="1">
+          </div>
+
+          <div class="control-group">
+            <label for="editType">Qué quieres hacer</label>
+            <select id="editType">
+              <option value="text">Añadir texto</option>
+              <option value="cover">Tapar una zona</option>
+              <option value="rotate">Rotar página</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="textControls" class="controls-grid">
+          <div class="control-group full">
+            <label for="editText">Texto</label>
+            <textarea id="editText" class="edit-textarea" maxlength="1200" placeholder="Puedes escribir varias palabras e incluso varias líneas."></textarea>
+          </div>
+
+          <div class="control-group">
+            <label for="fontSize">Tamaño</label>
+            <input id="fontSize" type="number" min="6" max="96" value="18">
+          </div>
+
+          <div class="control-group">
+            <label for="textColor">Color</label>
+            <input id="textColor" type="color" value="#111111">
+          </div>
+        </div>
+
+        <div id="coverControls" class="hidden-control">
+          <div class="control-group">
+            <label for="coverColor">Color para tapar</label>
+            <input id="coverColor" type="color" value="#ffffff">
+          </div>
+
+          <div class="pdf-editor-hint">
+            <strong>Cómo tapar:</strong> arrastra directamente sobre la vista previa de la página.
+            El rectángulo que dibujes será exactamente la zona que se cubrirá.
+          </div>
+        </div>
+
+        <div id="rotationControls" class="controls-grid hidden-control">
+          <div class="control-group full">
+            <label for="rotation">Rotación</label>
+            <select id="rotation">
+              <option value="90">90°</option>
+              <option value="180">180°</option>
+              <option value="270">270°</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pdf-position-readout" id="pointReadout">
+          Haz clic sobre la página para elegir una posición.
+        </div>
+
+        <div class="editor-toolbar-row">
+          <button class="button secondary" id="addOperation" type="button" disabled>Añadir cambio</button>
+          <button class="button secondary" id="cancelEdit" type="button" hidden>Cancelar edición</button>
+          <button class="button secondary" id="clearOperations" type="button" disabled>Limpiar cambios</button>
+          <button class="button primary" id="applyEdits" type="button" disabled>Aplicar y descargar</button>
+        </div>
+
+        <div class="pdf-operation-list" id="operationList"></div>
+        <div class="status-box" id="status" aria-live="polite">Selecciona un PDF para empezar.</div>
+      </div>
+
+      <div class="tool-panel pdf-preview-panel">
+        <h2>2. Vista previa</h2>
+        <p class="panel-description">
+          Los cambios pendientes se dibujan sobre esta vista para que sepas exactamente qué vas a aplicar.
+        </p>
+
+        <div class="pdf-canvas-wrap editor-preview-wrap">
+          <canvas id="pdfCanvas" width="560" height="760"></canvas>
+        </div>
+
+        <div class="pdf-warning">
+          <strong>Alcance:</strong> ToolHub añade contenido sobre el PDF.
+          Puede añadir texto, cubrir visualmente zonas y rotar páginas.
+          No reescribe el texto interno original como un editor profesional de escritorio.
+        </div>
+      </div>
+    </section>
+
+    <section class="tool-switcher" aria-label="Otras herramientas PDF">
+      <h2>Herramientas PDF</h2>
+      <div class="pdf-switcher-grid">
+        <a class="tool-switcher-link" href="dividir.html">✂️ Dividir</a><a class="tool-switcher-link" href="unir.html">🔗 Unir</a><a class="tool-switcher-link" href="optimizar.html">📦 Optimizar</a><a class="tool-switcher-link" href="pdf-a-word.html">📝 PDF a Word</a><a class="tool-switcher-link active" href="editar.html">✏️ Editar</a><a class="tool-switcher-link" href="firmar.html">✍️ Firmar</a><a class="tool-switcher-link" href="marca-agua.html">💧 Marca de agua</a>
+      </div>
+    </section>
+
+  </main>
+
+  
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+
+    <p class="copyright">
+      © <span id="currentYear"></span> 匚尺丨丂.<br>
+      Todos los derechos reservados.
+    </p>
+  </footer>
+
+  
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle" aria-describedby="pdfPrivacyDescription">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+
+      <div class="privacy-notice" id="pdfPrivacyDescription">
+        <p>
+          Antes de utilizar esta web debes leer esta información, especialmente si vas
+          a manipular documentos PDF que puedan contener datos personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Tratamiento de PDF</dt>
+            <dd>Las herramientas PDF de ToolHub procesan el contenido localmente en tu navegador. Los PDF no se envían ni se almacenan en servidores de ToolHub.</dd>
+          </div>
+          <div>
+            <dt>Librerías técnicas</dt>
+            <dd>La versión web carga librerías JavaScript desde jsDelivr para procesar PDF. Esas librerías se descargan al navegador; ToolHub no les envía tus documentos.</dd>
+          </div>
+          <div>
+            <dt>Finalidad</dt>
+            <dd>Ejecutar únicamente la operación sobre el archivo que el usuario solicite.</dd>
+          </div>
+          <div>
+            <dt>Normativa de referencia</dt>
+            <dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd>
+          </div>
+          <div>
+            <dt>Recordatorio de aceptación</dt>
+            <dd>La web guarda en este navegador una marca local para recordar que este aviso ya fue aceptado.</dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning">
+          Si un PDF contiene datos personales, información confidencial o datos de terceros,
+          asegúrate de tener autorización o una base jurídica válida para utilizarlo.
+        </p>
+      </div>
+
+      <label class="privacy-check privacy-check-required">
+        <input id="pdfPrivacyCheck" type="checkbox">
+        <span>He leído y comprendido la información de privacidad y protección de datos.</span>
+      </label>
+
+      <div class="privacy-actions privacy-actions-gate">
+        <button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle" aria-describedby="infoModalBody">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions">
+        <button class="button primary" id="infoModalOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="../imagenes/tool-common.js"></script>
+  <script src="pdf-tools.js"></script>
+</body>
+</html>

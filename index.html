@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Web de herramientas, guías y soluciones para PC, VR, Unity, VRChat, Discord e imágenes.">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <title>ToolHub - Herramientas y Guías</title>
+  <script>
+    // Evita que un usuario nuevo pueda interactuar con la web antes de que cargue script.js.
+    // La preferencia se guarda únicamente en este navegador/perfil mediante localStorage.
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="herramientas/generales/calculadora.css">
+  <link rel="stylesheet" href="herramientas/discord/discord-tools.css">
+  <link rel="stylesheet" href="herramientas/vrchat/vrchat.css">
+  <link rel="stylesheet" href="herramientas/unity/unity.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">
+      ☰
+    </button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link active" href="#inicio">Inicio</a>
+      <a class="nav-link" href="#herramientas">Herramientas</a>
+      <a class="nav-link" href="#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <label class="search-box" for="siteSearch">
+        <span aria-hidden="true">⌕</span>
+        <input id="siteSearch" type="search" placeholder="Buscar..." autocomplete="off">
+      </label>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section" id="inicio">
+      <div class="hero-content">
+        <span class="eyebrow">MULTIHERRAMIENTA · GUÍAS · SOLUCIONES</span>
+        <h1>Todo lo que necesitas en un solo lugar.</h1>
+        <p>
+          Herramientas rápidas y guías prácticas para imágenes, PDF, PC, VR, Unity,
+          VRChat y Discord.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button primary" href="#herramientas">Ver herramientas</a>
+          <a class="button secondary" href="#guias">Explorar guías</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hero-stat">
+          <strong>8+</strong>
+          <span>Categorías de herramientas</span>
+        </div>
+        <div class="hero-stat">
+          <strong>4</strong>
+          <span>Áreas principales de guías</span>
+        </div>
+        <div class="hero-stat">
+          <strong>100%</strong>
+          <span>Diseño preparado para crecer</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-access section">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">ACCESO RÁPIDO</span>
+          <h2>Empieza por aquí</h2>
+        </div>
+      </div>
+
+      <div class="quick-grid">
+        <a class="quick-card" href="#imagenes">
+          <span class="card-icon">🖼️</span>
+          <div>
+            <h3>Imágenes</h3>
+            <p>Convertir, redimensionar y comprimir.</p>
+          </div>
+        </a>
+
+        <a class="quick-card" href="#pdf">
+          <span class="card-icon">📄</span>
+          <div>
+            <h3>PDF</h3>
+            <p>Dividir, unir y optimizar.</p>
+          </div>
+        </a>
+
+        <a class="quick-card" href="#guia-pc">
+          <span class="card-icon">🖥️</span>
+          <div>
+            <h3>Guías PC</h3>
+            <p>Windows, BIOS y drivers.</p>
+          </div>
+        </a>
+
+        <a class="quick-card" href="#guia-unity">
+          <span class="card-icon">🎮</span>
+          <div>
+            <h3>Guías Unity</h3>
+            <p>Texturas, Poiyomi y materiales.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" id="herramientas">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow purple">HERRAMIENTAS</span>
+          <h2>Todas las herramientas</h2>
+          <p>Organizadas por categorías para encontrar lo que necesitas rápidamente.</p>
+        </div>
+      </div>
+
+      <div class="cards-grid searchable-area">
+        <article class="category-card" id="imagenes" data-search="imagenes conversor png jpg webp redimensionar comprimir gradientes matcap normal map height profundidad relieve unity vrchat shader">
+          <div class="category-title">
+            <span class="card-icon">🖼️</span>
+            <h3>Imágenes</h3>
+          </div>
+          <ul>
+            <li><a class="tool-page-link" href="herramientas/imagenes/conversor.html">Conversor PNG / JPG / WEBP</a></li>
+            <li><a class="tool-page-link" href="herramientas/imagenes/redimensionar.html">Redimensionar imágenes</a></li>
+            <li><a class="tool-page-link" href="herramientas/imagenes/comprimir.html">Comprimir imágenes</a></li>
+            <li><a class="tool-page-link" href="herramientas/imagenes/gradientes.html">Generador de gradientes</a></li>
+            <li><a class="tool-page-link" href="herramientas/imagenes/matcap.html">Generador de MatCap</a></li>
+            <li><a class="tool-page-link" href="herramientas/imagenes/normal-map.html">Generador de Normal Map</a></li>
+          </ul>
+        </article>
+
+        <article class="category-card" id="pdf" data-search="pdf dividir unir optimizar word editar firma firmar marca agua documentos">
+          <div class="category-title">
+            <span class="card-icon">📄</span>
+            <h3>PDF</h3>
+          </div>
+          <ul>
+            <li><a class="tool-page-link" href="herramientas/pdf/dividir.html">Dividir PDF</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/unir.html">Unir PDF</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/optimizar.html">Optimizar PDF</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/pdf-a-word.html">PDF a Word</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/editar.html">Editar PDF</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/firmar.html">Firmar PDF</a></li>
+            <li><a class="tool-page-link" href="herramientas/pdf/marca-agua.html">Marca de agua</a></li>
+          </ul>
+        </article>
+
+        <article class="category-card" id="generales" data-search="generales calculadora calculadora cientifica matematicas utilidad">
+          <div class="category-title">
+            <span class="card-icon">🧮</span>
+            <h3>Generales</h3>
+          </div>
+          <ul>
+            <li><button class="tool-page-link general-popup-link" type="button" id="openCalculator">Calculadora</button></li>
+          </ul>
+        </article>
+
+        <article class="category-card" data-search="discord herramientas server servidor bots bot top gg consejos roles permisos comunidad moderacion">
+          <div class="category-title">
+            <span class="card-icon">💬</span>
+            <h3>Discord</h3>
+          </div>
+          <ul>
+            <li>
+              <button class="tool-page-link discord-info-link" type="button" id="openDiscordInfo">
+                Herramientas para Discord
+              </button>
+            </li>
+            <li>
+              <a
+                class="tool-page-link external-tool-link"
+                href="https://top.gg/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Abrir Top.gg en una pestaña nueva"
+              >
+                Bots para Discord <span class="external-link-mark" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <button class="tool-page-link discord-popup-tool" type="button" data-discord-tool="embed">
+                Constructor de Embeds
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link discord-popup-tool" type="button" data-discord-tool="structure">
+                Generador de estructura de servidor
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link discord-popup-tool" type="button" data-discord-tool="roles">
+                Generador de roles y permisos
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link discord-popup-tool" type="button" data-discord-tool="security">
+                Checklist de seguridad para Discord
+              </button>
+            </li>
+          </ul>
+        </article>
+
+        <article class="category-card" data-search="vrchat vr chat avatar herramientas vrcx magicchatbox ovr advanced settings virtual desktop steam osc">
+          <div class="category-title">
+            <span class="card-icon">🥽</span>
+            <h3>VRChat</h3>
+          </div>
+          <ul>
+            <li>
+              <button class="tool-page-link vrchat-popup-link" type="button" id="openVrchatInfo">
+                Herramientas para VRChat
+              </button>
+            </li>
+            <li>
+              <a class="tool-page-link external-tool-link" href="https://vrchat.com/home/login" target="_blank" rel="noopener noreferrer">
+                Oficial VRChat <span class="external-link-mark" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="tool-page-link external-tool-link" href="https://github.com/vrcx-team/VRCX/releases" target="_blank" rel="noopener noreferrer">
+                VRCX <span class="external-link-mark" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <a class="tool-page-link external-tool-link" href="https://github.com/BoiHanny/vrcosc-magicchatbox/releases" target="_blank" rel="noopener noreferrer">
+                MagicChatbox <span class="external-link-mark" aria-hidden="true">↗</span>
+              </a>
+            </li>
+            <li>
+              <button class="tool-page-link vrchat-popup-link" type="button" data-vrchat-guide="ovr">
+                OVR Advanced Settings
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link vrchat-popup-link" type="button" data-vrchat-guide="virtual-desktop">
+                Virtual Desktop
+              </button>
+            </li>
+          </ul>
+        </article>
+
+        <article class="category-card" data-search="unity herramientas shader generador shader studio material avatar assets poiyomi liltoon vrcfury modular dressing">
+          <div class="category-title">
+            <span class="card-icon">🎮</span>
+            <h3>Unity</h3>
+          </div>
+          <ul>
+            <li>
+              <button class="tool-page-link unity-popup-link" type="button" id="openUnityInfo">
+                Herramientas para Unity
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link unity-popup-link" type="button" data-unity-popup="webs">
+                Webs de avatares y assets
+              </button>
+            </li>
+            <li>
+              <button class="tool-page-link unity-popup-link" type="button" data-unity-popup="tools">
+                Herramientas
+              </button>
+            </li>
+                      <li>
+              <a class="tool-page-link" href="herramientas/unity/shader-generator.html">
+                Generador de Shaders
+              </a>
+            </li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section guides-section" id="guias">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow green">GUÍAS</span>
+          <h2>Guías y tutoriales</h2>
+          <p>Contenido organizado por tema, pensado para explicar cada proceso paso a paso.</p>
+        </div>
+      </div>
+
+      <div class="guides-grid searchable-area">
+        
+
+        <article class="guide-card vr-guide-home-card" data-search="vr conectividad pcvr cable air link steam link virtual desktop steamvr fbt slimevr htc vive trackers full body tracking realidad virtual">
+          <div class="guide-head">
+            <span class="card-icon">🥽</span>
+            <div>
+              <span class="guide-label">GUÍA VISUAL</span>
+              <h3>VR</h3>
+            </div>
+          </div>
+          <div class="vr-home-guides">
+            <a class="guide-entry-rich" href="guias/vr/conectividad.html">
+              <span class="guide-entry-icon">📡</span>
+              <span>
+                <strong>Conectividad y PCVR</strong>
+                <small>Cable, Air Link, Steam Link, Virtual Desktop y cómo elegir.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+            <a class="guide-entry-rich" href="guias/vr/steamvr.html">
+              <span class="guide-entry-icon">⚙️</span>
+              <span>
+                <strong>SteamVR</strong>
+                <small>Configuración, dispositivos, rendimiento, playspace y problemas.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+            <a class="guide-entry-rich" href="guias/vr/fbt.html">
+              <span class="guide-entry-icon">🦵</span>
+              <span>
+                <strong>Full Body Tracking</strong>
+                <small>SlimeVR, VIVE/HTC, colocación, calibración y sistemas híbridos.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="guide-card unity-guide-home-card" id="guia-unity"
+          data-search="unity optimizar texturas poiyomi liltoon materiales matcap mask normal map luces shaders hierarchy scene inspector animation animator project sdk">
+          <div class="guide-head">
+            <span class="card-icon">🎮</span>
+            <div>
+              <span class="guide-label">GUÍA VISUAL</span>
+              <h3>Unity</h3>
+            </div>
+          </div>
+
+          <div class="unity-home-guides">
+            <a class="guide-entry-rich" href="guias/unity/optimizar-texturas.html">
+              <span class="guide-entry-icon">🖼️</span>
+              <span>
+                <strong>Optimizar texturas</strong>
+                <small>Resolución, compresión, memoria, atlas y PC/Quest.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/poiyomi.html">
+              <span class="guide-entry-icon">🎨</span>
+              <span>
+                <strong>Poiyomi</strong>
+                <small>Materiales, módulos, animación, optimización y Quest.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/liltoon.html">
+              <span class="guide-entry-icon">🌸</span>
+              <span>
+                <strong>lilToon</strong>
+                <small>Presets, normals, MatCap, emission, custom shaders y rendimiento.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/materiales.html">
+              <span class="guide-entry-icon">🧱</span>
+              <span>
+                <strong>Materiales</strong>
+                <small>Shader vs material, slots, atlas y modos de render.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/texturas.html">
+              <span class="guide-entry-icon">🗺️</span>
+              <span>
+                <strong>MatCap, Masks, Normal Maps y más</strong>
+                <small>Tipos de mapas, UV, channel packing y usos reales.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/reducir-luces.html">
+              <span class="guide-entry-icon">💡</span>
+              <span>
+                <strong>Reducir luces</strong>
+                <small>Lights de avatar, Performance Rank y alternativas visuales.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/shaders.html">
+              <span class="guide-entry-icon">🧪</span>
+              <span>
+                <strong>Shaders: crearlos y usarlos</strong>
+                <small>HLSL, materiales, shaders animados, rendimiento y Shader Studio.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+
+            <a class="guide-entry-rich" href="guias/unity/interfaz-unity.html">
+              <span class="guide-entry-icon">🧭</span>
+              <span>
+                <strong>Interfaz de Unity y SDK</strong>
+                <small>Hierarchy, Scene, Inspector, Animation, Animator, Project, SDK y más.</small>
+              </span>
+              <span class="guide-entry-arrow">›</span>
+            </a>
+          </div>
+        </article>
+
+        
+      </div>
+
+      <p class="no-results" id="noResults" hidden>
+        No encontramos ninguna herramienta o guía con esa búsqueda.
+      </p>
+    </section>
+  </main>
+
+  
+    <section class="asset-library-home" id="asset-library">
+      <div class="section-heading asset-library-heading">
+        <span class="eyebrow green">UNITY · VRCHAT · ASSETS</span>
+        <h2>Biblioteca de Assets VRChat</h2>
+        <p>
+          Organiza referencias de avatares, ropa, texturas, shaders, prefabs y recursos
+          de Unity desde un único catálogo visual.
+        </p>
+      </div>
+
+      <a class="asset-library-home-card" href="biblioteca-assets.html">
+        <div class="asset-library-home-icon">📦</div>
+        <div class="asset-library-home-copy">
+          <span class="asset-library-home-kicker">CATÁLOGO PERSONAL</span>
+          <h3>Almacén de Assets para Unity y VRChat</h3>
+          <p>
+            Crea fichas con preview, enlaces, categorías y tags. Busca, filtra y administra
+            tu biblioteca sin mezclarla con las herramientas principales.
+          </p>
+          <div class="asset-library-home-tags" aria-label="Funciones disponibles">
+            <span>Crear</span>
+            <span>Buscar</span>
+            <span>Filtrar</span>
+            <span>Tags</span>
+            <span>Administrador</span>
+          </div>
+        </div>
+        <span class="asset-library-home-arrow" aria-hidden="true">→</span>
+      </a>
+    </section>
+
+
+    <footer class="footer">
+    <div class="footer-owner">
+      <a href="#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+
+    <p class="copyright">
+      © <span id="currentYear"></span> 匚尺丨丂.<br>
+      Todos los derechos reservados.
+    </p>
+  </footer>
+
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle" aria-describedby="pdfPrivacyDescription">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+
+      <div class="privacy-notice" id="pdfPrivacyDescription">
+        <p>
+          Antes de utilizar esta web debes leer esta información, especialmente si vas a manipular documentos PDF que puedan contener datos personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Tratamiento de PDF</dt>
+            <dd>Las herramientas PDF están diseñadas para procesar los archivos localmente en tu navegador, sin enviarlos ni almacenarlos en servidores de esta web.</dd>
+          </div>
+          <div>
+            <dt>Finalidad</dt>
+            <dd>Ejecutar únicamente la operación sobre el documento que el usuario solicite.</dd>
+          </div>
+          <div>
+            <dt>Normativa de referencia</dt>
+            <dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd>
+          </div>
+          <div>
+            <dt>Recordatorio de aceptación</dt>
+            <dd>La web guarda únicamente en este navegador una marca local que recuerda que este aviso ya fue aceptado, para no volver a mostrarlo en visitas posteriores.</dd>
+          </div>
+          <div>
+            <dt>Funciones de IA opcionales</dt>
+            <dd>El Generador de MatCap funciona localmente por defecto. El asistente gratuito sin modelo no envía datos; Ollama puede procesar el texto en tu propio PC. Solo si eliges OpenAI se envían a esa API el texto, la configuración actual y la memoria de preferencias seleccionada. No se envían imágenes ni archivos mediante esa función.</dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning">
+          Si un PDF contiene datos personales, información confidencial o datos de terceros, asegúrate de tener autorización o una base jurídica válida para utilizarlo. No proceses más información de la necesaria.
+        </p>
+      </div>
+
+      <label class="privacy-check privacy-check-required">
+        <input id="pdfPrivacyCheck" type="checkbox">
+        <span>He leído y comprendido la información de privacidad y protección de datos.</span>
+      </label>
+
+      <div class="privacy-actions privacy-actions-gate">
+        <button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle" aria-describedby="infoModalBody">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions">
+        <button class="button primary" id="infoModalOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+
+
+  
+  
+  
+  
+
+
+  <!-- ToolHub v16 · Unity -->
+  <div class="modal-backdrop" id="unityInfoBackdrop" hidden>
+    <section class="modal privacy-modal unity-modal" role="dialog" aria-modal="true" aria-labelledby="unityInfoTitle">
+      <button class="modal-close" id="unityInfoClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow purple">INFORMACIÓN SOBRE UNITY</span>
+      <h2 id="unityInfoTitle">Antes de utilizar estas herramientas</h2>
+
+      <div class="privacy-notice">
+        <p>
+          Las herramientas, shaders, paquetes, configuraciones, programas, assets y guías
+          relacionadas con Unity y VRChat que aparecen en ToolHub se ofrecen con carácter
+          informativo y están basadas en experiencia propia, opinión y criterios personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Software y paquetes de terceros</dt>
+            <dd>Cada herramienta pertenece a sus respectivos autores o desarrolladores. ToolHub no controla sus actualizaciones, permisos, licencias, compatibilidad, políticas ni disponibilidad futura.</dd>
+          </div>
+          <div>
+            <dt>Copias de seguridad</dt>
+            <dd>Antes de importar paquetes, actualizar shaders, cambiar la versión de Unity o modificar un avatar/proyecto importante, crea una copia de seguridad.</dd>
+          </div>
+          <div>
+            <dt>Uso bajo tu criterio</dt>
+            <dd>El usuario decide qué instala y qué cambios aplica. ToolHub no garantiza un resultado concreto ni asume daños o pérdidas derivados de incompatibilidades, configuraciones incorrectas, conflictos entre paquetes o cambios de terceros.</dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning">
+          Revisa siempre la licencia y la fuente oficial del asset o paquete antes de importarlo,
+          redistribuirlo o utilizarlo en un proyecto público o comercial.
+        </p>
+      </div>
+
+      <div class="privacy-actions">
+        <button class="button primary" id="unityInfoOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="unityWebsBackdrop" hidden>
+    <section class="modal privacy-modal unity-modal" role="dialog" aria-modal="true" aria-labelledby="unityWebsTitle">
+      <button class="modal-close" type="button" data-unity-close="webs" aria-label="Cerrar">×</button>
+
+      <span class="eyebrow purple">UNITY · ASSETS</span>
+      <h2 id="unityWebsTitle">Webs de avatares y assets</h2>
+
+      <p class="modal-description">
+        Fuentes para buscar modelos y assets. Comprueba siempre la licencia del contenido antes de usarlo.
+      </p>
+
+      <div class="unity-web-grid">
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/sketchfab.png" alt="Logo de Sketchfab">
+            <strong>Sketchfab</strong>
+          </div>
+          <span>Modelos 3D de múltiples autores. Revisa la licencia concreta de cada modelo.</span>
+          <a class="button primary" href="https://sketchfab.com/feed" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/vrcmods.png" alt="Logo de VRCMods">
+            <strong>VRCMods</strong>
+          </div>
+          <span>Recursos comunitarios relacionados con VRChat. Revisa autoría y condiciones de cada descarga.</span>
+          <a class="button primary" href="https://vrcmods.com/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/booth.png" alt="Logo de BOOTH">
+            <strong>BOOTH</strong>
+          </div>
+          <span>Marketplace utilizado por muchos creadores de avatares, ropa, shaders y accesorios.</span>
+          <a class="button primary" href="https://booth.pm/en/browse/3D%20Models" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/jinxxy.png" alt="Logo de Jinxxy">
+            <strong>Jinxxy</strong>
+          </div>
+          <span>Marketplace orientado a avatares, assets y herramientas de comunidades VR.</span>
+          <a class="button primary" href="https://jinxxy.com/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/gumroad.webp" alt="Logo de Gumroad">
+            <strong>Gumroad</strong>
+          </div>
+          <span>Plataforma donde muchos creadores publican herramientas, assets y paquetes para Unity/VRChat.</span>
+          <a class="button primary" href="https://gumroad.com/discover?query=vrchat" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo unity-web-logo-wide" src="herramientas/unity/assets/web-icons/nexyy.png" alt="Logo de Nexyy">
+            <strong>Nexyy</strong>
+          </div>
+          <span>Buscador especializado para encontrar avatares, mundos y assets de VRChat publicados en distintas tiendas.</span>
+          <a class="button primary" href="https://nexyy.com/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-web-card">
+          <div class="unity-web-card-head">
+            <img class="unity-web-logo" src="herramientas/unity/assets/web-icons/payhip.png" alt="Logo de Payhip">
+            <strong>Payhip Marketplace</strong>
+          </div>
+          <span>Marketplace de productos digitales con una categoría 3D que incluye avatares y assets para VRChat y otras plataformas.</span>
+          <a class="button primary" href="https://payhip.com/marketplace" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+      </div>
+
+
+        
+
+        
+
+        
+
+      <div class="unity-warning-box">
+        <strong>Nota:</strong> ToolHub enlaza fuentes donde el usuario debe revisar la licencia y
+        autorización de cada asset. No se incluyen enlaces a sitios centrados en contenido ripeado
+        o distribuido sin permiso.
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="unityToolsBackdrop" hidden>
+    <section class="modal privacy-modal unity-modal" role="dialog" aria-modal="true" aria-labelledby="unityToolsTitle">
+      <button class="modal-close" type="button" data-unity-close="tools" aria-label="Cerrar">×</button>
+
+      <span class="eyebrow purple">UNITY · VRCHAT</span>
+      <h2 id="unityToolsTitle">Herramientas</h2>
+
+      <div class="unity-version-box">
+        <strong>Unity requerido actualmente por VRChat: 2022.3.22f1</strong>
+        <span>
+          VRChat recomienda mantenerse en esta versión para proyectos de avatares y mundos.
+          El Creator Companion puede instalar la versión compatible automáticamente.
+        </span>
+        <a class="button secondary" href="https://creators.vrchat.com/sdk/upgrade/current-unity-version/" target="_blank" rel="noopener noreferrer">
+          Ver versión oficial ↗
+        </a>
+      </div>
+
+      <div class="unity-list">
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>VRChat Creator Companion (VCC)</strong>
+            <span>Herramienta oficial para crear y gestionar proyectos, SDKs y paquetes VPM.</span>
+            <div class="unity-badge-row">
+              <span class="unity-badge official">OFICIAL VRCHAT</span>
+              <span class="unity-badge vcc">VCC</span>
+            </div>
+          </div>
+          <a class="button primary" href="https://vrchat.com/download/vcc" target="_blank" rel="noopener noreferrer">Descargar ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>FACS Utilities</strong>
+            <span>Conjunto de utilidades para reparación, optimización y flujo de trabajo con avatares.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">VCC compatible</span></div>
+          </div>
+          <a class="button primary" href="https://github.com/FACS01-01/FACS_Utilities/releases" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>Poiyomi Toon Shader</strong>
+            <span>Shader toon avanzado para avatares y proyectos VRChat.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">VPM / VCC</span></div>
+          </div>
+          <a class="button primary" href="https://poiyomi.github.io/vpm/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>lilToon</strong>
+            <span>Shader de avatares con múltiples opciones de iluminación, máscaras y efectos.</span>
+          </div>
+          <a class="button primary" href="https://lilxyzw.github.io/lilToon/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>VRCFury</strong>
+            <span>Herramientas no destructivas para toggles, ropa, menús, controladores y otros sistemas de avatar.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">Instalación VCC recomendada</span></div>
+          </div>
+          <a class="button primary" href="https://vrcfury.com/download/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>HierarchyPlus</strong>
+            <span>Mejoras visuales y de calidad de vida para la jerarquía de Unity.</span>
+            <div class="unity-badge-row"><span class="unity-badge legacy">LEGACY / COMUNIDAD</span></div>
+          </div>
+          <a class="button primary" href="https://openupm.com/packages/com.dreadscripts.hierarchyplus/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>VRCSDK+</strong>
+            <span>Inspectores alternativos y mejoras de calidad de vida para parámetros y menús del VRCSDK.</span>
+            <div class="unity-badge-row"><span class="unity-badge legacy">FORK VRLABS</span></div>
+          </div>
+          <a class="button primary" href="https://github.com/VRLabs/VRCSDKPlus" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>World Constraint</strong>
+            <span>Prefab/sistema de VRLabs para mantener objetos en espacio de mundo mediante constraints.</span>
+          </div>
+          <a class="button primary" href="https://github.com/VRLabs/World-Constraint" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>Modular Avatar</strong>
+            <span>Sistema no destructivo para ropa, toggles, menús, parámetros y componentes modulares.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">VCC</span></div>
+          </div>
+          <a class="button primary" href="https://modular-avatar.nadena.dev/docs/intro" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>wholesome© SPS Configurator</strong>
+            <span>Configurador automatizado para setups SPS en bases compatibles.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">VCC</span></div>
+          </div>
+          <a class="button primary" href="https://wholesomevr.github.io/SPS-Configurator/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+
+        <div class="unity-resource">
+          <div class="unity-resource-main">
+            <strong>DressingTools</strong>
+            <span>Sistema no destructivo para vestir avatares y gestionar wearables.</span>
+            <div class="unity-badge-row"><span class="unity-badge vcc">VCC recomendado</span></div>
+          </div>
+          <a class="button primary" href="https://dressingtools.chocopoi.com/docs/getting-started/installation/" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
+        </div>
+      </div>
+
+      <div class="unity-warning-box">
+        <strong>Antes de actualizar:</strong> algunos avatares dependen de versiones concretas de
+        shaders o herramientas. Haz copia de seguridad del proyecto antes de actualizar paquetes.
+      </div>
+    </section>
+  </div>
+
+
+  <!-- ToolHub v15 · VRChat -->
+  <div class="modal-backdrop" id="vrchatInfoBackdrop" hidden>
+    <section class="modal privacy-modal vrchat-guide-modal" role="dialog" aria-modal="true" aria-labelledby="vrchatInfoTitle">
+      <button class="modal-close" id="vrchatInfoClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow purple">INFORMACIÓN SOBRE VRCHAT</span>
+      <h2 id="vrchatInfoTitle">Antes de utilizar estas herramientas</h2>
+
+      <div class="privacy-notice">
+        <p>
+          Las herramientas, programas, configuraciones, guías y recomendaciones relacionadas
+          con VRChat que aparecen en ToolHub se ofrecen con carácter informativo y están basadas
+          en experiencia propia, opinión y criterios personales.
+        </p>
+        <dl class="privacy-details">
+          <div>
+            <dt>Software de terceros</dt>
+            <dd>VRCX, MagicChatbox, OVR Advanced Settings, Virtual Desktop y otras herramientas externas pertenecen a sus respectivos desarrolladores. ToolHub no controla sus actualizaciones, funcionamiento, permisos, políticas ni disponibilidad.</dd>
+          </div>
+          <div>
+            <dt>Uso bajo tu criterio</dt>
+            <dd>Antes de instalar o configurar una herramienta, revisa su fuente oficial, documentación, permisos, requisitos y condiciones de uso.</dd>
+          </div>
+          <div>
+            <dt>Responsabilidad</dt>
+            <dd>El usuario decide libremente qué herramientas instala y qué cambios aplica. ToolHub no garantiza resultados concretos ni asume las consecuencias derivadas de configuraciones incorrectas, incompatibilidades, cambios de terceros o un uso distinto del explicado.</dd>
+          </div>
+        </dl>
+        <p class="privacy-warning vrchat-info-warning">
+          Descarga siempre las herramientas desde sus páginas oficiales o repositorios oficiales enlazados por ToolHub.
+        </p>
+      </div>
+
+      <div class="privacy-actions">
+        <button class="button primary" id="vrchatInfoOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="ovrGuideBackdrop" hidden>
+    <section class="modal privacy-modal vrchat-guide-modal" role="dialog" aria-modal="true" aria-labelledby="ovrGuideTitle">
+      <button class="modal-close" type="button" data-vrchat-close-guide="ovr" aria-label="Cerrar">×</button>
+      <span class="eyebrow purple">STEAMVR · UTILIDAD</span>
+      <h2 id="ovrGuideTitle">OVR Advanced Settings</h2>
+
+      <div class="vrchat-guide-content">
+        <div class="vrchat-guide-section">
+          <h3>¿Qué es?</h3>
+          <p>Es una aplicación de overlay para SteamVR que añade ajustes y utilidades accesibles desde el dashboard de VR.</p>
+        </div>
+        <div class="vrchat-guide-section">
+          <h3>Instalación</h3>
+          <ol class="vrchat-guide-list">
+            <li>Ten Steam y SteamVR instalados.</li>
+            <li>Abre OVR Advanced Settings en Steam.</li>
+            <li>Instálalo y ejecútalo junto a SteamVR.</li>
+            <li>Dentro de VR abre el dashboard de SteamVR y busca OVR Advanced Settings.</li>
+          </ol>
+        </div>
+        <div class="vrchat-guide-section">
+          <h3>Funciones útiles</h3>
+          <ul class="vrchat-guide-list">
+            <li><strong>Space Drag:</strong> desplazar virtualmente tu posición.</li>
+            <li><strong>Space Turn:</strong> girar el espacio virtual.</li>
+            <li><strong>Fix Floor:</strong> reajustar la altura del suelo.</li>
+            <li><strong>Push-To-Talk / Push-To-Mute:</strong> controlar el micrófono.</li>
+            <li>Brillo, bindings por aplicación y otras utilidades de SteamVR.</li>
+          </ul>
+        </div>
+        <div class="vrchat-warning">
+          <strong>Consejo:</strong> cambia una opción cada vez, especialmente las relacionadas con movimiento del espacio.
+        </div>
+      </div>
+
+      <div class="vrchat-link-actions">
+        <a class="button primary" href="https://store.steampowered.com/app/1009850/OVR_Advanced_Settings/" target="_blank" rel="noopener noreferrer">Abrir en Steam ↗</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="virtualDesktopGuideBackdrop" hidden>
+    <section class="modal privacy-modal vrchat-guide-modal" role="dialog" aria-modal="true" aria-labelledby="virtualDesktopGuideTitle">
+      <button class="modal-close" type="button" data-vrchat-close-guide="virtual-desktop" aria-label="Cerrar">×</button>
+      <span class="eyebrow purple">PCVR · CONECTIVIDAD</span>
+      <h2 id="virtualDesktopGuideTitle">Virtual Desktop</h2>
+
+      <div class="vrchat-guide-content">
+        <div class="vrchat-warning">
+          <strong>Importante:</strong> la versión de Steam es <strong>Virtual Desktop Classic</strong> y está orientada a visores PCVR como Rift/Rift S, HTC Vive, Valve Index y Windows Mixed Reality. No es la versión para Meta Quest ni Pico.
+        </div>
+        <div class="vrchat-guide-section">
+          <h3>Para Meta Quest / Pico y otros standalone</h3>
+          <ol class="vrchat-guide-list">
+            <li>Instala la versión standalone correspondiente a tu visor.</li>
+            <li>Instala <strong>Virtual Desktop Streamer</strong> en el PC desde la web oficial.</li>
+            <li>Conecta el PC al router por Ethernet siempre que sea posible.</li>
+            <li>Conecta el visor a una red Wi-Fi rápida y estable.</li>
+            <li>Abre Virtual Desktop en el visor y conéctate al PC.</li>
+            <li>Para PCVR, inicia los juegos desde la sección de juegos de Virtual Desktop cuando corresponda.</li>
+          </ol>
+        </div>
+        <div class="vrchat-guide-section">
+          <h3>Red recomendada</h3>
+          <ul class="vrchat-guide-list">
+            <li>PC conectado por Ethernet al router.</li>
+            <li>Wi-Fi de 5 GHz AC/AX como mínimo según la documentación oficial.</li>
+            <li>Evita redes de invitados o redes distintas entre PC y visor.</li>
+            <li>Si hay cortes, revisa firewall, VPN y antivirus.</li>
+          </ul>
+        </div>
+        <div class="vrchat-guide-section">
+          <h3>Versión de Steam</h3>
+          <p>Si usas un visor PCVR compatible con Virtual Desktop Classic, puedes abrir la ficha oficial de Steam desde el botón inferior.</p>
+        </div>
+      </div>
+
+      <div class="vrchat-link-actions">
+        <a class="button primary" href="https://www.vrdesktop.net/" target="_blank" rel="noopener noreferrer">Web oficial / Streamer / Standalone ↗</a>
+        <a class="button secondary" href="https://store.steampowered.com/app/382110/Virtual_Desktop/" target="_blank" rel="noopener noreferrer">Virtual Desktop Classic en Steam ↗</a>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- Constructor de Embeds -->
+  <div class="modal-backdrop discord-tool-backdrop" id="discordEmbedBackdrop" hidden>
+    <section class="discord-tool-modal" role="dialog" aria-modal="true" aria-labelledby="discordEmbedTitle">
+      <div class="discord-tool-head">
+        <div>
+          <span class="eyebrow purple">DISCORD · EMBEDS</span>
+          <h2 id="discordEmbedTitle">Constructor de Embeds</h2>
+          <p>Crea un embed, revisa una vista previa similar a Discord y copia el JSON generado.</p>
+        </div>
+        <button class="modal-close" type="button" data-discord-close="embed" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="discord-tool-layout">
+        <div class="discord-tool-panel">
+          <h3>Contenido</h3>
+
+          <div class="discord-form-grid">
+            <div class="discord-control full">
+              <label for="embedAuthor">Autor</label>
+              <input id="embedAuthor" type="text" maxlength="256" placeholder="Nombre del autor">
+            </div>
+
+            <div class="discord-control full">
+              <label for="embedTitle">Título</label>
+              <input id="embedTitle" type="text" maxlength="256" placeholder="Título del embed">
+            </div>
+
+            <div class="discord-control full">
+              <label for="embedDescription">Descripción</label>
+              <textarea id="embedDescription" maxlength="4096" placeholder="Descripción del embed"></textarea>
+            </div>
+
+            <div class="discord-control">
+              <label for="embedColor">Color</label>
+              <input id="embedColor" type="color" value="#5865F2">
+            </div>
+
+            <div class="discord-control">
+              <label for="embedFooter">Footer</label>
+              <input id="embedFooter" type="text" maxlength="2048" placeholder="Texto inferior">
+            </div>
+
+            <div class="discord-control full">
+              <label for="embedImage">Imagen principal (URL)</label>
+              <input id="embedImage" type="url" placeholder="https://...">
+            </div>
+
+            <div class="discord-control full">
+              <label for="embedThumbnail">Miniatura (URL)</label>
+              <input id="embedThumbnail" type="url" placeholder="https://...">
+            </div>
+          </div>
+
+          <div class="discord-inline-actions">
+            <button class="button secondary" id="addEmbedField" type="button">+ Añadir campo</button>
+            <button class="button secondary" id="clearEmbed" type="button">Limpiar</button>
+          </div>
+
+          <div id="embedFieldsEditor"></div>
+        </div>
+
+        <div class="discord-tool-panel">
+          <h3>Vista previa</h3>
+
+          <div class="discord-embed-preview-shell">
+            <div class="discord-message-line">
+              <div class="discord-avatar-mock">T</div>
+              <div class="discord-message-content">
+                <div class="discord-message-author">ToolHub Bot</div>
+
+                <div class="discord-embed-card" id="embedPreviewCard">
+                  <div class="embed-author" id="embedPreviewAuthor" hidden></div>
+                  <div class="embed-title" id="embedPreviewTitle" hidden></div>
+                  <div class="embed-description" id="embedPreviewDescription">Tu embed aparecerá aquí.</div>
+                  <div class="embed-fields" id="embedPreviewFields"></div>
+
+                  <div class="embed-media-row" id="embedPreviewMedia" hidden>
+                    <img class="embed-main-image" id="embedPreviewImage" alt="" hidden>
+                    <img class="embed-thumbnail" id="embedPreviewThumbnail" alt="" hidden>
+                  </div>
+
+                  <div class="embed-footer" id="embedPreviewFooter" hidden></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="copyEmbedJson" type="button">Copiar JSON</button>
+            <button class="button secondary" id="downloadEmbedJson" type="button">Descargar JSON</button>
+          </div>
+
+          <div class="discord-tool-status" id="embedStatus">Completa los campos para generar el embed.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estructura de servidor -->
+  <div class="modal-backdrop discord-tool-backdrop" id="discordStructureBackdrop" hidden>
+    <section class="discord-tool-modal" role="dialog" aria-modal="true" aria-labelledby="discordStructureTitle">
+      <div class="discord-tool-head">
+        <div>
+          <span class="eyebrow purple">DISCORD · ESTRUCTURA</span>
+          <h2 id="discordStructureTitle">Generador de estructura de servidor</h2>
+          <p>Genera una base organizada de categorías y canales según el tipo de servidor.</p>
+        </div>
+        <button class="modal-close" type="button" data-discord-close="structure" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="discord-tool-layout">
+        <div class="discord-tool-panel">
+          <h3>Configuración</h3>
+
+          <div class="discord-form-grid">
+            <div class="discord-control full">
+              <label for="structureServerName">Nombre del servidor</label>
+              <input id="structureServerName" type="text" maxlength="100" value="Mi Comunidad">
+            </div>
+
+            <div class="discord-control full">
+              <label for="structurePreset">Tipo</label>
+              <select id="structurePreset">
+                <option value="community">Comunidad</option>
+                <option value="gaming">Gaming</option>
+                <option value="vrchat">VRChat</option>
+                <option value="creator">Creador / contenido</option>
+                <option value="study">Estudio / proyecto</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="structure-options">
+            <label class="discord-check-row">
+              <input id="structureWelcome" type="checkbox" checked>
+              <span>Incluir entrada, reglas y presentaciones</span>
+            </label>
+
+            <label class="discord-check-row">
+              <input id="structureVoice" type="checkbox" checked>
+              <span>Incluir canales de voz</span>
+            </label>
+
+            <label class="discord-check-row">
+              <input id="structureStaff" type="checkbox" checked>
+              <span>Incluir categoría privada para staff</span>
+            </label>
+
+            <label class="discord-check-row">
+              <input id="structureBots" type="checkbox" checked>
+              <span>Incluir canal para comandos/bots</span>
+            </label>
+
+            <label class="discord-check-row">
+              <input id="structureLogs" type="checkbox" checked>
+              <span>Incluir logs/moderación</span>
+            </label>
+          </div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="generateStructure" type="button">Generar estructura</button>
+          </div>
+        </div>
+
+        <div class="discord-tool-panel">
+          <h3>Resultado</h3>
+          <div class="structure-result" id="structureResult"></div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="copyStructure" type="button">Copiar estructura</button>
+            <button class="button secondary" id="downloadStructure" type="button">Descargar TXT</button>
+          </div>
+
+          <div class="discord-tool-status" id="structureStatus">Genera una estructura para empezar.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Roles y permisos -->
+  <div class="modal-backdrop discord-tool-backdrop" id="discordRolesBackdrop" hidden>
+    <section class="discord-tool-modal" role="dialog" aria-modal="true" aria-labelledby="discordRolesTitle">
+      <div class="discord-tool-head">
+        <div>
+          <span class="eyebrow purple">DISCORD · ROLES</span>
+          <h2 id="discordRolesTitle">Generador de roles y permisos</h2>
+          <p>Crea una jerarquía de roles, asigna permisos y recibe avisos cuando seleccionas permisos sensibles.</p>
+        </div>
+        <button class="modal-close" type="button" data-discord-close="roles" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="discord-tool-layout">
+        <div class="discord-tool-panel">
+          <h3>Nuevo rol</h3>
+
+          <div class="discord-form-grid">
+            <div class="discord-control">
+              <label for="roleName">Nombre</label>
+              <input id="roleName" type="text" maxlength="100" placeholder="Moderador">
+            </div>
+
+            <div class="discord-control">
+              <label for="roleColor">Color</label>
+              <input id="roleColor" type="color" value="#5865F2">
+            </div>
+          </div>
+
+          <div class="permission-grid" id="permissionGrid">
+            <label class="permission-chip critical">
+              <input type="checkbox" value="Administrator">
+              <span>Administrator</span>
+            </label>
+            <label class="permission-chip critical">
+              <input type="checkbox" value="Manage Server">
+              <span>Manage Server</span>
+            </label>
+            <label class="permission-chip critical">
+              <input type="checkbox" value="Manage Roles">
+              <span>Manage Roles</span>
+            </label>
+            <label class="permission-chip sensitive">
+              <input type="checkbox" value="Ban Members">
+              <span>Ban Members</span>
+            </label>
+            <label class="permission-chip sensitive">
+              <input type="checkbox" value="Kick Members">
+              <span>Kick Members</span>
+            </label>
+            <label class="permission-chip sensitive">
+              <input type="checkbox" value="Manage Channels">
+              <span>Manage Channels</span>
+            </label>
+            <label class="permission-chip sensitive">
+              <input type="checkbox" value="Manage Messages">
+              <span>Manage Messages</span>
+            </label>
+            <label class="permission-chip sensitive">
+              <input type="checkbox" value="Mention Everyone">
+              <span>Mention Everyone</span>
+            </label>
+            <label class="permission-chip">
+              <input type="checkbox" value="Manage Nicknames">
+              <span>Manage Nicknames</span>
+            </label>
+            <label class="permission-chip">
+              <input type="checkbox" value="Moderate Members">
+              <span>Moderate Members</span>
+            </label>
+            <label class="permission-chip">
+              <input type="checkbox" value="View Audit Log">
+              <span>View Audit Log</span>
+            </label>
+            <label class="permission-chip">
+              <input type="checkbox" value="Manage Events">
+              <span>Manage Events</span>
+            </label>
+          </div>
+
+          <div class="role-warning-box">
+            <strong>Consejo:</strong> evita dar <em>Administrator</em> salvo que sea estrictamente necesario.
+            Ese permiso ignora las restricciones de canales.
+          </div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="addRole" type="button">Añadir rol</button>
+            <button class="button secondary" id="safeRolePreset" type="button">Preset base segura</button>
+          </div>
+        </div>
+
+        <div class="discord-tool-panel">
+          <h3>Jerarquía</h3>
+
+          <div class="roles-list" id="rolesList"></div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="copyRoles" type="button">Copiar configuración</button>
+            <button class="button secondary" id="clearRoles" type="button">Limpiar</button>
+          </div>
+
+          <div class="discord-tool-status" id="rolesStatus">Añade roles o usa el preset base segura.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Checklist seguridad -->
+  <div class="modal-backdrop discord-tool-backdrop" id="discordSecurityBackdrop" hidden>
+    <section class="discord-tool-modal" role="dialog" aria-modal="true" aria-labelledby="discordSecurityTitle">
+      <div class="discord-tool-head">
+        <div>
+          <span class="eyebrow purple">DISCORD · SEGURIDAD</span>
+          <h2 id="discordSecurityTitle">Checklist de seguridad para Discord</h2>
+          <p>Lista práctica para revisar la configuración de seguridad de una comunidad. El progreso se guarda en este navegador.</p>
+        </div>
+        <button class="modal-close" type="button" data-discord-close="security" aria-label="Cerrar">×</button>
+      </div>
+
+      <div class="discord-tool-layout">
+        <div class="discord-tool-panel">
+          <div class="security-progress-wrap">
+            <div class="security-progress-line">
+              <strong>Progreso</strong>
+              <span id="securityProgressText">0 / 10</span>
+            </div>
+
+            <div class="security-progress-bar">
+              <div class="security-progress-fill" id="securityProgressFill"></div>
+            </div>
+          </div>
+
+          <div class="security-checklist" id="securityChecklist">
+            <label class="security-item">
+              <input type="checkbox" data-security-id="two-factor">
+              <span>
+                <strong>2FA para moderación</strong>
+                Exige autenticación en dos pasos a las cuentas con permisos de moderación cuando sea posible.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="everyone">
+              <span>
+                <strong>Revisar @everyone</strong>
+                Evita permisos amplios por defecto y concede acceso mediante roles concretos.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="verification">
+              <span>
+                <strong>Nivel de verificación</strong>
+                Ajusta la verificación según el tamaño y exposición pública del servidor.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="automod">
+              <span>
+                <strong>AutoMod / filtros</strong>
+                Configura reglas básicas contra spam, menciones masivas y contenido no deseado.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="bots">
+              <span>
+                <strong>Permisos de bots revisados</strong>
+                Comprueba qué permisos necesita realmente cada bot y elimina accesos innecesarios.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="roles">
+              <span>
+                <strong>Jerarquía de roles</strong>
+                Verifica que los bots y moderadores no puedan gestionar roles iguales o superiores sin necesidad.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="audit">
+              <span>
+                <strong>Registro de auditoría</strong>
+                Asegúrate de que el equipo sabe revisar el Audit Log cuando ocurre un cambio importante.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="private">
+              <span>
+                <strong>Canales privados revisados</strong>
+                Comprueba permisos de staff, administración, tickets y cualquier canal con información sensible.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="invites">
+              <span>
+                <strong>Invitaciones controladas</strong>
+                Revisa quién puede crear invitaciones y elimina enlaces permanentes que ya no deban existir.
+              </span>
+            </label>
+
+            <label class="security-item">
+              <input type="checkbox" data-security-id="incident">
+              <span>
+                <strong>Plan básico ante raid/incidente</strong>
+                Define qué hacer si hay spam masivo, cuentas comprometidas o un bot con permisos abusivos.
+              </span>
+            </label>
+          </div>
+
+          <div class="discord-inline-actions">
+            <button class="button secondary" id="resetSecurityChecklist" type="button">Reiniciar checklist</button>
+          </div>
+        </div>
+
+        <div class="discord-tool-panel">
+          <h3>Informe</h3>
+          <div class="security-report" id="securityReport"></div>
+
+          <div class="discord-inline-actions">
+            <button class="button primary" id="copySecurityReport" type="button">Copiar informe</button>
+          </div>
+
+          <div class="discord-tool-status" id="securityStatus">
+            Marca los puntos que ya tienes revisados.
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="modal-backdrop" id="discordInfoBackdrop" hidden>
+    <section
+      class="modal privacy-modal discord-info-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="discordInfoTitle"
+      aria-describedby="discordInfoBody"
+    >
+      <button
+        class="modal-close"
+        id="discordInfoClose"
+        type="button"
+        aria-label="Cerrar"
+      >×</button>
+
+      <span class="eyebrow purple">INFORMACIÓN SOBRE DISCORD</span>
+      <h2 id="discordInfoTitle">Antes de utilizar estas recomendaciones</h2>
+
+      <div class="privacy-notice discord-info-body" id="discordInfoBody">
+        <p>
+          Las herramientas, bots, configuraciones, recomendaciones y consejos relacionados
+          con Discord que aparecen en ToolHub se ofrecen con carácter informativo y están
+          basados en opiniones, experiencia propia y criterios personales.
+        </p>
+
+        <dl class="privacy-details">
+          <div>
+            <dt>Uso bajo tu criterio</dt>
+            <dd>
+              Cada servidor, comunidad y bot puede tener necesidades, permisos, riesgos y
+              configuraciones diferentes. Revisa siempre qué estás instalando o modificando
+              antes de aplicarlo en tu servidor.
+            </dd>
+          </div>
+
+          <div>
+            <dt>Bots y servicios externos</dt>
+            <dd>
+              Los bots y páginas externas pertenecen a sus respectivos desarrolladores o
+              propietarios. ToolHub no controla su funcionamiento, disponibilidad, políticas,
+              permisos ni cambios futuros.
+            </dd>
+          </div>
+
+          <div>
+            <dt>Responsabilidad del usuario</dt>
+            <dd>
+              El usuario decide libremente si aplica una recomendación, instala un bot o
+              modifica la configuración de su servidor. ToolHub no garantiza un resultado
+              concreto ni asume las consecuencias derivadas de un uso incorrecto, una mala
+              configuración o cambios realizados por servicios de terceros.
+            </dd>
+          </div>
+        </dl>
+
+        <p class="privacy-warning discord-warning">
+          Antes de añadir un bot, comprueba sus permisos, reputación, política de privacidad,
+          desarrollador y el acceso que solicita a tu servidor.
+        </p>
+      </div>
+
+      <div class="privacy-actions">
+        <button class="button primary" id="discordInfoOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow" id="modalType">PRÓXIMAMENTE</span>
+      <h2 id="modalTitle">Herramienta</h2>
+      <p id="modalText">
+        Esta sección ya está conectada a la estructura principal. Después podemos programar su funcionamiento.
+      </p>
+      <button class="button primary" id="modalOk" type="button">Entendido</button>
+    </section>
+  </div>
+
+
+  <div class="modal-backdrop calculator-backdrop" id="calculatorBackdrop" hidden>
+    <section class="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="calculatorTitle">
+      <div class="calculator-head">
+        <div>
+          <span class="eyebrow purple">HERRAMIENTA GENERAL</span>
+          <h2 id="calculatorTitle">Calculadora</h2>
+        </div>
+
+        <div class="calculator-head-actions">
+          <button
+            class="calculator-scientific-toggle"
+            id="calculatorScientificToggle"
+            type="button"
+            aria-pressed="false"
+          >
+            Científica
+          </button>
+
+          <button
+            class="modal-close calculator-close"
+            id="calculatorClose"
+            type="button"
+            aria-label="Cerrar calculadora"
+          >×</button>
+        </div>
+      </div>
+
+      <div class="calculator-toolbar">
+        <div class="calculator-angle-group" id="calculatorAngleGroup" hidden>
+          <button class="calculator-angle-button active" type="button" data-calc-angle="DEG">DEG</button>
+          <button class="calculator-angle-button" type="button" data-calc-angle="RAD">RAD</button>
+        </div>
+
+        <button class="calculator-history-toggle" id="calculatorHistoryToggle" type="button">
+          Historial
+        </button>
+      </div>
+
+      <div class="calculator-history" id="calculatorHistory" hidden>
+        <div class="calculator-history-head">
+          <strong>Historial</strong>
+          <button id="calculatorClearHistory" type="button">Borrar</button>
+        </div>
+
+        <div class="calculator-history-list" id="calculatorHistoryList"></div>
+      </div>
+
+      <div class="calculator-display">
+        <div class="calculator-expression" id="calculatorExpression" aria-live="polite"></div>
+        <input
+          class="calculator-input"
+          id="calculatorInput"
+          type="text"
+          inputmode="decimal"
+          value="0"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Operación matemática"
+        >
+      </div>
+
+      <div class="calculator-grid calculator-scientific-grid" id="calculatorScientificPanel" hidden>
+        <button type="button" data-calc-insert="sin(">sin</button>
+        <button type="button" data-calc-insert="cos(">cos</button>
+        <button type="button" data-calc-insert="tan(">tan</button>
+        <button type="button" data-calc-insert="asin(">sin⁻¹</button>
+        <button type="button" data-calc-insert="acos(">cos⁻¹</button>
+        <button type="button" data-calc-insert="atan(">tan⁻¹</button>
+
+        <button type="button" data-calc-insert="log(">log</button>
+        <button type="button" data-calc-insert="ln(">ln</button>
+        <button type="button" data-calc-insert="sqrt(">√</button>
+        <button type="button" data-calc-insert="abs(">abs</button>
+        <button type="button" data-calc-insert="exp(">eˣ</button>
+        <button type="button" data-calc-insert="^2">x²</button>
+
+        <button type="button" data-calc-insert="^">xʸ</button>
+        <button type="button" data-calc-insert="!">x!</button>
+        <button type="button" data-calc-insert="pi">π</button>
+        <button type="button" data-calc-insert="e">e</button>
+        <button type="button" data-calc-insert="(">(</button>
+        <button type="button" data-calc-insert=")">)</button>
+      </div>
+
+      <div class="calculator-grid calculator-basic-grid">
+        <button class="calc-muted" type="button" data-calc-action="clear">AC</button>
+        <button class="calc-muted" type="button" data-calc-action="backspace">⌫</button>
+        <button class="calc-muted" type="button" data-calc-insert="%">%</button>
+        <button class="calc-operator" type="button" data-calc-insert="/">÷</button>
+
+        <button type="button" data-calc-insert="7">7</button>
+        <button type="button" data-calc-insert="8">8</button>
+        <button type="button" data-calc-insert="9">9</button>
+        <button class="calc-operator" type="button" data-calc-insert="*">×</button>
+
+        <button type="button" data-calc-insert="4">4</button>
+        <button type="button" data-calc-insert="5">5</button>
+        <button type="button" data-calc-insert="6">6</button>
+        <button class="calc-operator" type="button" data-calc-insert="-">−</button>
+
+        <button type="button" data-calc-insert="1">1</button>
+        <button type="button" data-calc-insert="2">2</button>
+        <button type="button" data-calc-insert="3">3</button>
+        <button class="calc-operator" type="button" data-calc-insert="+">+</button>
+
+        <button type="button" data-calc-action="sign">±</button>
+        <button type="button" data-calc-insert="0">0</button>
+        <button type="button" data-calc-insert=".">,</button>
+        <button class="calc-equals" type="button" data-calc-action="equals">=</button>
+      </div>
+
+      <p class="calculator-help">
+        Enter = calcular · Esc = cerrar · También puedes escribir con el teclado.
+      </p>
+    </section>
+  </div>
+
+
+  <script src="script.js"></script>
+  <script src="herramientas/generales/calculadora.js"></script>
+  <script src="herramientas/discord/discord.js"></script>
+  <script src="herramientas/discord/discord-tools.js"></script>
+  <script src="herramientas/vrchat/vrchat.js"></script>
+  <script src="herramientas/unity/unity.js"></script>
+</body>
+</html>

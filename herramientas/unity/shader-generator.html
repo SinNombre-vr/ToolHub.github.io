@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Shader Studio de ToolHub para crear shaders estáticos y animados para Unity con vista previa en tiempo real.">
+  <title>Shader Studio - ToolHub</title>
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../imagenes/image-tools.css">
+  <link rel="stylesheet" href="shader-generator.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#unity">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main class="tool-main shader-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#herramientas">Herramientas</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Shader Studio</span>
+    </nav>
+
+    <section class="tool-page-hero shader-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · SHADER STUDIO</span>
+        <h1>Generador de Shaders</h1>
+        <p>
+          Crea shaders estáticos o animados, carga tus propias texturas, previsualiza el resultado
+          en tiempo real y descarga un archivo <strong>.shader</strong> listo para importar en Unity.
+        </p>
+      </div>
+      <div class="local-processing-badge">🔒 Todo se genera en tu navegador</div>
+    </section>
+
+    <div class="shader-warning">
+      <strong>VRChat:</strong> el shader generado está pensado para PC / Built-in Render Pipeline.
+      En Quest/Android VRChat limita los shaders disponibles a su lista compatible, por lo que un shader personalizado no es equivalente a un shader móvil permitido.
+    </div>
+
+    <section class="shader-studio-grid">
+      <aside class="tool-panel shader-preview-panel">
+        <div class="panel-head-row">
+          <div>
+            <h2>Vista previa</h2>
+            <p class="panel-description">Los efectos animados se reproducen en tiempo real.</p>
+          </div>
+          <div class="preview-actions">
+            <button class="mini-button" id="previewPlay" type="button">⏸ Pausar</button>
+            <button class="mini-button" id="previewReset" type="button">↻ Reset</button>
+          </div>
+        </div>
+
+        <div class="shader-preview-wrap">
+          <canvas id="shaderPreview" width="420" height="420" aria-label="Vista previa del shader"></canvas>
+        </div>
+
+        <div class="preview-toolbar">
+          <label class="compact-control">Objeto
+            <select id="previewShape">
+              <option value="sphere" selected>Esfera</option>
+              <option value="plane">Plano</option>
+            </select>
+          </label>
+          <label class="compact-control">Fondo
+            <select id="previewBackground">
+              <option value="studio" selected>Estudio</option>
+              <option value="dark">Oscuro</option>
+              <option value="checker">Transparencia</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="shader-summary" id="shaderSummary"></div>
+
+        <div class="shader-export-stack">
+          <button class="button success" id="downloadShader" type="button">Descargar .shader</button>
+          <button class="button secondary" id="copyShader" type="button">Copiar código</button>
+          <button class="button secondary" id="downloadConfig" type="button">Descargar configuración JSON</button>
+        </div>
+        <div class="status-box" id="shaderStatus" aria-live="polite">Shader preparado.</div>
+      </aside>
+
+      <div class="shader-editor-column">
+        <section class="tool-panel accent">
+          <div class="panel-head-row">
+            <div>
+              <h2>Configuración</h2>
+              <p class="panel-description">Activa solo las funciones que necesites para mantener el shader más limpio.</p>
+            </div>
+            <button class="mini-button" id="resetShader" type="button">Restablecer</button>
+          </div>
+
+          <div class="shader-section">
+            <h3>Base</h3>
+            <div class="shader-control-grid">
+              <div class="control-group full">
+                <label for="shaderName">Nombre del shader</label>
+                <input id="shaderName" type="text" value="ToolHub/CustomShader" maxlength="80">
+              </div>
+              <div class="control-group">
+                <label for="shaderType">Tipo</label>
+                <select id="shaderType">
+                  <option value="lit" selected>Lit / Standard</option>
+                  <option value="unlit">Unlit</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="renderMode">Render</label>
+                <select id="renderMode">
+                  <option value="opaque" selected>Opaque</option>
+                  <option value="cutout">Cutout</option>
+                  <option value="transparent">Transparent</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="cullMode">Cull</label>
+                <select id="cullMode">
+                  <option value="Back" selected>Back</option>
+                  <option value="Front">Front</option>
+                  <option value="Off">Off / doble cara</option>
+                </select>
+              </div>
+              <div class="control-group">
+                <label for="baseColor">Color base</label>
+                <input id="baseColor" type="color" value="#6f35ff">
+              </div>
+            </div>
+          </div>
+
+          <div class="shader-section">
+            <h3>Texturas</h3>
+            <div class="texture-upload-grid">
+              <label class="texture-drop">
+                <span>🖼️ Albedo / Main Texture</span>
+                <input id="albedoUpload" type="file" accept="image/png,image/jpeg,image/webp">
+                <small id="albedoName">Sin textura</small>
+              </label>
+              <label class="texture-drop">
+                <span>🧭 Normal Map</span>
+                <input id="normalUpload" type="file" accept="image/png,image/jpeg,image/webp">
+                <small id="normalName">Sin textura</small>
+              </label>
+              <label class="texture-drop">
+                <span>✨ Emission Map</span>
+                <input id="emissionUpload" type="file" accept="image/png,image/jpeg,image/webp">
+                <small id="emissionName">Sin textura</small>
+              </label>
+              <label class="texture-drop">
+                <span>🔮 MatCap</span>
+                <input id="matcapUpload" type="file" accept="image/png,image/jpeg,image/webp">
+                <small id="matcapName">Sin textura</small>
+              </label>
+            </div>
+            <div class="tool-actions compact-actions">
+              <button class="button secondary" id="clearTextures" type="button">Quitar texturas de preview</button>
+            </div>
+          </div>
+
+          <div class="shader-section">
+            <h3>Superficie</h3>
+            <div class="shader-control-grid">
+              <label class="range-control">Metálico <input id="metallic" type="range" min="0" max="100" value="20"><output id="metallicValue">0.20</output></label>
+              <label class="range-control">Smoothness <input id="smoothness" type="range" min="0" max="100" value="65"><output id="smoothnessValue">0.65</output></label>
+              <label class="range-control">Normal Strength <input id="normalStrength" type="range" min="0" max="200" value="100"><output id="normalStrengthValue">1.00</output></label>
+              <label class="range-control">Opacity <input id="opacity" type="range" min="0" max="100" value="100"><output id="opacityValue">1.00</output></label>
+              <label class="range-control">Cutoff <input id="cutoff" type="range" min="0" max="100" value="50"><output id="cutoffValue">0.50</output></label>
+              <label class="range-control">Tiling <input id="tiling" type="range" min="25" max="400" value="100"><output id="tilingValue">1.00</output></label>
+            </div>
+          </div>
+
+          <div class="shader-section">
+            <h3>Efectos</h3>
+            <div class="feature-grid">
+              <label class="feature-toggle"><input id="enableEmission" type="checkbox"><span><strong>Emission</strong><small>Brillo adicional y mapa de emisión.</small></span></label>
+              <label class="feature-toggle"><input id="enableRim" type="checkbox" checked><span><strong>Rim / Fresnel</strong><small>Borde luminoso según el ángulo de cámara.</small></span></label>
+              <label class="feature-toggle"><input id="enableMatcap" type="checkbox"><span><strong>MatCap</strong><small>Reflejo basado en la normal de cámara.</small></span></label>
+              <label class="feature-toggle"><input id="enableDissolve" type="checkbox"><span><strong>Dissolve</strong><small>Disolución procedural con borde coloreado.</small></span></label>
+              <label class="feature-toggle"><input id="enableHue" type="checkbox"><span><strong>Hue Shift</strong><small>Cambio de tono manual o animado.</small></span></label>
+            </div>
+            <div class="shader-control-grid effect-controls">
+              <div class="control-group"><label for="emissionColor">Emission Color</label><input id="emissionColor" type="color" value="#33a6ff"></div>
+              <label class="range-control">Emission Intensity <input id="emissionIntensity" type="range" min="0" max="500" value="100"><output id="emissionIntensityValue">1.00</output></label>
+              <div class="control-group"><label for="rimColor">Rim Color</label><input id="rimColor" type="color" value="#b663ff"></div>
+              <label class="range-control">Rim Power <input id="rimPower" type="range" min="50" max="800" value="280"><output id="rimPowerValue">2.80</output></label>
+              <label class="range-control">Rim Intensity <input id="rimIntensity" type="range" min="0" max="300" value="80"><output id="rimIntensityValue">0.80</output></label>
+              <label class="range-control">MatCap Strength <input id="matcapStrength" type="range" min="0" max="200" value="75"><output id="matcapStrengthValue">0.75</output></label>
+              <label class="range-control">Dissolve <input id="dissolve" type="range" min="0" max="100" value="0"><output id="dissolveValue">0.00</output></label>
+              <label class="range-control">Dissolve Edge <input id="dissolveEdge" type="range" min="1" max="30" value="8"><output id="dissolveEdgeValue">0.08</output></label>
+              <label class="range-control">Hue <input id="hue" type="range" min="0" max="360" value="0"><output id="hueValue">0°</output></label>
+            </div>
+          </div>
+
+          <div class="shader-section">
+            <h3>Animación</h3>
+            <div class="feature-grid">
+              <label class="feature-toggle"><input id="enableUvScroll" type="checkbox"><span><strong>UV Scroll</strong><small>Mueve la textura automáticamente.</small></span></label>
+              <label class="feature-toggle"><input id="enableUvRotate" type="checkbox"><span><strong>UV Rotation</strong><small>Rota las UV alrededor del centro.</small></span></label>
+              <label class="feature-toggle"><input id="enablePulse" type="checkbox"><span><strong>Pulse</strong><small>Pulso de emisión o brillo.</small></span></label>
+              <label class="feature-toggle"><input id="enableWave" type="checkbox"><span><strong>Vertex Wave</strong><small>Deforma la malla siguiendo su normal.</small></span></label>
+              <label class="feature-toggle"><input id="animateHue" type="checkbox"><span><strong>Hue animado</strong><small>Hace girar el tono con el tiempo.</small></span></label>
+            </div>
+            <div class="shader-control-grid">
+              <label class="range-control">Scroll X <input id="scrollX" type="range" min="-200" max="200" value="25"><output id="scrollXValue">0.25</output></label>
+              <label class="range-control">Scroll Y <input id="scrollY" type="range" min="-200" max="200" value="0"><output id="scrollYValue">0.00</output></label>
+              <label class="range-control">Rotación/s <input id="rotationSpeed" type="range" min="-360" max="360" value="45"><output id="rotationSpeedValue">45°</output></label>
+              <label class="range-control">Pulse Speed <input id="pulseSpeed" type="range" min="1" max="1000" value="200"><output id="pulseSpeedValue">2.00</output></label>
+              <label class="range-control">Pulse Strength <input id="pulseStrength" type="range" min="0" max="200" value="50"><output id="pulseStrengthValue">0.50</output></label>
+              <label class="range-control">Hue Speed <input id="hueSpeed" type="range" min="-200" max="200" value="30"><output id="hueSpeedValue">30°/s</output></label>
+              <label class="range-control">Wave Amp <input id="waveAmp" type="range" min="0" max="100" value="10"><output id="waveAmpValue">0.10</output></label>
+              <label class="range-control">Wave Freq <input id="waveFreq" type="range" min="10" max="1000" value="350"><output id="waveFreqValue">3.50</output></label>
+              <label class="range-control">Wave Speed <input id="waveSpeed" type="range" min="0" max="1000" value="180"><output id="waveSpeedValue">1.80</output></label>
+            </div>
+          </div>
+
+          <div class="shader-section">
+            <h3>Presets</h3>
+            <div class="shader-preset-grid">
+              <button type="button" data-shader-preset="toon">Toon limpio</button>
+              <button type="button" data-shader-preset="hologram">Holograma</button>
+              <button type="button" data-shader-preset="lava">Lava animada</button>
+              <button type="button" data-shader-preset="ghost">Fantasma</button>
+              <button type="button" data-shader-preset="cyber">Cyber neón</button>
+              <button type="button" data-shader-preset="metal">Metal pulido</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel shader-code-panel">
+          <div class="panel-head-row">
+            <div>
+              <h2>Código generado</h2>
+              <p class="panel-description">Se actualiza automáticamente al cambiar cualquier opción.</p>
+            </div>
+            <span class="code-badge" id="codeLineCount">0 líneas</span>
+          </div>
+          <pre><code id="shaderCode"></code></pre>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.<br>Todos los derechos reservados.</p>
+  </footer>
+
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+      <div class="privacy-notice">
+        <p>Shader Studio procesa las texturas cargadas y genera el código localmente en tu navegador.</p>
+        <dl class="privacy-details">
+          <div><dt>Texturas</dt><dd>Se usan únicamente para la vista previa local y no se envían a ToolHub.</dd></div>
+          <div><dt>Archivos generados</dt><dd>El .shader y el JSON se crean en tu navegador.</dd></div>
+          <div><dt>Normativa de referencia</dt><dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd></div>
+        </dl>
+      </div>
+      <label class="privacy-check privacy-check-required"><input id="pdfPrivacyCheck" type="checkbox"><span>He leído y comprendido la información.</span></label>
+      <div class="privacy-actions privacy-actions-gate"><button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button></div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions"><button class="button primary" id="infoModalOk" type="button">Entendido</button></div>
+    </section>
+  </div>
+
+  <script src="../imagenes/tool-common.js"></script>
+  <script src="shader-generator.js"></script>
+</body>
+</html>

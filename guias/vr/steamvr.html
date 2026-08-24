@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Guía visual de ToolHub sobre SteamVR, configuración, tracking, rendimiento y problemas.">
+  <title>SteamVR - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="vr-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>VR</span><span>›</span><span>SteamVR</span>
+    </nav>
+
+    <section class="guide-hero">
+      <div>
+        <span class="eyebrow green">VR · STEAMVR</span>
+        <h1>SteamVR</h1>
+        <p>Una referencia visual para entender qué hace SteamVR, cómo ordenar la configuración y dónde mirar cuando un visor, tracker o juego no se comporta como debería.</p>
+        <div class="hero-tags"><span class="hero-tag">Runtime</span><span class="hero-tag">Tracking</span><span class="hero-tag">Rendimiento</span><span class="hero-tag">Bindings</span><span class="hero-tag">Playspace</span></div>
+      </div>
+      <div class="hero-side"><div class="hero-stat"><strong>Formato</strong><span>Guía visual</span></div><div class="hero-stat"><strong>Enfoque</strong><span>Configurar + entender</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Qué es</a>
+<a href="#inicio">Primer arranque</a>
+<a href="#ajustes">Ajustes</a>
+<a href="#rendimiento">Rendimiento</a>
+<a href="#tracking">Tracking</a>
+<a href="#herramientas">Ecosistema</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">⚡ Resumen rápido</span>
+  <h2>SteamVR es el centro de tu PCVR</h2>
+  <p class="section-intro">SteamVR conecta aplicaciones VR con visores, mandos y sistemas de seguimiento compatibles. También concentra ajustes de vídeo, audio, entrada, límites y estado del sistema.</p>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🥽</div><strong>Visor</strong><p>Recibe la imagen y reporta posición/orientación al runtime.</p></div>
+    <div class="summary-card"><div class="icon">🎮</div><strong>Entrada</strong><p>Mandos, bindings y otros dispositivos que SteamVR expone a las aplicaciones.</p></div>
+    <div class="summary-card"><div class="icon">📍</div><strong>Tracking</strong><p>Inside‑out, Lighthouse u otros sistemas pueden terminar representados dentro del mismo entorno SteamVR.</p></div>
+  </div>
+  <div class="flow-map">
+    <div class="flow-node">Hardware / software del visor</div><span class="flow-arrow">→</span>
+    <div class="flow-node">SteamVR runtime</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Juego / VRChat</div>
+  </div>
+</section>
+
+<section class="guide-section" id="inicio">
+  <span class="section-kicker">🪜 Primer arranque</span>
+  <h2>Orden limpio para configurar SteamVR</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Deja funcionando primero el visor</h3><p>En standalone, entra antes por Link, Air Link, Steam Link, Virtual Desktop o el puente que corresponda. En PCVR nativo, verifica conexiones físicas.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Abre SteamVR</h3><p>Comprueba el monitor de estado: visor, mandos y dispositivos relevantes deberían aparecer sin errores.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Configura área / suelo</h3><p>El origen y altura del suelo deben ser coherentes. Un suelo mal establecido termina afectando calibraciones, FBT y altura dentro de aplicaciones.</p></div></div>
+    <div class="step"><div class="step-num">4</div><div><h3>Ajusta rendimiento al final</h3><p>Primero consigue tracking y conexión estables. Después toca resolución por ojo, refresco y ajustes específicos por aplicación.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="ajustes">
+  <span class="section-kicker">⚙️ Ajustes</span>
+  <h2>Qué controla cada bloque importante</h2>
+  <div class="setting-grid">
+    <div class="setting-card"><div class="icon">🖼️</div><h3>Resolución de render</h3><p>Aumentarla mejora nitidez, pero incrementa la carga de GPU. La resolución efectiva puede superar la resolución física del panel por corrección óptica y supersampling.</p></div>
+    <div class="setting-card"><div class="icon">⏱️</div><h3>Frecuencia del visor</h3><p>Más Hz implican menos tiempo disponible para renderizar cada frame. Si tu GPU no sostiene el objetivo, aparecerán reproyección o frames perdidos.</p></div>
+    <div class="setting-card"><div class="icon">🎮</div><h3>Bindings</h3><p>Permiten adaptar acciones de una aplicación a botones, sticks, gatillos y gestos compatibles del controlador.</p></div>
+    <div class="setting-card"><div class="icon">🔊</div><h3>Audio</h3><p>SteamVR puede ayudar a cambiar dispositivos de reproducción/captura al entrar o salir de VR. Comprueba siempre qué micrófono usa la aplicación.</p></div>
+    <div class="setting-card"><div class="icon">🧱</div><h3>Play area / Chaperone</h3><p>Define límites y referencias espaciales para mantener coherencia con tu habitación y advertirte al acercarte al borde.</p></div>
+    <div class="setting-card"><div class="icon">🧩</div><h3>Add-ons</h3><p>Drivers y utilidades pueden integrarse con SteamVR. Si un dispositivo desaparece, revisa que su add-on no esté deshabilitado.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="rendimiento">
+  <span class="section-kicker">📊 Rendimiento</span>
+  <h2>Cómo leer un problema de rendimiento</h2>
+  <p class="section-intro">No diagnostiques VR solo mirando “FPS”. Lo importante es si cada frame llega dentro del tiempo disponible para la frecuencia elegida.</p>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🟢</div><strong>Frame a tiempo</strong><p>La GPU/CPU completan el trabajo dentro del presupuesto. El movimiento se percibe estable.</p></div>
+    <div class="summary-card"><div class="icon">🟡</div><strong>Reproyección</strong><p>El runtime usa técnicas para mantener movimiento perceptual cuando la aplicación no entrega todos los frames reales.</p></div>
+    <div class="summary-card"><div class="icon">🔴</div><strong>Frame perdido</strong><p>Hay picos o carga sostenida. Reduce primero resolución o efectos pesados antes de tocar diez opciones distintas.</p></div>
+  </div>
+  <div class="notice green"><strong>🟢 Método recomendado:</strong> usa una escena/juego repetible, cambia un único ajuste y compara. La resolución por aplicación es una forma limpia de corregir un juego pesado sin degradar todo SteamVR.</div>
+</section>
+
+<section class="guide-section" id="tracking">
+  <span class="section-kicker">📍 Tracking</span>
+  <h2>Inside‑out, Lighthouse y sistemas mixtos</h2>
+  <table class="data-table">
+    <thead><tr><th>Sistema</th><th>Cómo se referencia</th><th>Punto fuerte</th><th>Atención</th></tr></thead>
+    <tbody>
+      <tr><td>Inside‑out</td><td>El propio visor usa cámaras/sensores para ubicarse.</td><td>Menos hardware externo.</td><td>Iluminación, oclusiones y el espacio pueden afectar.</td></tr>
+      <tr><td>Lighthouse</td><td>Dispositivos compatibles detectan estaciones base.</td><td>Seguimiento externo preciso y ampliable.</td><td>Necesita estaciones correctamente colocadas y compatibles.</td></tr>
+      <tr><td>Mixto</td><td>Visor y trackers pertenecen a espacios diferentes.</td><td>Permite mezclar, por ejemplo, Quest + VIVE Trackers.</td><td>Hay que alinear ambos espacios y puede aparecer drift.</td></tr>
+    </tbody>
+  </table>
+  <div class="notice warn"><strong>🟡 Estaciones base:</strong> no asumas que Base Station 1.0 y 2.0 se mezclan entre sí. HTC documenta que usan métodos de sincronización distintos; verifica siempre la compatibilidad exacta de tus dispositivos.</div>
+</section>
+
+<section class="guide-section" id="herramientas">
+  <span class="section-kicker">🧰 Ecosistema</span>
+  <h2>Herramientas que suelen aparecer alrededor de SteamVR</h2>
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">🧭</div><h3>OVR Advanced Settings</h3><p>Utilidad de SteamVR para funciones de playspace, accesos y ajustes extra. ToolHub ya tiene una guía específica en la sección VRChat.</p></div>
+    <div class="compare-card"><div class="icon">🔗</div><h3>Space Calibrator</h3><p>Se usa en configuraciones con dos universos de tracking para calcular la transformación entre ambos espacios.</p></div>
+    <div class="compare-card"><div class="icon">🦵</div><h3>SlimeVR Server</h3><p>Gestiona trackers SlimeVR, proporciones, resets y su integración con SteamVR/OSC según el modo elegido.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Diagnóstico</span>
+  <h2>Cuando algo no aparece o se mueve mal</h2>
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>SteamVR dice que no hay visor conectado</span><span>+</span></button><div class="accordion-panel">En un visor standalone, SteamVR puede depender de que primero esté activa la capa que lo presenta al PC. Conecta el visor mediante tu método elegido y solo después abre/reinicia SteamVR.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Un tracker está emparejado pero no aparece</span><span>+</span></button><div class="accordion-panel">Revisa dongle, alimentación y add-ons/driver. En sistemas Lighthouse, también verifica que las estaciones base estén activas y que el tracker esté dentro de cobertura.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El suelo o la altura están mal</span><span>+</span></button><div class="accordion-panel">Corrige primero el origen del visor/play area. Calibrar FBT encima de un suelo incorrecto suele producir más problemas. Después repite la calibración del cuerpo.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>La GPU va al límite</span><span>+</span></button><div class="accordion-panel">Reduce resolución de render antes de tocar demasiadas cosas. Si solo un juego falla, usa una resolución por aplicación. Si usas streaming, recuerda que la GPU también puede estar codificando vídeo para el visor.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://store.steampowered.com/app/250820/SteamVR/" target="_blank" rel="noopener noreferrer"><strong>SteamVR</strong><p>Página oficial de Valve para SteamVR.</p><small>Steam ↗</small></a>
+    <a class="source-card" href="https://help.steampowered.com/en/faqs/view/0E2C-406B-9135-38A4" target="_blank" rel="noopener noreferrer"><strong>Steam Link VR</strong><p>Requisitos y visores compatibles con Steam Link.</p><small>Steam Support ↗</small></a>
+    <a class="source-card" href="https://www.vive.com/" target="_blank" rel="noopener noreferrer"><strong>VIVE</strong><p>Documentación y soporte para hardware Lighthouse/VIVE.</p><small>HTC VIVE ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">
+      ToolHub organiza esta información como guía práctica. Las interfaces, compatibilidades y requisitos
+      pueden cambiar con las actualizaciones del fabricante; revisa las fuentes oficiales cuando vayas a instalar o configurar hardware.
+    </p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button" aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías VR</strong>
+    </div>
+    <div class="footer-links">
+      <a href="conectividad.html">Conectividad</a>
+      <a href="steamvr.html">SteamVR</a>
+      <a href="fbt.html">FBT</a>
+    </div>
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="vr-guides.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Una guía para entender qué hace cada mapa de textura y cómo se relaciona con el material y el shader.">
+  <title>Texturas: MatCap, Masks, Normal Maps y más - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>Texturas: MatCap, Masks, Normal Maps y más</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · TEXTURAS</span>
+        <h1>Texturas: MatCap, Masks, Normal Maps y más</h1>
+        <p>Una guía para entender qué hace cada mapa de textura y cómo se relaciona con el material y el shader.</p>
+        <div class="hero-tags"><span class="hero-tag">Albedo</span><span class="hero-tag">Normal</span><span class="hero-tag">Masks</span><span class="hero-tag">MatCap</span><span class="hero-tag">UV</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Formato</strong><span>Guía visual</span></div><div class="hero-stat"><strong>Uso</strong><span>Materiales</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#mapas">Tipos de mapas</a>
+<a href="#normal">Normal Map</a>
+<a href="#mask">Masks</a>
+<a href="#matcap">MatCap</a>
+<a href="#uv">UV</a>
+<a href="#optimizar">Optimizar</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="mapas">
+  <span class="section-kicker">🗺️ Mapas</span>
+  <h2>Qué información guarda cada textura</h2>
+
+  <div class="term-grid">
+    <div class="term-card"><h3>Base Color / Albedo</h3><p>Color principal de la superficie sin intentar “dibujar” toda la iluminación real dentro de la imagen.</p></div>
+    <div class="term-card"><h3>Normal Map</h3><p>Altera la dirección aparente de la superficie para cambiar cómo reaccionan luces, rim y reflejos.</p></div>
+    <div class="term-card"><h3>Mask</h3><p>Imagen en escala de grises o canales RGBA que decide dónde se aplica un efecto y con qué intensidad.</p></div>
+    <div class="term-card"><h3>MatCap</h3><p>Textura normalmente circular/esférica usada para simular iluminación o reflejo basado en la orientación de la superficie.</p></div>
+    <div class="term-card"><h3>Emission</h3><p>Define zonas autoiluminadas o una máscara para aplicar color/emisión.</p></div>
+    <div class="term-card"><h3>Detail</h3><p>Texturas repetidas de pequeño detalle para tela, piel, metal, suciedad o microrelieve.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="normal">
+  <span class="section-kicker">🧭 Normal Map</span>
+  <h2>Cómo usarlo correctamente</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Importa como Normal Map</h3><p>Selecciona la textura y cambia Texture Type. No la dejes como Default si el shader espera un normal.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>Ajusta intensidad</h3><p>Más fuerza no significa más realismo. Exagerarla puede romper la lectura de la superficie.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Comprueba luz real</h3><p>Rota el avatar o cambia la luz para confirmar que el relieve responde de forma coherente.</p></div></div>
+  </div>
+
+  <div class="notice purple">
+    <strong>🟣 ToolHub:</strong>
+    <a class="guide-inline-link" href="../../herramientas/imagenes/normal-map.html">Normal Map Studio Pro</a>
+    puede convertir una imagen en Normal Map y mostrar una preview de iluminación antes de exportarla.
+  </div>
+</section>
+
+
+
+<section class="guide-section" id="mask">
+  <span class="section-kicker">🎭 Masks</span>
+  <h2>Una textura puede controlar varios efectos</h2>
+
+  <table class="data-table">
+    <thead><tr><th>Canal</th><th>Ejemplo de uso</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td><span class="texture-channel">R</span></td><td>Metallic</td><td>Negro = apagado · Blanco = máximo</td></tr>
+      <tr><td><span class="texture-channel">G</span></td><td>Smoothness</td><td>Control continuo</td></tr>
+      <tr><td><span class="texture-channel">B</span></td><td>Emission Mask</td><td>Solo zonas iluminadas</td></tr>
+      <tr><td><span class="texture-channel">A</span></td><td>Detail / Alpha / otro</td><td>Depende del shader</td></tr>
+    </tbody>
+  </table>
+
+  <div class="notice green">
+    <strong>🟢 Ventaja:</strong> packing RGBA puede sustituir varias máscaras en blanco y negro.
+    Comprueba siempre qué canal espera el shader.
+  </div>
+</section>
+
+<section class="guide-section" id="matcap">
+  <span class="section-kicker">🔮 MatCap</span>
+  <h2>Qué hace y cuándo usarlo</h2>
+
+  <div class="compare-grid">
+    <div class="compare-card"><div class="icon">⚙️</div><h3>Metal</h3><p>Un MatCap contrastado puede dar lectura metálica incluso en mundos con luz plana.</p></div>
+    <div class="compare-card"><div class="icon">🧴</div><h3>Piel / plástico</h3><p>Un MatCap suave añade brillo amplio y controlado sin necesitar geometría adicional.</p></div>
+    <div class="compare-card"><div class="icon">☣️</div><h3>FX estilizado</h3><p>Texturas agresivas, corrosivas o cromáticas pueden cambiar por completo el carácter del material.</p></div>
+  </div>
+
+  <div class="notice purple">
+    <strong>🟣 ToolHub:</strong> el Generador de MatCap de la sección Imágenes te permite crear
+    y exportar MatCaps sin salir de la web.
+  </div>
+</section>
+
+<section class="guide-section" id="uv">
+  <span class="section-kicker">📐 UV</span>
+  <h2>La textura necesita coordenadas</h2>
+  <p>
+    Las UV indican qué zona de una imagen corresponde a cada parte del mesh. Si una textura aparece
+    estirada, desplazada o repetida de forma extraña, el problema puede estar en UV, tiling/offset o en
+    el canal UV seleccionado por el shader.
+  </p>
+
+  <div class="flow-map">
+    <div class="flow-node">Mesh</div><span class="flow-arrow">→</span>
+    <div class="flow-node">UV Coordinates</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Texture</div><span class="flow-arrow">→</span>
+    <div class="flow-node">Material</div>
+  </div>
+</section>
+
+<section class="guide-section" id="optimizar">
+  <span class="section-kicker">⚡ Optimización</span>
+  <h2>Qué revisar antes de subir</h2>
+  <ul class="checklist">
+    <li>Resolución adecuada para el tamaño real de la zona visible.</li>
+    <li>Normal Maps marcados correctamente.</li>
+    <li>Máscaras empaquetadas cuando el shader lo permita.</li>
+    <li>No mantener alfa en texturas que no lo usan.</li>
+    <li>Evitar copias innecesarias del mismo archivo.</li>
+  </ul>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes</h2>
+  <div class="source-grid">
+    <a class="source-card" href="https://docs.unity3d.com/2022.3/Documentation/Manual/NormalMap.html" target="_blank" rel="noopener noreferrer"><strong>Normal Maps</strong><p>Conceptos de normales en Unity.</p><small>Unity ↗</small></a>
+    <a class="source-card" href="https://www.poiyomi.com/color-and-normals/" target="_blank" rel="noopener noreferrer"><strong>Poiyomi Color & Normals</strong><p>Uso de color, normales y mapas en Poiyomi.</p><small>Poiyomi ↗</small></a>
+    <a class="source-card" href="https://lilxyzw.github.io/lilToon/ja_JP/reflections/normal.html" target="_blank" rel="noopener noreferrer"><strong>lilToon Normal Map</strong><p>Cómo afectan los normales a módulos de lilToon.</p><small>lilToon ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

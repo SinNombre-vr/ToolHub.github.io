@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Guía práctica de lilToon: instalación, materiales, normales, MatCap, emisión, optimización y custom shaders.">
+  <title>lilToon - ToolHub</title>
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="unity-guides.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button"
+      aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link active" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#guias">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button"
+        aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <div class="guide-progress" aria-hidden="true"><span></span></div>
+
+  <main class="guide-page">
+    <nav class="guide-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#guias">Guías</a><span>›</span>
+      <span>Unity</span><span>›</span><span>lilToon</span>
+    </nav>
+
+    <section class="guide-hero unity-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · SHADER</span>
+        <h1>lilToon</h1>
+        <p>Guía práctica de lilToon: instalación, materiales, normales, MatCap, emisión, optimización y custom shaders.</p>
+        <div class="hero-tags"><span class="hero-tag">Toon</span><span class="hero-tag">Normal Maps</span><span class="hero-tag">MatCap</span><span class="hero-tag">Emission</span><span class="hero-tag">Presets</span></div>
+      </div>
+
+      <div class="hero-side"><div class="hero-stat"><strong>Enfoque</strong><span>Avatar</span></div><div class="hero-stat"><strong>Quest</strong><span>Material aparte</span></div></div>
+    </section>
+
+    <div class="guide-shell">
+      <aside class="guide-toc" aria-label="Contenido">
+        <div class="guide-toc-title">☰ Contenido</div>
+        <a href="#resumen">Qué es</a>
+<a href="#instalar">Instalar</a>
+<a href="#material">Material</a>
+<a href="#normales">Normales</a>
+<a href="#optimizar">Optimizar</a>
+<a href="#custom">Custom Shader</a>
+<a href="#quest">Quest</a>
+<a href="#problemas">Problemas</a>
+<a href="#fuentes">Fuentes</a>
+      </aside>
+
+      <article class="guide-main">
+        
+<section class="guide-section" id="resumen">
+  <span class="section-kicker">🎨 Resumen</span>
+  <h2>lilToon en una frase</h2>
+  <p class="section-intro">
+    lilToon es un shader toon rico en funciones para avatares, con presets,
+    herramientas de color, normales, MatCap, emisión, outline, dissolve y optimización automática de variantes.
+  </p>
+
+  <div class="summary-grid">
+    <div class="summary-card"><div class="icon">🪄</div><strong>Presets</strong><p>Permiten guardar y reaplicar configuraciones de materiales de forma rápida.</p></div>
+    <div class="summary-card"><div class="icon">🎭</div><strong>Estilo</strong><p>Sombras, rim, MatCap, gloss, outline y múltiples controles de color.</p></div>
+    <div class="summary-card"><div class="icon">⚡</div><strong>Optimización</strong><p>El editor puede eliminar funciones no utilizadas de las variantes generadas.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="instalar">
+  <span class="section-kicker">📦 Instalación</span>
+  <h2>Instalar y mantener limpio el proyecto</h2>
+
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><div><h3>Añade el repositorio VPM</h3><p>La instalación por VCC/VPM es la ruta más cómoda para mantener versiones modernas.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div><h3>No mezcles carpetas antiguas</h3><p>Si aparecen errores tras actualizaciones, revisa que no existan copias viejas del shader dentro de Assets.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div><h3>Haz backup</h3><p>Antes de migrar entre versiones grandes, duplica el proyecto o crea un backup desde VCC.</p></div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="material">
+  <span class="section-kicker">🧱 Material</span>
+  <h2>Orden práctico de configuración</h2>
+
+  <div class="term-grid">
+    <div class="term-card"><h3>Main Color</h3><p>Empieza por textura y color base. Ajusta primero la apariencia general antes de añadir efectos.</p></div>
+    <div class="term-card"><h3>Shadows</h3><p>Controla separación de zonas iluminadas y oscuras; es la base del estilo toon.</p></div>
+    <div class="term-card"><h3>Normal Map</h3><p>Modifica cómo reaccionan sombra, gloss, MatCap, rim y otros módulos a la superficie.</p></div>
+    <div class="term-card"><h3>MatCap / Rim</h3><p>Añade reflejos estilizados y luz de borde. Son potentes, pero conviene usarlos con intención.</p></div>
+    <div class="term-card"><h3>Emission</h3><p>Puede usar máscaras, UV scroll y cambios de color/tiempo para efectos luminosos.</p></div>
+    <div class="term-card"><h3>Rendering</h3><p>Opaque, Cutout, Transparent y variantes especiales cambian coste y orden de render.</p></div>
+  </div>
+</section>
+
+<section class="guide-section" id="normales">
+  <span class="section-kicker">🧭 Normales</span>
+  <h2>El Normal Map no es solo “relieve”</h2>
+  <p>
+    lilToon documenta que el Normal Map modifica cómo responden sombras, backlight,
+    gloss, MatCap, rim, glitter, AudioLink, refraction y otras funciones.
+  </p>
+
+  <div class="notice blue">
+    <strong>🔵 Uso común:</strong> un Normal Map principal para la forma general y otro secundario para microdetalle,
+    por ejemplo piel, tela o metal cepillado.
+  </div>
+</section>
+
+<section class="guide-section" id="optimizar">
+  <span class="section-kicker">⚡ Optimización</span>
+  <h2>No necesitas activar todo</h2>
+
+  <ul class="checklist">
+    <li>Usa Opaque si no necesitas transparencia.</li>
+    <li>Evita doble cara si la geometría está correctamente construida y no necesitas ver ambas caras.</li>
+    <li>Desactiva módulos que no aporten nada visible.</li>
+    <li>Reduce resoluciones y reutiliza máscaras.</li>
+    <li>Revisa material slots del avatar además del coste del shader.</li>
+  </ul>
+</section>
+
+<section class="guide-section" id="custom">
+  <span class="section-kicker">🧪 Custom Shader</span>
+  <h2>lilToon también permite extensiones personalizadas</h2>
+  <p>
+    La documentación oficial incluye una plantilla para custom shaders basada en archivos HLSL,
+    bloques de propiedades e inspector personalizado.
+  </p>
+
+  <div class="code-sample">Template/
+├─ Shaders/custom.hlsl
+├─ Shaders/custom_insert.hlsl
+├─ Shaders/lilCustomShaderDatas.lilblock
+├─ Shaders/lilCustomShaderProperties.lilblock
+└─ Editor/CustomInspector.cs</div>
+
+  <div class="notice purple">
+    <strong>🟣 Para empezar:</strong> si solo quieres un efecto sencillo, primero intenta hacerlo
+    con las funciones integradas de lilToon antes de crear una variante custom.
+  </div>
+</section>
+
+<section class="guide-section" id="quest">
+  <span class="section-kicker">📱 Quest / Android</span>
+  <h2>Shader móvil separado</h2>
+  <p>
+    Igual que con otros shaders personalizados, los avatares Android/Quest de VRChat
+    deben usar los shaders móviles permitidos por el SDK. Mantén una versión móvil del material.
+  </p>
+</section>
+
+<section class="guide-section" id="problemas">
+  <span class="section-kicker">🛠 Diagnóstico</span>
+  <h2>Errores frecuentes</h2>
+
+  <div class="accordion-list">
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>Unity muestra errores después de actualizar lilToon</span><span>+</span></button><div class="accordion-panel">La documentación oficial recomienda comprobar Console, reinstalar la versión actual y evitar que convivan copias de versiones diferentes.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El material está rosa</span><span>+</span></button><div class="accordion-panel">Comprueba que el shader exista y compile. Si el proyecto tiene errores de scripts, Unity también puede impedir que el SDK funcione correctamente.</div></div>
+    <div class="accordion-item"><button class="accordion-trigger" aria-expanded="false"><span>El efecto se ve distinto entre mundos</span><span>+</span></button><div class="accordion-panel">Prueba distintos entornos de iluminación. Shading, rim, MatCap y emission responden de forma diferente según el mundo.</div></div>
+  </div>
+</section>
+
+<section class="guide-section" id="fuentes">
+  <span class="section-kicker">🔗 Referencias</span>
+  <h2>Fuentes oficiales</h2>
+
+  <div class="source-grid">
+    <a class="source-card" href="https://lilxyzw.github.io/lilToon/" target="_blank" rel="noopener noreferrer"><strong>lilToon</strong><p>Página oficial y acceso a documentación.</p><small>lilxyzw ↗</small></a>
+    <a class="source-card" href="https://lilxyzw.github.io/vpm-repos/" target="_blank" rel="noopener noreferrer"><strong>VPM Repository</strong><p>Repositorio oficial para VCC.</p><small>lilxyzw ↗</small></a>
+    <a class="source-card" href="https://lilxyzw.github.io/lilToon/ja_JP/dev/custom_shader.html" target="_blank" rel="noopener noreferrer"><strong>Custom Shader</strong><p>Plantilla y estructura oficial para extensiones.</p><small>Docs ↗</small></a>
+  </div>
+</section>
+
+      </article>
+    </div>
+
+    <p class="guide-footer-note">ToolHub organiza esta información como guía práctica. Unity, VRChat y los paquetes de terceros cambian con el tiempo; revisa siempre las fuentes oficiales antes de actualizar un proyecto.</p>
+  </main>
+
+  <button class="back-top" id="backTop" type="button"
+    aria-label="Volver arriba">↑</button>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <strong>Guías Unity</strong>
+    </div>
+
+    <div class="footer-links">
+      
+      <a href="optimizar-texturas.html">Texturas</a>
+      <a href="poiyomi.html">Poiyomi</a>
+      <a href="liltoon.html">lilToon</a>
+      <a href="materiales.html">Materiales</a>
+      <a href="shaders.html">Shaders</a>
+    
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.</p>
+  </footer>
+
+  <script src="unity-guides.js"></script>
+</body>
+</html>

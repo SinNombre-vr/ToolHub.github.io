@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="copyright" content="© 匚尺丨丂. Todos los derechos reservados.">
+  <meta name="description" content="Normal Map Studio Pro de ToolHub: genera mapas normales a partir de imágenes con preview de relieve en tiempo real y exportación PNG para Unity.">
+  <title>Normal Map Studio Pro - ToolHub</title>
+
+  <script>
+    try {
+      if (localStorage.getItem("toolhub_privacy_notice_v1") !== "accepted") {
+        document.documentElement.classList.add("privacy-pending");
+      }
+    } catch (error) {
+      document.documentElement.classList.add("privacy-pending");
+    }
+  </script>
+
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="image-tools.css">
+  <link rel="stylesheet" href="normal-map.css">
+</head>
+
+<body data-image-tool="normal-map">
+  <header class="topbar">
+    <a class="brand" href="../../index.html#inicio" aria-label="Ir al inicio">
+      <span class="brand-icon">⬡</span>
+      <span class="brand-text"><strong>TOOL</strong>HUB</span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navegación principal">
+      <a class="nav-link" href="../../index.html#inicio">Inicio</a>
+      <a class="nav-link active" href="../../index.html#herramientas">Herramientas</a>
+      <a class="nav-link" href="../../index.html#guias">Guías</a>
+    </nav>
+
+    <div class="header-actions">
+      <a class="button secondary" href="../../index.html#imagenes">← Volver</a>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Cambiar tema">☾</button>
+    </div>
+  </header>
+
+  <main class="tool-main normal-main">
+    <nav class="tool-breadcrumb" aria-label="Ruta">
+      <a href="../../index.html#inicio">Inicio</a><span>›</span>
+      <a href="../../index.html#herramientas">Herramientas</a><span>›</span>
+      <a href="../../index.html#imagenes">Imágenes</a><span>›</span>
+      <span>Normal Map Studio Pro</span>
+    </nav>
+
+    <section class="tool-page-hero normal-hero">
+      <div>
+        <span class="eyebrow purple">UNITY · VRCHAT · NORMAL MAP</span>
+        <h1>Normal Map Studio Pro</h1>
+        <p>
+          Convierte una imagen en un Normal Map, controla cómo se interpreta la profundidad
+          y comprueba el relieve con una iluminación interactiva antes de exportarlo a Unity.
+        </p>
+      </div>
+
+      <div class="local-processing-badge">🔒 100% local · sin subir imágenes</div>
+    </section>
+
+    <section class="tool-panel normal-source-panel">
+      <div class="panel-title-row">
+        <div>
+          <h2>1. Imagen de origen</h2>
+          <p class="panel-description">
+            Arrastra una textura o imagen. ToolHub interpreta su luminosidad o canal seleccionado como altura.
+          </p>
+        </div>
+        <span class="normal-pro-pill">PRO</span>
+      </div>
+
+      <label class="drop-zone normal-drop-zone" id="normalDropZone">
+        <input id="normalFileInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp">
+        <span>
+          <span class="drop-icon">🧭</span>
+          <strong>Arrastra una imagen o haz clic para cargarla</strong>
+          <small>PNG · JPG · WEBP · BMP · Procesamiento local en el navegador</small>
+        </span>
+      </label>
+
+      <div class="file-summary" id="normalFileSummary" hidden>
+        <strong id="normalFileName">—</strong>
+        <div class="file-meta">
+          <span id="normalFileSize">—</span>
+          <span id="normalFileDimensions">—</span>
+          <span id="normalFileType">—</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="normal-preview-grid" aria-label="Previews">
+      <article class="tool-panel normal-preview-card">
+        <div class="normal-preview-head">
+          <div>
+            <span class="normal-stage">ORIGINAL</span>
+            <h2>Imagen de entrada</h2>
+          </div>
+        </div>
+        <div class="normal-canvas-wrap checker">
+          <canvas id="sourceCanvas" width="480" height="480" aria-label="Imagen original"></canvas>
+          <div class="normal-canvas-placeholder" id="sourcePlaceholder">Carga una imagen para comenzar.</div>
+        </div>
+      </article>
+
+      <article class="tool-panel normal-preview-card">
+        <div class="normal-preview-head">
+          <div>
+            <span class="normal-stage">HEIGHT</span>
+            <h2>Mapa de altura</h2>
+          </div>
+          <button class="mini-button" id="autoLevelsButton" type="button" disabled>Auto Levels</button>
+        </div>
+        <div class="normal-canvas-wrap">
+          <canvas id="heightCanvas" width="480" height="480" aria-label="Mapa de altura"></canvas>
+          <div class="normal-canvas-placeholder" id="heightPlaceholder">Aquí verás qué zonas se interpretan como altas y bajas.</div>
+        </div>
+      </article>
+
+      <article class="tool-panel normal-preview-card accent">
+        <div class="normal-preview-head">
+          <div>
+            <span class="normal-stage purple">NORMAL</span>
+            <h2>Normal Map generado</h2>
+          </div>
+          <span class="normal-neutral-chip">Neutral #8080FF</span>
+        </div>
+        <div class="normal-canvas-wrap">
+          <canvas id="normalCanvas" width="480" height="480" aria-label="Normal Map generado"></canvas>
+          <div class="normal-canvas-placeholder" id="normalPlaceholder">El Normal Map aparecerá en tiempo real.</div>
+        </div>
+      </article>
+
+      <article class="tool-panel normal-preview-card relief-card">
+        <div class="normal-preview-head">
+          <div>
+            <span class="normal-stage green">RELIEVE</span>
+            <h2>Preview de profundidad</h2>
+          </div>
+          <span class="normal-drag-hint">Arrastra la luz</span>
+        </div>
+        <div class="normal-canvas-wrap relief-wrap" id="reliefWrap">
+          <canvas id="reliefCanvas" width="480" height="480" aria-label="Preview de iluminación del Normal Map"></canvas>
+          <div class="normal-canvas-placeholder" id="reliefPlaceholder">La luz mostrará cómo reaccionaría el relieve.</div>
+          <div class="normal-light-indicator" id="lightIndicator" hidden></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="normal-editor-grid">
+      <div class="normal-editor-column">
+        <section class="tool-panel accent">
+          <div class="panel-title-row">
+            <div>
+              <h2>2. Interpretación de altura</h2>
+              <p class="panel-description">
+                Decide qué información de la imagen representa profundidad antes de generar las normales.
+              </p>
+            </div>
+          </div>
+
+          <div class="normal-control-grid">
+            <div class="control-group">
+              <label for="heightChannel">Fuente de altura</label>
+              <select id="heightChannel">
+                <option value="luminance" selected>Luminancia perceptual</option>
+                <option value="average">Promedio RGB</option>
+                <option value="red">Canal rojo</option>
+                <option value="green">Canal verde</option>
+                <option value="blue">Canal azul</option>
+                <option value="alpha">Canal alfa</option>
+                <option value="max">Canal más brillante</option>
+                <option value="min">Canal más oscuro</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="edgeMode">Bordes</label>
+              <select id="edgeMode">
+                <option value="clamp" selected>Clamp · textura normal</option>
+                <option value="wrap">Wrap · textura tileable</option>
+              </select>
+            </div>
+
+            <div class="control-group full">
+              <label for="blackPoint">Punto negro</label>
+              <div class="range-row">
+                <input id="blackPoint" type="range" min="0" max="49" value="0">
+                <output class="range-value" id="blackPointValue">0%</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="whitePoint">Punto blanco</label>
+              <div class="range-row">
+                <input id="whitePoint" type="range" min="51" max="100" value="100">
+                <output class="range-value" id="whitePointValue">100%</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="heightContrast">Contraste de altura</label>
+              <div class="range-row">
+                <input id="heightContrast" type="range" min="20" max="300" value="110">
+                <output class="range-value" id="heightContrastValue">1.10</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="heightGamma">Gamma</label>
+              <div class="range-row">
+                <input id="heightGamma" type="range" min="20" max="300" value="100">
+                <output class="range-value" id="heightGammaValue">1.00</output>
+              </div>
+            </div>
+
+            <label class="check-row">
+              <input id="invertHeight" type="checkbox">
+              <span>Invertir altura · oscuro = alto</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="tool-panel">
+          <div class="panel-title-row">
+            <div>
+              <h2>3. Profundidad y detalle</h2>
+              <p class="panel-description">
+                Controla la intensidad del relieve y cuánto detalle fino pasa al Normal Map.
+              </p>
+            </div>
+          </div>
+
+          <div class="normal-control-grid">
+            <div class="control-group full">
+              <label for="normalStrength">Fuerza / profundidad</label>
+              <div class="range-row">
+                <input id="normalStrength" type="range" min="5" max="1000" value="220">
+                <output class="range-value" id="normalStrengthValue">2.20</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="heightBlur">Suavizado previo</label>
+              <div class="range-row">
+                <input id="heightBlur" type="range" min="0" max="12" value="1">
+                <output class="range-value" id="heightBlurValue">1 px</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="sampleRadius">Escala del relieve</label>
+              <div class="range-row">
+                <input id="sampleRadius" type="range" min="1" max="5" value="1">
+                <output class="range-value" id="sampleRadiusValue">1 px</output>
+              </div>
+            </div>
+
+            <label class="check-row">
+              <input id="flipX" type="checkbox">
+              <span>Invertir canal X · rojo</span>
+            </label>
+
+            <label class="check-row">
+              <input id="flipY" type="checkbox">
+              <span>Invertir canal Y · verde</span>
+            </label>
+          </div>
+
+          <div class="normal-preset-row" aria-label="Presets de Normal Map">
+            <button class="preset-button" type="button" data-normal-preset="softSkin">🫧 Piel suave</button>
+            <button class="preset-button" type="button" data-normal-preset="cloth">🧵 Tela</button>
+            <button class="preset-button" type="button" data-normal-preset="engraved">⚙️ Grabado</button>
+            <button class="preset-button" type="button" data-normal-preset="stone">🪨 Piedra</button>
+            <button class="preset-button" type="button" data-normal-preset="tattoo">🖋️ Tatuaje / detalle</button>
+            <button class="preset-button" type="button" data-normal-preset="crisp">🔹 Nítido</button>
+          </div>
+
+          <div class="tool-actions">
+            <button class="button secondary" id="resetNormalSettings" type="button">↻ Restablecer</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="normal-editor-column">
+        <section class="tool-panel normal-light-panel">
+          <div class="panel-title-row">
+            <div>
+              <h2>4. Preview de iluminación</h2>
+              <p class="panel-description">
+                Estos controles no modifican el PNG final: solo sirven para inspeccionar el relieve.
+              </p>
+            </div>
+          </div>
+
+          <div class="normal-control-grid">
+            <div class="control-group">
+              <label for="previewMode">Material de preview</label>
+              <select id="previewMode">
+                <option value="source" selected>Color original</option>
+                <option value="gray">Gris neutro</option>
+                <option value="height">Mapa de altura</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="lightColor">Color de luz</label>
+              <input class="normal-color-input" id="lightColor" type="color" value="#ffffff">
+            </div>
+
+            <div class="control-group full">
+              <label for="lightX">Luz horizontal</label>
+              <div class="range-row">
+                <input id="lightX" type="range" min="-100" max="100" value="-35">
+                <output class="range-value" id="lightXValue">-0.35</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="lightY">Luz vertical</label>
+              <div class="range-row">
+                <input id="lightY" type="range" min="-100" max="100" value="-42">
+                <output class="range-value" id="lightYValue">-0.42</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="ambientLight">Ambiente</label>
+              <div class="range-row">
+                <input id="ambientLight" type="range" min="0" max="100" value="28">
+                <output class="range-value" id="ambientLightValue">0.28</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="diffuseLight">Intensidad de luz</label>
+              <div class="range-row">
+                <input id="diffuseLight" type="range" min="0" max="200" value="105">
+                <output class="range-value" id="diffuseLightValue">1.05</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="specularLight">Especular</label>
+              <div class="range-row">
+                <input id="specularLight" type="range" min="0" max="200" value="32">
+                <output class="range-value" id="specularLightValue">0.32</output>
+              </div>
+            </div>
+
+            <div class="control-group full">
+              <label for="shininess">Dureza especular</label>
+              <div class="range-row">
+                <input id="shininess" type="range" min="2" max="160" value="48">
+                <output class="range-value" id="shininessValue">48</output>
+              </div>
+            </div>
+          </div>
+
+          <div class="normal-note">
+            <strong>Cómo leer el relieve:</strong> mueve la luz de izquierda a derecha.
+            Si una zona que debería sobresalir parece hundirse, prueba <em>Invertir altura</em>
+            o <em>Invertir canal Y</em>.
+          </div>
+        </section>
+
+        <section class="tool-panel accent normal-export-panel">
+          <div class="panel-title-row">
+            <div>
+              <h2>5. Exportar para Unity</h2>
+              <p class="panel-description">
+                El Normal Map se exporta como PNG RGB. Mantén el original por si necesitas regenerarlo.
+              </p>
+            </div>
+          </div>
+
+          <div class="normal-control-grid">
+            <div class="control-group">
+              <label for="exportResolution">Resolución</label>
+              <select id="exportResolution">
+                <option value="original" selected>Original</option>
+                <option value="512">Máx. 512 px</option>
+                <option value="1024">Máx. 1024 px</option>
+                <option value="2048">Máx. 2048 px</option>
+                <option value="4096">Máx. 4096 px</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="exportName">Nombre</label>
+              <input id="exportName" class="normal-text-input" type="text" value="normal-map" maxlength="80">
+            </div>
+          </div>
+
+          <div class="tool-actions">
+            <button class="button success" id="downloadNormal" type="button" disabled>Descargar Normal Map PNG</button>
+            <button class="button secondary" id="downloadHeight" type="button" disabled>Descargar Height PNG</button>
+            <button class="button secondary" id="downloadConfig" type="button">Config JSON</button>
+            <label class="button secondary file-button">
+              Cargar JSON
+              <input id="loadConfig" type="file" accept="application/json,.json">
+            </label>
+          </div>
+
+          <div class="status-box" id="normalStatus" aria-live="polite">
+            Carga una imagen para generar tu Normal Map.
+          </div>
+
+          <div class="unity-tips normal-unity-tips">
+            <div class="unity-tip">
+              <strong>Texture Type</strong>
+              <span>Normal map</span>
+            </div>
+            <div class="unity-tip">
+              <strong>Wrap Mode</strong>
+              <span>Repeat si la textura es tileable; Clamp si no lo es.</span>
+            </div>
+            <div class="unity-tip">
+              <strong>Uso</strong>
+              <span>Asigna el PNG al slot Normal Map de Poiyomi, lilToon u otro shader compatible.</span>
+            </div>
+            <div class="unity-tip">
+              <strong>Si se ve invertido</strong>
+              <span>Prueba el canal Y/verde antes de volver a generar desde cero.</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+
+    <section class="normal-advanced-suite" id="normalAdvancedLab">
+      <section class="tool-panel normal-advanced-header accent">
+        <div class="panel-title-row">
+          <div>
+            <span class="eyebrow purple">LABORATORIO AVANZADO</span>
+            <h2>Herramientas Pro adicionales</h2>
+            <p class="panel-description">
+              Estas funciones trabajan encima del generador principal. El núcleo original
+              permanece intacto para que puedas seguir usando exactamente el flujo que ya funciona.
+            </p>
+          </div>
+          <span class="normal-core-safe">CORE INTACTO</span>
+        </div>
+
+        <div class="normal-advanced-toolbar">
+          <button class="button secondary" id="advancedUndo" type="button" disabled>↶ Deshacer</button>
+          <button class="button secondary" id="advancedRedo" type="button" disabled>↷ Rehacer</button>
+          <span class="normal-toolbar-separator"></span>
+          <button class="button secondary" id="saveSnapshotA" type="button">Guardar A</button>
+          <button class="button secondary" id="applySnapshotA" type="button" disabled>Aplicar A</button>
+          <button class="button secondary" id="saveSnapshotB" type="button">Guardar B</button>
+          <button class="button secondary" id="applySnapshotB" type="button" disabled>Aplicar B</button>
+          <span class="normal-toolbar-separator"></span>
+          <label class="normal-toolbar-control">
+            <span>Zoom previews</span>
+            <select id="globalPreviewZoom">
+              <option value="75">75%</option>
+              <option value="100" selected>100%</option>
+              <option value="150">150%</option>
+              <option value="200">200%</option>
+              <option value="300">300%</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="normal-advanced-top-grid">
+        <article class="tool-panel normal-3d-panel">
+          <div class="normal-preview-head">
+            <div>
+              <span class="normal-stage purple">PREVIEW 3D</span>
+              <h2>Normal Map sobre geometría</h2>
+            </div>
+            <span class="normal-drag-hint">Arrastra para rotar</span>
+          </div>
+
+          <div class="normal-3d-wrap" id="normal3dWrap">
+            <canvas id="normal3dCanvas" width="720" height="480" aria-label="Preview 3D del Normal Map"></canvas>
+            <div class="normal-canvas-placeholder" id="normal3dPlaceholder">
+              Carga una imagen para activar la preview 3D.
+            </div>
+          </div>
+
+          <div class="normal-3d-controls">
+            <label>
+              <span>Geometría</span>
+              <select id="preview3dShape">
+                <option value="sphere" selected>Esfera</option>
+                <option value="cube">Cubo</option>
+                <option value="plane">Plano</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Material</span>
+              <select id="preview3dBase">
+                <option value="source" selected>Imagen original</option>
+                <option value="gray">Gris neutro</option>
+                <option value="white">Blanco</option>
+              </select>
+            </label>
+
+            <label class="check-row compact">
+              <input id="preview3dRotate" type="checkbox">
+              <span>Rotación automática</span>
+            </label>
+
+            <button class="button secondary" id="reset3dView" type="button">Reset cámara</button>
+          </div>
+        </article>
+
+        <article class="tool-panel normal-compare-panel">
+          <div class="normal-preview-head">
+            <div>
+              <span class="normal-stage green">ANTES / DESPUÉS</span>
+              <h2>Comparador interactivo</h2>
+            </div>
+            <output id="compareSplitValue" class="normal-neutral-chip">50%</output>
+          </div>
+
+          <div class="normal-compare-wrap" id="compareWrap">
+            <canvas id="compareBaseCanvas" width="720" height="480" aria-label="Original"></canvas>
+            <div class="normal-compare-overlay" id="compareOverlay">
+              <canvas id="compareEffectCanvas" width="720" height="480" aria-label="Con relieve"></canvas>
+            </div>
+            <div class="normal-compare-divider" id="compareDivider"></div>
+            <span class="compare-label before">ORIGINAL</span>
+            <span class="compare-label after">RELIEVE</span>
+          </div>
+
+          <div class="control-group full">
+            <label for="compareSplit">Deslizador de comparación</label>
+            <div class="range-row">
+              <input id="compareSplit" type="range" min="0" max="100" value="50">
+              <output class="range-value">Arrastra</output>
+            </div>
+          </div>
+
+          <div class="normal-note">
+            El lado derecho usa la preview de iluminación del generador principal;
+            no modifica el PNG exportado.
+          </div>
+        </article>
+      </section>
+
+      <section class="tool-panel normal-channel-panel">
+        <div class="panel-title-row">
+          <div>
+            <span class="normal-stage">CANALES</span>
+            <h2>Comparador de fuentes de altura</h2>
+            <p class="panel-description">
+              Compara visualmente qué canal contiene mejor la profundidad antes de elegirlo.
+              Haz clic sobre una preview para usar ese canal en el generador principal.
+            </p>
+          </div>
+        </div>
+
+        <div class="normal-channel-grid" id="channelPreviewGrid">
+          <button class="normal-channel-card" type="button" data-height-channel="luminance">
+            <canvas width="220" height="150"></canvas><strong>Luminancia</strong>
+          </button>
+          <button class="normal-channel-card" type="button" data-height-channel="red">
+            <canvas width="220" height="150"></canvas><strong>Rojo</strong>
+          </button>
+          <button class="normal-channel-card" type="button" data-height-channel="green">
+            <canvas width="220" height="150"></canvas><strong>Verde</strong>
+          </button>
+          <button class="normal-channel-card" type="button" data-height-channel="blue">
+            <canvas width="220" height="150"></canvas><strong>Azul</strong>
+          </button>
+          <button class="normal-channel-card" type="button" data-height-channel="alpha">
+            <canvas width="220" height="150"></canvas><strong>Alfa</strong>
+          </button>
+          <button class="normal-channel-card" type="button" data-height-channel="average">
+            <canvas width="220" height="150"></canvas><strong>Promedio RGB</strong>
+          </button>
+        </div>
+      </section>
+
+      <section class="normal-advanced-work-grid">
+        <article class="tool-panel normal-height-lab accent">
+          <div class="panel-title-row">
+            <div>
+              <span class="normal-stage purple">HEIGHT LAB</span>
+              <h2>Editar el mapa de altura</h2>
+              <p class="panel-description">
+                Copia el Height Map actual, carga uno externo o corrige zonas manualmente
+                antes de generar un Normal Map avanzado.
+              </p>
+            </div>
+          </div>
+
+          <div class="normal-height-source-row">
+            <button class="button secondary" id="syncHeightFromCore" type="button" disabled>Copiar Height actual</button>
+
+            <label class="button secondary file-button">
+              Cargar Height Map
+              <input id="externalHeightInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp">
+            </label>
+
+            <button class="button secondary" id="clearHeightEdits" type="button" disabled>Limpiar edición</button>
+          </div>
+
+          <div class="normal-edit-canvas-wrap" id="heightEditWrap">
+            <canvas id="heightEditCanvas" width="720" height="480" aria-label="Height Map editable"></canvas>
+            <div class="normal-canvas-placeholder" id="heightEditPlaceholder">
+              Copia el Height actual o carga un Height Map externo.
+            </div>
+            <div class="normal-brush-cursor" id="normalBrushCursor" hidden></div>
+          </div>
+
+          <div class="normal-paint-toolbar">
+            <div class="normal-segmented" role="group" aria-label="Herramienta de pintura">
+              <button type="button" class="active" data-height-brush="raise">＋ Elevar</button>
+              <button type="button" data-height-brush="lower">－ Hundir</button>
+              <button type="button" data-height-brush="smooth">≈ Suavizar</button>
+              <button type="button" data-height-brush="erase">⌫ Borrar corrección</button>
+            </div>
+
+            <div class="control-group">
+              <label for="heightBrushSize">Tamaño pincel</label>
+              <div class="range-row">
+                <input id="heightBrushSize" type="range" min="4" max="120" value="38">
+                <output class="range-value" id="heightBrushSizeValue">38 px</output>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="heightBrushPower">Fuerza pincel</label>
+              <div class="range-row">
+                <input id="heightBrushPower" type="range" min="1" max="100" value="24">
+                <output class="range-value" id="heightBrushPowerValue">24%</output>
+              </div>
+            </div>
+          </div>
+
+          <div class="normal-advanced-filter-grid">
+            <div class="normal-advanced-filter">
+              <label class="check-row">
+                <input id="multiscaleEnabled" type="checkbox">
+                <span>Separación de detalle por escalas</span>
+              </label>
+
+              <div class="control-group">
+                <label for="macroDetail">Macro</label>
+                <div class="range-row">
+                  <input id="macroDetail" type="range" min="0" max="200" value="100">
+                  <output id="macroDetailValue" class="range-value">1.00</output>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="mediumDetail">Medio</label>
+                <div class="range-row">
+                  <input id="mediumDetail" type="range" min="0" max="300" value="100">
+                  <output id="mediumDetailValue" class="range-value">1.00</output>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="microDetail">Micro</label>
+                <div class="range-row">
+                  <input id="microDetail" type="range" min="0" max="400" value="100">
+                  <output id="microDetailValue" class="range-value">1.00</output>
+                </div>
+              </div>
+            </div>
+
+            <div class="normal-advanced-filter">
+              <label class="check-row">
+                <input id="seamFixEnabled" type="checkbox">
+                <span>Edge Seam Fix · texturas tileables</span>
+              </label>
+
+              <div class="control-group">
+                <label for="seamFixWidth">Anchura del borde</label>
+                <div class="range-row">
+                  <input id="seamFixWidth" type="range" min="1" max="20" value="6">
+                  <output id="seamFixWidthValue" class="range-value">6%</output>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label for="seamFixStrength">Fuerza</label>
+                <div class="range-row">
+                  <input id="seamFixStrength" type="range" min="0" max="100" value="70">
+                  <output id="seamFixStrengthValue" class="range-value">70%</output>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tool-actions">
+            <button class="button primary" id="generateAdvancedNormal" type="button" disabled>Generar Normal avanzado</button>
+          </div>
+        </article>
+
+        <article class="tool-panel normal-mixer-panel">
+          <div class="panel-title-row">
+            <div>
+              <span class="normal-stage green">NORMAL MIXER</span>
+              <h2>Combinar Normal Maps</h2>
+              <p class="panel-description">
+                Mezcla el Normal principal con un segundo Normal de detalle: poros, tela,
+                arañazos, costuras, grabados o microdetalle.
+              </p>
+            </div>
+          </div>
+
+          <label class="drop-zone normal-detail-drop">
+            <input id="detailNormalInput" type="file" accept="image/png,image/jpeg,image/webp,image/bmp">
+            <span>
+              <span class="drop-icon">➕</span>
+              <strong>Cargar Normal Map de detalle</strong>
+              <small>Se adapta automáticamente al tamaño del Normal base.</small>
+            </span>
+          </label>
+
+          <div class="normal-control-grid">
+            <div class="control-group full">
+              <label for="detailNormalStrength">Intensidad del detalle</label>
+              <div class="range-row">
+                <input id="detailNormalStrength" type="range" min="0" max="200" value="100">
+                <output id="detailNormalStrengthValue" class="range-value">1.00</output>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="normalBlendMode">Método</label>
+              <select id="normalBlendMode">
+                <option value="rnm" selected>Reoriented / RNM</option>
+                <option value="whiteout">Whiteout</option>
+                <option value="linear">Linear normalize</option>
+              </select>
+            </div>
+
+            <label class="check-row compact">
+              <input id="detailFlipY" type="checkbox">
+              <span>Invertir Y del Normal de detalle</span>
+            </label>
+          </div>
+
+          <div class="normal-advanced-output-grid">
+            <div>
+              <span class="normal-stage">AVANZADO</span>
+              <div class="normal-canvas-wrap small">
+                <canvas id="advancedNormalCanvas" width="480" height="480"></canvas>
+                <div class="normal-canvas-placeholder" id="advancedNormalPlaceholder">Genera un Normal avanzado o se usará el Normal principal.</div>
+              </div>
+            </div>
+
+            <div>
+              <span class="normal-stage purple">COMBINADO</span>
+              <div class="normal-canvas-wrap small">
+                <canvas id="combinedNormalCanvas" width="480" height="480"></canvas>
+                <div class="normal-canvas-placeholder" id="combinedNormalPlaceholder">El resultado combinado aparecerá aquí.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tool-actions">
+            <button class="button success" id="downloadCombinedNormal" type="button" disabled>Descargar Normal combinado</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="normal-advanced-mid-grid">
+        <article class="tool-panel normal-tile-panel">
+          <div class="normal-preview-head">
+            <div>
+              <span class="normal-stage">TILE PREVIEW</span>
+              <h2>Comprobar repetición y costuras</h2>
+            </div>
+          </div>
+
+          <div class="normal-tile-controls">
+            <label>
+              <span>Contenido</span>
+              <select id="tilePreviewSource">
+                <option value="combined" selected>Normal combinado</option>
+                <option value="normal">Normal principal</option>
+                <option value="height">Height Map</option>
+                <option value="source">Imagen original</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Repeticiones</span>
+              <select id="tilePreviewCount">
+                <option value="2">2 × 2</option>
+                <option value="3" selected>3 × 3</option>
+                <option value="4">4 × 4</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="normal-tile-wrap">
+            <canvas id="tilePreviewCanvas" width="600" height="600"></canvas>
+            <div class="normal-canvas-placeholder" id="tilePreviewPlaceholder">Carga una imagen para comprobar sus costuras.</div>
+          </div>
+        </article>
+
+        <article class="tool-panel normal-tech-panel">
+          <div class="normal-preview-head">
+            <div>
+              <span class="normal-stage green">INFO EN VIVO</span>
+              <h2>Estado técnico</h2>
+            </div>
+          </div>
+
+          <div class="normal-tech-grid">
+            <div><span>Origen</span><strong id="techSourceSize">—</strong></div>
+            <div><span>Preview</span><strong id="techPreviewSize">—</strong></div>
+            <div><span>Exportación</span><strong id="techExportSize">—</strong></div>
+            <div><span>Memoria RGBA aprox.</span><strong id="techMemory">—</strong></div>
+            <div><span>Rango Height</span><strong id="techHeightRange">—</strong></div>
+            <div><span>Normal Strength</span><strong id="techStrength">—</strong></div>
+          </div>
+
+          <div class="normal-tech-warning" id="techWarning">
+            Carga una imagen para analizar la configuración.
+          </div>
+
+          <hr class="normal-subtle-separator">
+
+          <div class="panel-title-row compact">
+            <div>
+              <span class="normal-stage purple">UNITY / VRCHAT</span>
+              <h3>Preset de importación</h3>
+            </div>
+          </div>
+
+          <div class="normal-control-grid">
+            <div class="control-group">
+              <label for="unityImportProfile">Perfil</label>
+              <select id="unityImportProfile">
+                <option value="unityPc">Unity PC</option>
+                <option value="vrchatPc" selected>VRChat PC</option>
+                <option value="vrchatQuest">VRChat Quest / Android</option>
+              </select>
+            </div>
+
+            <button class="button secondary normal-copy-settings" id="copyUnitySettings" type="button">Copiar ajustes</button>
+          </div>
+
+          <pre class="normal-import-settings" id="unityImportSettings"></pre>
+        </article>
+      </section>
+
+      <section class="tool-panel normal-batch-panel">
+        <div class="panel-title-row">
+          <div>
+            <span class="normal-stage purple">BATCH</span>
+            <h2>Procesamiento múltiple</h2>
+            <p class="panel-description">
+              Aplica la configuración actual a varias imágenes y descarga todos los Normal Maps en un ZIP.
+              El batch usa los controles principales y los filtros Macro/Micro + Seam Fix;
+              las pinceladas manuales no se aplican a todas las imágenes.
+            </p>
+          </div>
+        </div>
+
+        <div class="normal-batch-grid">
+          <label class="drop-zone normal-batch-drop">
+            <input id="batchNormalInput" type="file" multiple accept="image/png,image/jpeg,image/webp,image/bmp">
+            <span>
+              <span class="drop-icon">🗂️</span>
+              <strong>Seleccionar varias imágenes</strong>
+              <small id="batchFileSummary">Ningún archivo seleccionado</small>
+            </span>
+          </label>
+
+          <div class="normal-batch-options">
+            <div class="control-group">
+              <label for="batchMaxSize">Resolución máxima</label>
+              <select id="batchMaxSize">
+                <option value="original">Original</option>
+                <option value="1024">1024 px</option>
+                <option value="2048" selected>2048 px</option>
+                <option value="4096">4096 px</option>
+              </select>
+            </div>
+
+            <button class="button success" id="runBatchNormal" type="button" disabled>Generar ZIP</button>
+          </div>
+        </div>
+
+        <div class="normal-batch-progress" id="batchProgress" hidden>
+          <div><span id="batchProgressText">Preparando…</span><strong id="batchProgressValue">0%</strong></div>
+          <progress id="batchProgressBar" max="100" value="0"></progress>
+        </div>
+      </section>
+    </section>
+
+
+    <section class="tool-panel normal-explainer">
+      <span class="eyebrow blue">IMPORTANTE</span>
+      <h2>De imagen a Normal Map: qué está haciendo ToolHub</h2>
+      <p>
+        Una imagen 2D no contiene profundidad real. Esta herramienta crea un <strong>mapa de altura aproximado</strong>
+        a partir del brillo o canal seleccionado y calcula las pendientes de esa altura para construir las normales.
+        Es ideal para detalles de piel, tela, grabados, tatuajes, ruido y superficies, pero no puede reconstruir
+        geometría 3D que no exista en la imagen.
+      </p>
+
+      <div class="normal-process-flow">
+        <span>Imagen</span><b>→</b>
+        <span>Altura</span><b>→</b>
+        <span>Pendientes X/Y</span><b>→</b>
+        <span>Normal RGB</span><b>→</b>
+        <span>Preview de luz</span>
+      </div>
+    </section>
+
+    <section class="tool-switcher" aria-label="Otras herramientas de imagen">
+      <h2>Herramientas de imagen</h2>
+      <div class="tool-switcher-grid">
+        <a class="tool-switcher-link" href="conversor.html">🖼️ Conversor</a>
+        <a class="tool-switcher-link" href="redimensionar.html">↔️ Redimensionar</a>
+        <a class="tool-switcher-link" href="comprimir.html">📦 Comprimir</a>
+        <a class="tool-switcher-link" href="gradientes.html">🎨 Gradientes</a>
+        <a class="tool-switcher-link" href="matcap.html">🔮 MatCap</a>
+        <a class="tool-switcher-link active" href="normal-map.html">🧭 Normal Map</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-owner">
+      <a href="../../index.html#inicio" class="footer-brand">TOOLHUB</a>
+      <span>Propietario único</span>
+      <strong>匚尺丨丂</strong>
+    </div>
+
+    <div class="footer-links" aria-label="Información legal y del sitio">
+      <button class="footer-link-button" type="button" data-info-modal="about">Sobre la web</button>
+      <button class="footer-link-button" type="button" data-info-modal="privacy">Política de privacidad</button>
+      <button class="footer-link-button" type="button" data-info-modal="terms">Términos de uso</button>
+    </div>
+
+    <p class="copyright">© <span id="currentYear"></span> 匚尺丨丂.<br>Todos los derechos reservados.</p>
+  </footer>
+
+  <div class="modal-backdrop privacy-gate-backdrop" id="pdfPrivacyBackdrop" hidden>
+    <section class="modal privacy-modal privacy-gate" role="dialog" aria-modal="true" aria-labelledby="pdfPrivacyTitle">
+      <span class="eyebrow green">PRIVACIDAD Y PROTECCIÓN DE DATOS</span>
+      <h2 id="pdfPrivacyTitle">Antes de continuar</h2>
+
+      <div class="privacy-notice">
+        <p>
+          Normal Map Studio Pro procesa la imagen directamente en tu navegador.
+          La imagen original y los mapas generados no se envían a servidores de ToolHub.
+        </p>
+
+        <dl class="privacy-details">
+          <div><dt>Procesamiento</dt><dd>Local en el navegador.</dd></div>
+          <div><dt>Archivos</dt><dd>No se almacenan en servidores de ToolHub.</dd></div>
+          <div><dt>Configuración JSON</dt><dd>Solo se crea o carga localmente cuando tú lo solicitas.</dd></div>
+          <div><dt>Normativa de referencia</dt><dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD).</dd></div>
+        </dl>
+      </div>
+
+      <label class="privacy-check privacy-check-required">
+        <input id="pdfPrivacyCheck" type="checkbox">
+        <span>He leído y comprendido la información de privacidad.</span>
+      </label>
+
+      <div class="privacy-actions privacy-actions-gate">
+        <button class="button primary" id="pdfPrivacyContinue" type="button" disabled>Aceptar y continuar</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop" id="infoModalBackdrop" hidden>
+    <section class="modal privacy-modal info-modal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+      <button class="modal-close" id="infoModalClose" type="button" aria-label="Cerrar">×</button>
+      <span class="eyebrow green" id="infoModalEyebrow">INFORMACIÓN</span>
+      <h2 id="infoModalTitle">Información</h2>
+      <div class="privacy-notice legal-content" id="infoModalBody"></div>
+      <div class="privacy-actions">
+        <button class="button primary" id="infoModalOk" type="button">Entendido</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="tool-common.js"></script>
+  <script src="normal-map.js"></script>
+  <script src="normal-map-advanced.js"></script>
+</body>
+</html>

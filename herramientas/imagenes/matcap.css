@@ -1,0 +1,45 @@
+
+.matcap-main { max-width: 1660px; }
+.matcap-layout { display:grid; grid-template-columns:minmax(390px,.82fr) minmax(650px,1.25fr); gap:18px; align-items:start; }
+.matcap-preview-panel { position:sticky; top:94px; }
+.matcap-editor-column { display:grid; gap:18px; }
+.panel-title-row,.assistant-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+.panel-title-row h2,.assistant-head h2 { margin-top:0; }
+.pro-pill,.feature-count,.assistant-status { display:inline-flex; align-items:center; min-height:30px; padding:0 9px; border:1px solid rgba(161,92,255,.35); border-radius:999px; background:rgba(161,92,255,.08); color:#b980ff; font-size:.72rem; font-weight:900; white-space:nowrap; }
+.matcap-canvas-wrap { display:grid; place-items:center; padding:16px; border:1px solid var(--border); border-radius:16px; background:linear-gradient(45deg,rgba(255,255,255,.035) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,.035) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(255,255,255,.035) 75%),linear-gradient(-45deg,transparent 75%,rgba(255,255,255,.035) 75%),var(--bg-soft); background-size:22px 22px; background-position:0 0,0 11px,11px -11px,-11px 0; }
+#matcapCanvas { display:block; width:min(100%,620px); height:auto; aspect-ratio:1; border-radius:12px; }
+.matcap-preset-row { display:flex; flex-wrap:wrap; gap:7px; margin:13px 0 5px; }
+.preset-button,.mini-button { min-height:38px; padding:0 11px; border:1px solid var(--border); border-radius:9px; background:var(--bg-soft); color:var(--muted); cursor:pointer; font:inherit; font-size:.78rem; font-weight:800; }
+.preset-button:hover,.mini-button:hover { border-color:var(--purple); color:var(--text); }
+.preview-quick-actions { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0 13px; }
+.matcap-export-row { display:grid; grid-template-columns:1fr 1fr .7fr; gap:9px; }
+.export-buttons { display:grid; grid-template-columns:1.1fr .9fr .9fr; gap:8px; margin-top:9px; }
+.file-button { position:relative; overflow:hidden; cursor:pointer; }
+.file-button input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+.matcap-controls-section + .matcap-controls-section { margin-top:24px; padding-top:22px; border-top:1px solid var(--border); }
+.matcap-controls-section h3 { margin:0 0 13px; font-size:1rem; }
+.matcap-control-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.color-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.matcap-color { display:grid; grid-template-columns:48px minmax(0,1fr); gap:8px; align-items:center; }
+.matcap-color input[type="color"] { width:48px; height:43px; padding:3px; border:1px solid var(--border); border-radius:9px; background:var(--bg-soft); }
+.matcap-color code { min-width:0; overflow:hidden; text-overflow:ellipsis; padding:10px; border:1px solid var(--border); border-radius:9px; background:var(--bg-soft); color:var(--muted); }
+.matcap-slider { display:grid; grid-template-columns:minmax(0,1fr) 62px; gap:8px; align-items:center; }
+.matcap-slider input[type="range"] { width:100%; accent-color:var(--purple); }
+.matcap-slider output { text-align:right; color:var(--text); font-variant-numeric:tabular-nums; font-size:.8rem; }
+.overlay-upload-row { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:stretch; }
+.overlay-drop { display:grid; gap:5px; padding:13px; border:1px dashed var(--border); border-radius:11px; background:var(--bg-soft); cursor:pointer; }
+.overlay-drop strong { color:var(--text); }.overlay-drop span,.overlay-drop small { color:var(--muted); font-size:.8rem; }.overlay-drop input { color:var(--muted); font-size:.8rem; }
+.overlay-controls { margin-top:12px; }
+.unity-tips { margin-top:15px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.unity-tip { padding:12px; border:1px solid var(--border); border-radius:10px; background:var(--bg-soft); }.unity-tip strong { display:block; margin-bottom:4px; }.unity-tip span { color:var(--muted); font-size:.79rem; line-height:1.45; }
+.assistant-panel { padding:22px; border:1px solid rgba(51,148,255,.28); background:radial-gradient(circle at 0% 0%,rgba(51,148,255,.08),transparent 34%),var(--panel); }
+.assistant-status { border-color:rgba(56,217,150,.35); background:var(--green-soft); color:var(--green); }
+.assistant-status.offline { border-color:rgba(255,100,100,.35); background:rgba(255,100,100,.08); color:#ffb7b7; }
+.assistant-mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 12px; }
+.ai-textarea { width:100%; min-height:126px; resize:vertical; padding:13px; border:1px solid var(--border); border-radius:11px; background:var(--bg-soft); color:var(--text); line-height:1.55; outline:none; }.ai-textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-soft); }
+.assistant-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.assistant-free-note { margin-top:12px; padding:12px 14px; border-left:3px solid var(--green); background:var(--green-soft); color:var(--muted); font-size:.84rem; line-height:1.55; }.assistant-free-note strong { color:var(--text); }
+.memory-box { margin-top:12px; padding:13px; border:1px solid var(--border); border-radius:10px; background:var(--bg-soft); }.memory-box-head { display:flex; justify-content:space-between; gap:10px; align-items:center; margin-bottom:6px; }.memory-box-head strong{font-size:.86rem}.memory-box p{margin:0;color:var(--muted);font-size:.82rem;line-height:1.5}.memory-clear{border:0;background:transparent;color:var(--muted);cursor:pointer}.memory-clear:hover{color:#ffb7b7}
+.ai-result { margin-top:12px; min-height:44px; padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:var(--bg-soft); color:var(--muted); line-height:1.5; }.ai-result.success{border-color:rgba(56,217,150,.35);background:var(--green-soft);color:var(--text)}.ai-result.error{border-color:rgba(255,100,100,.35);background:rgba(255,100,100,.08);color:#ffb7b7}
+@media(max-width:1120px){.matcap-layout{grid-template-columns:1fr}.matcap-preview-panel{position:static}}
+@media(max-width:760px){.matcap-control-grid,.color-grid,.matcap-export-row,.export-buttons,.assistant-mode-grid,.unity-tips{grid-template-columns:1fr}.overlay-upload-row{grid-template-columns:1fr}.panel-title-row,.assistant-head{flex-direction:column}}

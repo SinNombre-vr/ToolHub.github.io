@@ -1,0 +1,255 @@
+
+/* ToolHub · Generales · Calculadora */
+
+.general-popup-link {
+  font: inherit;
+}
+
+.calculator-backdrop {
+  z-index: 500;
+}
+
+.calculator-modal {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: min(92vh, 860px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--panel);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .48);
+}
+
+.calculator-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.calculator-head h2 {
+  margin: 5px 0 0;
+}
+
+.calculator-head-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.calculator-scientific-toggle,
+.calculator-history-toggle,
+.calculator-angle-button {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg-soft);
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: .8rem;
+  font-weight: 800;
+}
+
+.calculator-scientific-toggle:hover,
+.calculator-scientific-toggle[aria-pressed="true"],
+.calculator-history-toggle:hover,
+.calculator-angle-button:hover,
+.calculator-angle-button.active {
+  border-color: var(--purple);
+  background: var(--purple-soft);
+  color: var(--text);
+}
+
+.calculator-close {
+  position: static;
+}
+
+.calculator-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  margin-bottom: 10px;
+}
+
+.calculator-angle-group {
+  display: flex;
+  gap: 6px;
+}
+
+.calculator-display {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-soft);
+}
+
+.calculator-expression {
+  min-height: 24px;
+  margin-bottom: 5px;
+  color: var(--muted);
+  text-align: right;
+  font-size: .82rem;
+  overflow-wrap: anywhere;
+}
+
+.calculator-input {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: right;
+  font: inherit;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -.035em;
+}
+
+.calculator-input.is-error {
+  color: #ff9c9c;
+}
+
+.calculator-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.calculator-basic-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.calculator-scientific-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-bottom: 8px;
+}
+
+.calculator-grid button {
+  min-height: 50px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--bg-soft);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.calculator-grid button:hover {
+  transform: translateY(-1px);
+  border-color: var(--blue);
+}
+
+.calculator-grid button:active {
+  transform: translateY(0);
+}
+
+.calculator-grid .calc-muted {
+  color: var(--muted);
+}
+
+.calculator-grid .calc-operator {
+  border-color: rgba(155, 104, 255, .34);
+  background: var(--purple-soft);
+  color: var(--purple);
+  font-size: 1.15rem;
+}
+
+.calculator-grid .calc-equals {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: #06111f;
+  font-size: 1.15rem;
+}
+
+.calculator-history {
+  margin-bottom: 10px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-soft);
+}
+
+.calculator-history-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.calculator-history-head button {
+  padding: 3px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.calculator-history-list {
+  display: grid;
+  gap: 6px;
+  max-height: 140px;
+  overflow: auto;
+}
+
+.calculator-history-entry {
+  width: 100%;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.calculator-history-entry small {
+  display: block;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.calculator-history-empty {
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.calculator-help {
+  margin: 11px 0 0;
+  color: var(--muted);
+  text-align: center;
+  font-size: .76rem;
+}
+
+@media (max-width: 560px) {
+  .calculator-modal {
+    padding: 16px;
+  }
+
+  .calculator-head {
+    flex-direction: column;
+  }
+
+  .calculator-head-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calculator-scientific-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

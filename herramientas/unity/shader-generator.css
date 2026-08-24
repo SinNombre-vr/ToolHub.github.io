@@ -1,0 +1,75 @@
+
+.shader-main { max-width: 1600px; }
+.shader-hero { align-items: flex-start; }
+.shader-warning {
+  margin: 0 0 18px;
+  padding: 13px 15px;
+  border: 1px solid rgba(255,180,84,.3);
+  border-left: 3px solid #ffb454;
+  border-radius: 12px;
+  background: rgba(255,180,84,.07);
+  color: var(--muted);
+  line-height: 1.55;
+}
+.shader-warning strong { color: var(--text); }
+.shader-studio-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, .82fr) minmax(620px, 1.35fr);
+  gap: 18px;
+  align-items: start;
+}
+.shader-preview-panel { position: sticky; top: 94px; }
+.panel-head-row { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.panel-head-row h2 { margin-top:0; }
+.preview-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.mini-button {
+  min-height:34px; padding:0 10px; border:1px solid var(--border); border-radius:9px;
+  background:var(--bg-soft); color:var(--muted); cursor:pointer; font:inherit; font-size:.78rem; font-weight:800;
+}
+.mini-button:hover { border-color:var(--purple); color:var(--text); }
+.shader-preview-wrap {
+  margin-top:14px; padding:14px; display:grid; place-items:center; overflow:hidden;
+  border:1px solid var(--border); border-radius:16px; background:var(--bg-soft);
+}
+#shaderPreview { width:min(100%,560px); height:auto; aspect-ratio:1; border-radius:12px; display:block; }
+.preview-toolbar { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
+.compact-control { display:grid; gap:5px; color:var(--muted); font-size:.78rem; font-weight:800; }
+.compact-control select { min-height:40px; }
+.shader-summary { display:flex; flex-wrap:wrap; gap:7px; margin:13px 0; }
+.shader-summary span { padding:6px 9px; border:1px solid var(--border); border-radius:999px; background:var(--bg-soft); color:var(--muted); font-size:.72rem; font-weight:800; }
+.shader-summary span.active { border-color:rgba(56,217,150,.35); color:var(--green); background:var(--green-soft); }
+.shader-export-stack { display:grid; gap:8px; }
+.shader-editor-column { display:grid; gap:18px; }
+.shader-section + .shader-section { margin-top:24px; padding-top:22px; border-top:1px solid var(--border); }
+.shader-section h3 { margin:0 0 13px; font-size:1rem; }
+.shader-control-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.shader-control-grid .full { grid-column:1/-1; }
+.shader-control-grid input[type="text"] { width:100%; }
+.texture-upload-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.texture-drop {
+  display:grid; gap:7px; min-height:100px; padding:14px; border:1px dashed var(--border);
+  border-radius:12px; background:var(--bg-soft); cursor:pointer;
+}
+.texture-drop:hover { border-color:var(--blue); }
+.texture-drop span { color:var(--text); font-weight:800; }
+.texture-drop small { color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.texture-drop input { width:100%; color:var(--muted); font-size:.78rem; }
+.compact-actions { margin-top:10px; }
+.range-control { display:grid; grid-template-columns:minmax(110px,.8fr) minmax(120px,1fr) 62px; gap:9px; align-items:center; color:var(--muted); font-size:.82rem; font-weight:800; }
+.range-control input[type="range"] { width:100%; accent-color:var(--purple); }
+.range-control output { text-align:right; color:var(--text); font-variant-numeric:tabular-nums; }
+.feature-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin-bottom:14px; }
+.feature-toggle { display:flex; gap:10px; align-items:flex-start; padding:11px; border:1px solid var(--border); border-radius:11px; background:var(--bg-soft); cursor:pointer; }
+.feature-toggle input { margin-top:4px; accent-color:var(--purple); }
+.feature-toggle span { display:grid; gap:3px; }
+.feature-toggle strong { color:var(--text); }
+.feature-toggle small { color:var(--muted); line-height:1.4; }
+.effect-controls { margin-top:6px; }
+.shader-preset-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.shader-preset-grid button { min-height:42px; border:1px solid var(--border); border-radius:10px; background:var(--bg-soft); color:var(--muted); cursor:pointer; font-weight:800; }
+.shader-preset-grid button:hover { border-color:var(--purple); color:var(--text); }
+.shader-code-panel pre { max-height:560px; overflow:auto; margin:12px 0 0; padding:15px; border:1px solid var(--border); border-radius:12px; background:#080c14; }
+.shader-code-panel code { white-space:pre; color:#c9d5e8; font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; }
+.code-badge { padding:6px 9px; border-radius:999px; border:1px solid var(--border); color:var(--muted); font-size:.72rem; font-weight:800; }
+@media (max-width:1100px){ .shader-studio-grid{grid-template-columns:1fr}.shader-preview-panel{position:static} }
+@media (max-width:700px){ .shader-control-grid,.texture-upload-grid,.feature-grid,.shader-preset-grid,.preview-toolbar{grid-template-columns:1fr}.shader-control-grid .full{grid-column:auto}.range-control{grid-template-columns:1fr 60px}.range-control input{grid-column:1/-1;grid-row:2}.panel-head-row{flex-direction:column} }
