@@ -1,17 +1,15 @@
 (() => {
   "use strict";
 
-  const CATALOG_URL = "data/assets.json";
-  const ISSUE_URL = "https://github.com/SinNombre-vr/ToolHub.github.io/issues/new";
-  const START_MARKER = "<!-- TOOLHUB_ASSET_START -->";
-  const END_MARKER = "<!-- TOOLHUB_ASSET_END -->";
-
   const state = {
     assets: [],
     search: "",
     category: "",
     platform: "",
-    tags: new Set()
+    tags: new Set(),
+    adminUnlocked: false,
+    adminUser: null,
+    ready: false
   };
 
   const $ = (selector) => document.querySelector(selector);
@@ -37,8 +35,28 @@
     assetCount: $("#assetCount"),
     tagCount: $("#tagCount"),
     categoryCount: $("#categoryCount"),
-    syncStatus: $("#catalogSyncStatus")
+    syncStatus: $("#catalogSyncStatus"),
+    adminDialog: $("#adminDialog"),
+    adminTrigger: $("#adminTrigger"),
+    adminEmail: $("#adminEmail"),
+    adminPassword: $("#adminPassword"),
+    adminLogin: $("#adminLogin"),
+    adminLogout: $("#adminLogout"),
+    adminStatus: $("#adminStatus"),
+    adminMessage: $("#adminMessage")
   };
+
+  let db = null;
+
+  function setSyncStatus(text, mode = "") {
+    els.syncStatus.textContent = text;
+    els.syncStatus.className = "asset-sync-status" + (mode ? ` ${mode}` : "");
+  }
+
+  function setAdminMessage(text, mode = "") {
+    els.adminMessage.textContent = text || "";
+    els.adminMessage.className = "asset-admin-message" + (mode ? ` ${mode}` : "");
+  }
 
   function safeUrl(value) {
     try {
@@ -55,6 +73,7 @@
         .split(",")
         .map((tag) => tag.trim().toLowerCase())
         .filter(Boolean)
+        .map((tag) => tag.slice(0, 32))
     )].slice(0, 20);
   }
 
@@ -62,7 +81,6 @@
     els.navButtons.forEach((button) => {
       button.classList.toggle("active", button.dataset.panel === name);
     });
-
     els.panels.forEach((panel) => {
       panel.classList.toggle("active", panel.dataset.panelName === name);
     });
@@ -78,7 +96,6 @@
 
   function filteredAssets() {
     const query = state.search.trim().toLowerCase();
-
     return state.assets.filter((asset) => {
       const haystack = [
         asset.name,
@@ -99,7 +116,6 @@
           if (!assetTags.has(tag)) return false;
         }
       }
-
       return true;
     });
   }
@@ -113,7 +129,7 @@
   function renderFilterControls() {
     const categories = allCategories();
     const tags = allTags();
-    const selectedCategory = state.category;
+    const currentCategory = state.category;
 
     els.filterCategory.innerHTML = '<option value="">Todas</option>';
     categories.forEach((category) => {
@@ -122,9 +138,9 @@
       option.textContent = category;
       els.filterCategory.appendChild(option);
     });
-    els.filterCategory.value = selectedCategory;
+    els.filterCategory.value = currentCategory;
 
-    const buildTagButtons = (container, filtering) => {
+    const buildTags = (container, filtering) => {
       container.replaceChildren();
       tags.forEach((tag) => {
         const button = document.createElement("button");
@@ -143,13 +159,41 @@
           }
           render();
         });
-
         container.appendChild(button);
       });
     };
 
-    buildTagButtons(els.searchTags, false);
-    buildTagButtons(els.filterTags, true);
+    buildTags(els.searchTags, false);
+    buildTags(els.filterTags, true);
+  }
+
+  function renderAdminState() {
+    els.adminTrigger.classList.toggle("unlocked", state.adminUnlocked);
+    els.adminTrigger.textContent = state.adminUnlocked ? "🔓 Administrador" : "🔒 Administrador";
+    els.adminStatus.classList.toggle("unlocked", state.adminUnlocked);
+    els.adminStatus.textContent = state.adminUnlocked
+      ? `🔓 Administrador activo${state.adminUser?.email ? ` · ${state.adminUser.email}` : ""}`
+      : "🔒 Administrador bloqueado · solo controla el borrado";
+    els.adminLogout.hidden = !state.adminUnlocked;
+    els.adminLogin.hidden = state.adminUnlocked;
+  }
+
+  async function deleteAsset(asset, card) {
+    if (!db || !state.adminUnlocked) return;
+    if (!confirm(`¿Eliminar "${asset.name}" de la biblioteca?`)) return;
+
+    card.classList.add("is-deleting");
+    const { error } = await db.from("assets").delete().eq("id", asset.id);
+
+    if (error) {
+      card.classList.remove("is-deleting");
+      alert(`No se pudo eliminar: ${error.message}`);
+      return;
+    }
+
+    state.assets = state.assets.filter((item) => item.id !== asset.id);
+    render();
+    setSyncStatus("✅ Asset eliminado", "ok");
   }
 
   function renderCards() {
@@ -160,8 +204,10 @@
     if (!assets.length) {
       els.empty.hidden = false;
       if (!state.assets.length) {
-        els.emptyTitle.textContent = "El catálogo está vacío";
-        els.emptyText.textContent = "Usa Crear para preparar la primera ficha. GitHub la añadirá automáticamente al confirmar la solicitud.";
+        els.emptyTitle.textContent = state.ready ? "La biblioteca está vacía" : "Supabase pendiente de configurar";
+        els.emptyText.textContent = state.ready
+          ? "Usa Crear para publicar la primera ficha. Aparecerá para todos automáticamente."
+          : "En cuanto conectemos el proyecto de Supabase, la biblioteca quedará lista.";
       } else {
         els.emptyTitle.textContent = "No hay coincidencias";
         els.emptyText.textContent = "Prueba otra búsqueda o restablece los filtros.";
@@ -173,6 +219,7 @@
 
     assets.forEach((asset) => {
       const node = els.template.content.cloneNode(true);
+      const card = node.querySelector(".asset-card");
       const image = node.querySelector(".asset-preview");
       const fallback = node.querySelector(".asset-preview-fallback");
       const platform = node.querySelector(".asset-platform-badge");
@@ -184,24 +231,26 @@
       const tagBox = node.querySelector(".asset-card-tags");
       const authorLink = node.querySelector(".asset-author-link");
       const downloadLink = node.querySelector(".asset-download-link");
+      const del = node.querySelector(".asset-delete-x");
 
       title.textContent = asset.name || "Sin nombre";
       category.textContent = asset.category || "OTRO";
       platform.textContent = asset.platform || "No especificado";
       author.textContent = asset.author ? `por ${asset.author}` : "Autor no especificado";
       description.textContent = asset.description || "Sin descripción.";
+      del.hidden = !state.adminUnlocked;
 
-      const date = new Date(asset.createdAt || "");
+      const date = new Date(asset.created_at || "");
       created.textContent = Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("es-ES");
 
-      const authorUrl = safeUrl(asset.authorUrl || asset.url || "");
-      const downloadUrl = safeUrl(asset.downloadUrl || asset.url || "");
+      const authorUrl = safeUrl(asset.author_url || "");
+      const downloadUrl = safeUrl(asset.download_url || "");
       authorLink.href = authorUrl || "#";
       downloadLink.href = downloadUrl || "#";
       authorLink.hidden = !authorUrl;
       downloadLink.hidden = !downloadUrl;
 
-      const preview = safeUrl(asset.preview || "");
+      const preview = safeUrl(asset.preview_url || "");
       fallback.hidden = false;
       if (preview) {
         image.src = preview;
@@ -222,6 +271,7 @@
         tagBox.appendChild(chip);
       });
 
+      del.addEventListener("click", () => deleteAsset(asset, card));
       els.grid.appendChild(node);
     });
   }
@@ -230,29 +280,29 @@
     renderStats();
     renderFilterControls();
     renderCards();
+    renderAdminState();
   }
 
-  async function loadCatalog() {
-    els.syncStatus.textContent = "📄 Cargando data/assets.json…";
-    els.syncStatus.className = "asset-sync-status";
+  async function loadAssets() {
+    if (!db) return;
+    setSyncStatus("☁️ Cargando biblioteca…");
 
-    try {
-      const response = await fetch(`${CATALOG_URL}?t=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = await response.json();
-      if (!Array.isArray(payload)) throw new Error("El catálogo debe ser un array JSON.");
+    const { data, error } = await db
+      .from("assets")
+      .select("id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at")
+      .order("created_at", { ascending: false })
+      .limit(500);
 
-      state.assets = payload;
-      render();
-      els.syncStatus.textContent = `⚡ GitHub Actions · ${payload.length} ${payload.length === 1 ? "asset" : "assets"}`;
-      els.syncStatus.className = "asset-sync-status ok";
-    } catch (error) {
-      console.error("No se pudo cargar data/assets.json:", error);
-      state.assets = [];
-      render();
-      els.syncStatus.textContent = "⚠️ No se pudo cargar data/assets.json";
-      els.syncStatus.className = "asset-sync-status error";
+    if (error) {
+      console.error(error);
+      setSyncStatus(`⚠️ ${error.message}`, "error");
+      return;
     }
+
+    state.assets = Array.isArray(data) ? data : [];
+    state.ready = true;
+    render();
+    setSyncStatus(`☁️ Supabase · ${state.assets.length} ${state.assets.length === 1 ? "asset" : "assets"}`, "ok");
   }
 
   function assetFromForm() {
@@ -278,87 +328,186 @@
       category,
       author,
       platform,
-      authorUrl,
-      preview,
-      downloadUrl,
+      author_url: authorUrl,
+      preview_url: preview,
+      download_url: downloadUrl,
       tags,
       description
     };
   }
 
-  function createPublishIssueUrl(asset) {
-    const title = `[ToolHub Asset] ${asset.name}`;
-    const body = [
-      "## Publicación automática desde ToolHub",
-      "",
-      "Esta solicitud fue generada por la Biblioteca de Assets. Al confirmar la Issue, GitHub Actions validará la ficha y la añadirá automáticamente a `data/assets.json`.",
-      "",
-      START_MARKER,
-      "```json",
-      JSON.stringify(asset, null, 2),
-      "```",
-      END_MARKER,
-      "",
-      "> No elimines los marcadores ni el bloque JSON."
-    ].join("\n");
-
-    return `${ISSUE_URL}?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-  }
-
-  function publishAsset(asset) {
-    const url = createPublishIssueUrl(asset);
-    const opened = window.open(url, "_blank");
-
-    if (!opened) {
-      window.location.href = url;
+  async function publishAsset() {
+    if (!db || !state.ready) {
+      alert("Supabase todavía no está configurado.");
       return;
     }
 
-    els.syncStatus.textContent = "🟢 GitHub abierto · confirma 'Submit new issue' para publicar";
-    els.syncStatus.className = "asset-sync-status ok";
-  }
-
-  els.navButtons.forEach((button) => {
-    button.addEventListener("click", () => setActivePanel(button.dataset.panel));
-  });
-
-  els.form.addEventListener("submit", (event) => {
-    event.preventDefault();
+    let asset;
     try {
-      publishAsset(assetFromForm());
+      asset = assetFromForm();
     } catch (error) {
       alert(error.message);
+      return;
     }
-  });
 
-  els.search.addEventListener("input", () => {
-    state.search = els.search.value;
+    els.publishButton.disabled = true;
+    const originalText = els.publishButton.textContent;
+    els.publishButton.textContent = "Publicando…";
+
+    const { data, error } = await db
+      .from("assets")
+      .insert(asset)
+      .select("id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at")
+      .single();
+
+    els.publishButton.disabled = false;
+    els.publishButton.textContent = originalText;
+
+    if (error) {
+      alert(`No se pudo publicar: ${error.message}`);
+      return;
+    }
+
+    state.assets.unshift(data);
+    els.form.reset();
+    setActivePanel("create");
     render();
-  });
+    setSyncStatus("✅ Publicado · visible para todos", "ok");
+  }
 
-  els.filterCategory.addEventListener("change", () => {
-    state.category = els.filterCategory.value;
+  async function checkAdmin(user) {
+    if (!db || !user) return false;
+    const { data, error } = await db
+      .from("toolhub_admins")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error || !data) return false;
+    state.adminUnlocked = true;
+    state.adminUser = user;
     render();
-  });
+    return true;
+  }
 
-  els.filterPlatform.addEventListener("change", () => {
-    state.platform = els.filterPlatform.value;
+  async function adminLogin() {
+    if (!db) {
+      setAdminMessage("Supabase todavía no está configurado.", "error");
+      return;
+    }
+
+    const email = els.adminEmail.value.trim();
+    const password = els.adminPassword.value;
+    if (!email || !password) {
+      setAdminMessage("Introduce email y contraseña.", "error");
+      return;
+    }
+
+    els.adminLogin.disabled = true;
+    setAdminMessage("Comprobando administrador…");
+
+    const { data, error } = await db.auth.signInWithPassword({ email, password });
+    els.adminLogin.disabled = false;
+
+    if (error || !data.user) {
+      setAdminMessage(error?.message || "No se pudo iniciar sesión.", "error");
+      return;
+    }
+
+    const allowed = await checkAdmin(data.user);
+    if (!allowed) {
+      await db.auth.signOut();
+      state.adminUnlocked = false;
+      state.adminUser = null;
+      render();
+      setAdminMessage("La cuenta es válida, pero no está autorizada como administrador.", "error");
+      return;
+    }
+
+    els.adminPassword.value = "";
+    setAdminMessage("Administrador activado. Ya aparecen las X de borrado.", "ok");
+  }
+
+  async function adminLogout() {
+    if (db) await db.auth.signOut();
+    state.adminUnlocked = false;
+    state.adminUser = null;
     render();
-  });
+    setAdminMessage("Administrador bloqueado.");
+  }
 
-  els.clearFilters.addEventListener("click", () => {
-    state.category = "";
-    state.platform = "";
-    state.tags.clear();
-    els.filterCategory.value = "";
-    els.filterPlatform.value = "";
+  function wireEvents() {
+    els.navButtons.forEach((button) => {
+      button.addEventListener("click", () => setActivePanel(button.dataset.panel));
+    });
+
+    els.form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      publishAsset();
+    });
+
+    els.search.addEventListener("input", () => {
+      state.search = els.search.value;
+      render();
+    });
+
+    els.filterCategory.addEventListener("change", () => {
+      state.category = els.filterCategory.value;
+      render();
+    });
+
+    els.filterPlatform.addEventListener("change", () => {
+      state.platform = els.filterPlatform.value;
+      render();
+    });
+
+    els.clearFilters.addEventListener("click", () => {
+      state.category = "";
+      state.platform = "";
+      state.tags.clear();
+      els.filterCategory.value = "";
+      els.filterPlatform.value = "";
+      render();
+    });
+
+    els.adminTrigger.addEventListener("click", () => {
+      setAdminMessage("");
+      els.adminDialog.showModal();
+    });
+    els.adminLogin.addEventListener("click", adminLogin);
+    els.adminLogout.addEventListener("click", adminLogout);
+  }
+
+  async function init() {
+    wireEvents();
     render();
-  });
 
-  window.addEventListener("focus", () => {
-    setTimeout(loadCatalog, 600);
-  });
+    const config = window.TOOLHUB_SUPABASE || {};
+    if (!window.supabase?.createClient) {
+      setSyncStatus("⚠️ No se pudo cargar Supabase JS", "error");
+      return;
+    }
 
-  render();
-  loadCatalog();
+    if (!config.url || !config.publishableKey) {
+      els.publishButton.disabled = true;
+      setSyncStatus("🟡 Supabase pendiente de configurar", "warn");
+      render();
+      return;
+    }
+
+    db = window.supabase.createClient(config.url, config.publishableKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false
+      }
+    });
+
+    const { data } = await db.auth.getSession();
+    if (data?.session?.user) await checkAdmin(data.session.user);
+
+    await loadAssets();
+  }
+
+  init();
 })();
