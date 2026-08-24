@@ -2,14 +2,16 @@
   "use strict";
 
   const CATALOG_URL = "data/assets.json";
+  const ISSUE_URL = "https://github.com/SinNombre-vr/ToolHub.github.io/issues/new";
+  const START_MARKER = "<!-- TOOLHUB_ASSET_START -->";
+  const END_MARKER = "<!-- TOOLHUB_ASSET_END -->";
 
   const state = {
     assets: [],
     search: "",
     category: "",
     platform: "",
-    tags: new Set(),
-    generatedCatalog: null
+    tags: new Set()
   };
 
   const $ = (selector) => document.querySelector(selector);
@@ -19,6 +21,7 @@
     navButtons: $$(".asset-nav-btn"),
     panels: $$(".asset-panel"),
     form: $("#assetForm"),
+    publishButton: $("#assetPublishButton"),
     grid: $("#assetGrid"),
     empty: $("#assetEmpty"),
     emptyTitle: $("#assetEmptyTitle"),
@@ -34,11 +37,7 @@
     assetCount: $("#assetCount"),
     tagCount: $("#tagCount"),
     categoryCount: $("#categoryCount"),
-    syncStatus: $("#catalogSyncStatus"),
-    generatedWrap: $("#generatedCatalogWrap"),
-    generatedJson: $("#generatedCatalogJson"),
-    copyGenerated: $("#copyGeneratedCatalog"),
-    downloadGenerated: $("#downloadGeneratedCatalog")
+    syncStatus: $("#catalogSyncStatus")
   };
 
   function safeUrl(value) {
@@ -162,7 +161,7 @@
       els.empty.hidden = false;
       if (!state.assets.length) {
         els.emptyTitle.textContent = "El catálogo está vacío";
-        els.emptyText.textContent = "Añade la primera ficha desde Crear y guarda el JSON generado en data/assets.json.";
+        els.emptyText.textContent = "Usa Crear para preparar la primera ficha. GitHub la añadirá automáticamente al confirmar la solicitud.";
       } else {
         els.emptyTitle.textContent = "No hay coincidencias";
         els.emptyText.textContent = "Prueba otra búsqueda o restablece los filtros.";
@@ -245,7 +244,7 @@
 
       state.assets = payload;
       render();
-      els.syncStatus.textContent = `📄 GitHub JSON · ${payload.length} ${payload.length === 1 ? "asset" : "assets"}`;
+      els.syncStatus.textContent = `⚡ GitHub Actions · ${payload.length} ${payload.length === 1 ? "asset" : "assets"}`;
       els.syncStatus.className = "asset-sync-status ok";
     } catch (error) {
       console.error("No se pudo cargar data/assets.json:", error);
@@ -275,7 +274,6 @@
     if (!downloadUrl) throw new Error("Introduce un enlace de descarga válido.");
 
     return {
-      id: `asset-${Date.now().toString(36)}`,
       name,
       category,
       author,
@@ -284,45 +282,40 @@
       preview,
       downloadUrl,
       tags,
-      description,
-      createdAt: new Date().toISOString()
+      description
     };
   }
 
-  function generateCatalog(asset) {
-    const catalog = [asset, ...state.assets];
-    state.generatedCatalog = catalog;
-    els.generatedJson.value = JSON.stringify(catalog, null, 2);
-    els.generatedWrap.hidden = false;
-    els.generatedWrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  function createPublishIssueUrl(asset) {
+    const title = `[ToolHub Asset] ${asset.name}`;
+    const body = [
+      "## Publicación automática desde ToolHub",
+      "",
+      "Esta solicitud fue generada por la Biblioteca de Assets. Al confirmar la Issue, GitHub Actions validará la ficha y la añadirá automáticamente a `data/assets.json`.",
+      "",
+      START_MARKER,
+      "```json",
+      JSON.stringify(asset, null, 2),
+      "```",
+      END_MARKER,
+      "",
+      "> No elimines los marcadores ni el bloque JSON."
+    ].join("\n");
+
+    return `${ISSUE_URL}?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
   }
 
-  async function copyGeneratedCatalog() {
-    if (!state.generatedCatalog) return;
-    const text = JSON.stringify(state.generatedCatalog, null, 2);
-    try {
-      await navigator.clipboard.writeText(text);
-      const original = els.copyGenerated.textContent;
-      els.copyGenerated.textContent = "Copiado ✓";
-      setTimeout(() => { els.copyGenerated.textContent = original; }, 1400);
-    } catch {
-      els.generatedJson.focus();
-      els.generatedJson.select();
-      document.execCommand("copy");
+  function publishAsset(asset) {
+    const url = createPublishIssueUrl(asset);
+    const opened = window.open(url, "_blank");
+
+    if (!opened) {
+      window.location.href = url;
+      return;
     }
-  }
 
-  function downloadGeneratedCatalog() {
-    if (!state.generatedCatalog) return;
-    const blob = new Blob([JSON.stringify(state.generatedCatalog, null, 2) + "\n"], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "assets.json";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
+    els.syncStatus.textContent = "🟢 GitHub abierto · confirma 'Submit new issue' para publicar";
+    els.syncStatus.className = "asset-sync-status ok";
   }
 
   els.navButtons.forEach((button) => {
@@ -332,7 +325,7 @@
   els.form.addEventListener("submit", (event) => {
     event.preventDefault();
     try {
-      generateCatalog(assetFromForm());
+      publishAsset(assetFromForm());
     } catch (error) {
       alert(error.message);
     }
@@ -362,8 +355,9 @@
     render();
   });
 
-  els.copyGenerated.addEventListener("click", copyGeneratedCatalog);
-  els.downloadGenerated.addEventListener("click", downloadGeneratedCatalog);
+  window.addEventListener("focus", () => {
+    setTimeout(loadCatalog, 600);
+  });
 
   render();
   loadCatalog();
