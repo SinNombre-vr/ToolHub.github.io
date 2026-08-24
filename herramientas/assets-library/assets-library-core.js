@@ -451,6 +451,8 @@
       localStorage.setItem(API_STORAGE_KEY, apiBase);
       els.adminPassword.value = "";
 
+      // Publica la URL del Worker como configuración NO secreta. Así los visitantes
+      // podrán leer el catálogo directamente desde el Worker cuando GitHub Pages actualice.
       fetchJson(`${apiBase}/admin/publish-config`, {
         method: "POST",
         headers: { Authorization: `Bearer ${password}` }
