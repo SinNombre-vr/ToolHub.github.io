@@ -126,24 +126,3 @@
   border-color: rgba(161, 92, 255, .35);
   background: linear-gradient(135deg, rgba(161,92,255,.08), rgba(51,148,255,.05)), var(--bg-soft);
 }
-
-/* v22.1 · Centrado real de la primera pantalla en el viewport */
-@media (min-width: 961px) {
-  body > main > .home-intro-v22 {
-    width: 100vw;
-    max-width: 100vw;
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    overflow-x: clip;
-  }
-
-  body > main > .home-intro-v22 > .hero {
-    margin-left: 50% !important;
-  }
-
-  body > main > .home-intro-v22 > .quick-access {
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
