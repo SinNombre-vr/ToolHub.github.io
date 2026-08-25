@@ -1,4 +1,4 @@
-/* ToolHub · Biblioteca de Assets · NSFW + visor de previews */
+/* ToolHub · Biblioteca de Assets · NSFW inline */
 
 .asset-nsfw-option {
   grid-column: 1 / -1;
@@ -108,13 +108,13 @@
   transform: translateY(0) scale(.97);
 }
 
-/* NSFW: la imagen NO se enseña ni difuminada en la tarjeta. */
-.asset-card.is-nsfw .asset-preview.visible {
+/* NSFW bloqueado: no se muestra la imagen. */
+.asset-card.is-nsfw:not(.is-nsfw-revealed) .asset-preview.visible {
   opacity: 0;
   visibility: hidden;
 }
 
-.asset-card.is-nsfw .asset-preview-wrap::before {
+.asset-card.is-nsfw:not(.is-nsfw-revealed) .asset-preview-wrap::before {
   content: "";
   position: absolute;
   z-index: 4;
@@ -125,7 +125,7 @@
     linear-gradient(145deg, #0a111b, #080d14 58%, #0b1119);
 }
 
-.asset-card.is-nsfw .asset-preview-wrap::after {
+.asset-card.is-nsfw:not(.is-nsfw-revealed) .asset-preview-wrap::after {
   content: "NSFW\A Imagen oculta";
   position: absolute;
   z-index: 5;
@@ -143,86 +143,11 @@
   text-shadow: 0 2px 12px rgba(0, 0, 0, .8);
 }
 
-.asset-preview-dialog {
-  width: min(1080px, calc(100% - 28px));
-  max-height: calc(100vh - 28px);
-  padding: 0;
-  border: 1px solid var(--asset-line);
-  border-radius: 20px;
-  background: #07101a;
-  color: var(--asset-text);
-  overflow: hidden;
-  box-shadow: 0 32px 110px rgba(0, 0, 0, .62);
-}
-
-.asset-preview-dialog::backdrop {
-  background: rgba(1, 5, 10, .86);
-  backdrop-filter: blur(10px);
-}
-
-.asset-preview-dialog-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 13px 15px;
-  border-bottom: 1px solid var(--asset-line);
-  background: #0a1420;
-}
-
-.asset-preview-dialog-title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 900;
-}
-
-.asset-preview-dialog-close {
-  flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid var(--asset-line);
-  border-radius: 10px;
-  background: #0d1927;
-  color: var(--asset-text);
-  font-size: 1.25rem;
-  cursor: pointer;
-}
-
-.asset-preview-dialog-warning {
-  margin: 12px 15px 0;
-  padding: 10px 12px;
-  border: 1px solid rgba(255, 107, 120, .25);
-  border-radius: 11px;
-  background: rgba(255, 107, 120, .06);
-  color: #ffc1c7;
-  font-size: .78rem;
-}
-
-.asset-preview-dialog-media {
-  display: grid;
-  place-items: center;
-  min-height: 240px;
-  max-height: calc(100vh - 150px);
-  padding: 15px;
-  overflow: auto;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(56, 156, 255, .08), transparent 40%),
-    #050b12;
-}
-
-.asset-preview-dialog-media img {
-  display: block;
-  max-width: 100%;
-  max-height: calc(100vh - 185px);
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  border-radius: 12px;
+/* Al pulsar Ver imagen, la preview se ve EXACTAMENTE en su tarjeta,
+   con el mismo tamaño y tratamiento visual que una ficha normal. */
+.asset-card.is-nsfw.is-nsfw-revealed .asset-preview.visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Detección automática de preview */
@@ -274,10 +199,5 @@
   .asset-preview-wrap > .asset-badge-stack {
     right: 8px;
     bottom: 8px;
-  }
-
-  .asset-preview-dialog {
-    width: calc(100% - 16px);
-    max-height: calc(100vh - 16px);
   }
 }
