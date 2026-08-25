@@ -6,6 +6,19 @@
   const grid = document.querySelector("#assetGrid");
   if (!form || !tagsInput || !grid) return;
 
+  // Elimina cualquier modal/visor heredado de una versión anterior.
+  const removeLegacyDialogs = () => {
+    document.querySelectorAll(".asset-preview-dialog").forEach((dialog) => {
+      try {
+        if (dialog.open && typeof dialog.close === "function") dialog.close();
+      } catch {}
+      dialog.remove();
+    });
+  };
+  removeLegacyDialogs();
+  const legacyObserver = new MutationObserver(removeLegacyDialogs);
+  legacyObserver.observe(document.documentElement, { childList: true, subtree: true });
+
   const tagsLabel = tagsInput.closest("label");
   if (!tagsLabel) return;
 
@@ -62,6 +75,17 @@
       .some((chip) => chip.textContent.trim().toLowerCase() === "#nsfw");
   }
 
+  function toggleInlinePreview(card, previewButton) {
+    const revealed = card.classList.toggle("is-nsfw-revealed");
+    previewButton.setAttribute("aria-pressed", String(revealed));
+    previewButton.innerHTML = revealed
+      ? "🙈 <span>Ocultar imagen</span>"
+      : "👁 <span>Ver imagen</span>";
+    previewButton.title = revealed
+      ? "Volver a ocultar la imagen NSFW"
+      : "Mostrar imagen NSFW en esta tarjeta";
+  }
+
   function enhanceCard(card) {
     if (card.dataset.nsfwEnhanced === "1") return;
 
@@ -111,23 +135,33 @@
       watchImage.observe(image, { attributes: true, attributeFilter: ["src"] });
     }
 
-    // Importante: NO abre modal ni agranda la imagen.
-    // Solo quita/activa la censura dentro de la propia tarjeta.
-    previewButton.addEventListener("click", () => {
-      const revealed = card.classList.toggle("is-nsfw-revealed");
-      previewButton.setAttribute("aria-pressed", String(revealed));
-      previewButton.innerHTML = revealed
-        ? "🙈 <span>Ocultar imagen</span>"
-        : "👁 <span>Ver imagen</span>";
-      previewButton.title = revealed
-        ? "Volver a ocultar la imagen NSFW"
-        : "Mostrar imagen NSFW en esta tarjeta";
+    previewButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleInlinePreview(card, previewButton);
     });
   }
 
   function enhanceCards() {
     grid.querySelectorAll(".asset-card").forEach(enhanceCard);
   }
+
+  // Captura defensiva: aunque quedase un listener viejo en caché,
+  // Ver imagen nunca debe abrir un modal; solo revela la imagen en la tarjeta.
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest(".asset-preview-view-button");
+    if (!button) return;
+    const card = button.closest(".asset-card");
+    if (!card || !card.classList.contains("is-nsfw")) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    // Si el listener propio ya se ejecutó, no duplicamos el toggle.
+    // En captura este listener corre primero, así que lo hacemos aquí.
+    toggleInlinePreview(card, button);
+  }, true);
 
   const observer = new MutationObserver(enhanceCards);
   observer.observe(grid, { childList: true });
