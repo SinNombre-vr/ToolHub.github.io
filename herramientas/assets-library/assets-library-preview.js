@@ -66,7 +66,9 @@
     button.disabled = true;
     setStatus("Buscando imagen principal…");
 
-    const { data, error } = await client.functions.invoke("preview-image", {
+    // La función se desplegó inicialmente con el slug "smooth-function".
+    // Cambiar el Name visible en Supabase no cambia el endpoint/slug.
+    const { data, error } = await client.functions.invoke("smooth-function", {
       body: { url: sourceUrl }
     });
 
