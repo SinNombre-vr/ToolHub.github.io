@@ -1,5 +1,10 @@
 /* ToolHub · Biblioteca de Assets · NSFW inline */
 
+/* Seguridad visual: cualquier visor modal de versiones anteriores queda anulado. */
+.asset-preview-dialog {
+  display: none !important;
+}
+
 .asset-nsfw-option {
   grid-column: 1 / -1;
   padding: 14px 15px;
@@ -75,7 +80,6 @@
   backdrop-filter: blur(8px);
 }
 
-/* Solo existe en tarjetas NSFW. */
 .asset-preview-view-button {
   position: absolute;
   z-index: 8;
@@ -108,7 +112,7 @@
   transform: translateY(0) scale(.97);
 }
 
-/* NSFW bloqueado: no se muestra la imagen. */
+/* NSFW bloqueado: la imagen no se muestra en la tarjeta. */
 .asset-card.is-nsfw:not(.is-nsfw-revealed) .asset-preview.visible {
   opacity: 0;
   visibility: hidden;
@@ -143,11 +147,16 @@
   text-shadow: 0 2px 12px rgba(0, 0, 0, .8);
 }
 
-/* Al pulsar Ver imagen, la preview se ve EXACTAMENTE en su tarjeta,
-   con el mismo tamaño y tratamiento visual que una ficha normal. */
+/* Revelada: misma preview, mismo tamaño, mismo recorte que una tarjeta normal. */
 .asset-card.is-nsfw.is-nsfw-revealed .asset-preview.visible {
-  opacity: 1;
-  visibility: visible;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.asset-card.is-nsfw.is-nsfw-revealed .asset-preview-wrap::before,
+.asset-card.is-nsfw.is-nsfw-revealed .asset-preview-wrap::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* Detección automática de preview */
