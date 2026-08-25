@@ -126,3 +126,28 @@
   border-color: rgba(161, 92, 255, .35);
   background: linear-gradient(135deg, rgba(161,92,255,.08), rgba(51,148,255,.05)), var(--bg-soft);
 }
+
+/* v22.4 · Centrado estable del inicio
+   Neutraliza el translateX heredado del layout animado sin tocar sus animaciones internas. */
+body > main > .home-intro-v22 {
+  width: 100% !important;
+  max-width: 1180px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+body > main > .home-intro-v22 > .hero,
+body > main > .home-intro-v22 > .quick-access {
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (min-width: 1100px) and (min-height: 780px) {
+  body > main > .home-intro-v22 > .hero {
+    transform: scale(.955) !important;
+    transform-origin: center center !important;
+  }
+}
