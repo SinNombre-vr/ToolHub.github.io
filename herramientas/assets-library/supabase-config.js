@@ -1,6 +1,6 @@
 window.TOOLHUB_SUPABASE = Object.freeze({
-  // Estos dos valores son públicos y están pensados para usarse en el navegador.
-  // NO pongas aquí una Secret key ni una service_role key.
-  url: "",
-  publishableKey: ""
+  // Valores públicos de frontend de Supabase.
+  // Nunca pongas aquí service_role, sb_secret_* ni contraseñas privadas.
+  url: "https://ntbylihedfkpebhgmfpt.supabase.co",
+  publishableKey: "sb_publishable_GxIk_gqhh4SIxLmd7igoVA_v1wPRgsz"
 });
