@@ -44,7 +44,7 @@
           <div><strong id="tagCount">0</strong><span>Tags</span></div>
           <div><strong id="categoryCount">0</strong><span>Categorías</span></div>
         </div>
-        <div class="asset-sync-status" id="catalogSyncStatus" aria-live="polite">🟡 Supabase pendiente de configurar</div>
+        <div class="asset-sync-status" id="catalogSyncStatus" aria-live="polite">☁️ Conectando con Supabase…</div>
       </div>
     </section>
 
@@ -60,7 +60,7 @@
 
         <div class="asset-shared-notice">
           <strong>☁️ Publicación compartida</strong>
-          <span>Cualquier visitante puede publicar. El modo administrador se usa únicamente para borrar fichas.</span>
+          <span>Cualquier visitante puede publicar una ficha. Se guarda directamente en Supabase y aparece para todos. Solo el administrador puede borrar.</span>
         </div>
 
         <form id="assetForm" class="asset-form">
@@ -105,6 +105,7 @@
             <label class="asset-form-wide">
               <span>Enlace de autor / origen *</span>
               <input id="assetAuthorUrl" type="url" required placeholder="https://... página original del creador">
+              <small>Página original del asset, tienda, perfil del creador o publicación de origen.</small>
             </label>
 
             <label class="asset-form-wide">
@@ -115,6 +116,7 @@
             <label class="asset-form-wide">
               <span>Enlace de descarga *</span>
               <input id="assetDownloadUrl" type="url" required placeholder="https://... enlace de descarga">
+              <small>Puede ser un enlace de descarga directa o la página donde se obtiene el archivo.</small>
             </label>
 
             <label class="asset-form-wide">
@@ -151,6 +153,7 @@
             <input id="assetSearch" type="search" autocomplete="off" placeholder="Ej. poiyomi, ropa, avatar...">
           </div>
         </label>
+
         <div class="asset-search-suggestions" id="searchTags"></div>
       </article>
 
@@ -165,7 +168,9 @@
         <div class="asset-filter-grid">
           <label>
             <span>Categoría</span>
-            <select id="filterCategory"><option value="">Todas</option></select>
+            <select id="filterCategory">
+              <option value="">Todas</option>
+            </select>
           </label>
 
           <label>
@@ -184,6 +189,7 @@
           <span class="asset-filter-label">Tags</span>
           <div class="asset-tag-cloud" id="filterTags"></div>
         </div>
+
         <button class="asset-secondary" id="clearFilters" type="button">Restablecer filtros</button>
       </article>
     </section>
@@ -199,9 +205,10 @@
 
       <div class="asset-empty" id="assetEmpty">
         <div>📦</div>
-        <h3 id="assetEmptyTitle">Supabase pendiente de configurar</h3>
-        <p id="assetEmptyText">En cuanto conectemos el proyecto de Supabase, la biblioteca quedará lista.</p>
+        <h3 id="assetEmptyTitle">Cargando biblioteca…</h3>
+        <p id="assetEmptyText">Conectando con Supabase.</p>
       </div>
+
       <div class="asset-grid" id="assetGrid"></div>
     </section>
   </main>
@@ -211,7 +218,9 @@
       <button class="asset-dialog-close" value="cancel" aria-label="Cerrar">×</button>
       <span class="asset-panel-kicker">ADMINISTRADOR</span>
       <h2>Borrado protegido</h2>
-      <p>Inicia sesión con la cuenta de administrador creada en Supabase. Esta cuenta solo habilita las X para borrar publicaciones.</p>
+      <p>
+        Inicia sesión con la cuenta administradora de Supabase. Este modo únicamente habilita las X para borrar publicaciones.
+      </p>
 
       <div class="asset-admin-status" id="adminStatus">🔒 Administrador bloqueado · solo controla el borrado</div>
 
@@ -222,13 +231,14 @@
 
       <label>
         <span>Contraseña</span>
-        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña de Supabase Auth">
+        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Contraseña de Supabase">
       </label>
 
       <div class="asset-admin-actions">
         <button class="asset-primary" id="adminLogin" type="button">Entrar como administrador</button>
-        <button class="asset-secondary" id="adminLogout" type="button" hidden>Bloquear administrador</button>
+        <button class="asset-secondary" id="adminLogout" type="button" hidden>Cerrar sesión</button>
       </div>
+
       <div class="asset-admin-message" id="adminMessage" aria-live="polite"></div>
     </form>
   </dialog>
@@ -260,7 +270,7 @@
   </template>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="herramientas/assets-library/supabase-config.js?v=1"></script>
-  <script src="herramientas/assets-library/assets-library.js?v=1"></script>
+  <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
+  <script src="herramientas/assets-library/assets-library.js?v=2"></script>
 </body>
 </html>
