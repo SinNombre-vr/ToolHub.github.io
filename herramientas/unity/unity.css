@@ -151,3 +151,31 @@ body > main > .home-intro-v22 > .quick-access {
     transform-origin: center center !important;
   }
 }
+
+/* v22.5 · Hero principal grande, centrado y sin crear ancho fantasma */
+@media (min-width: 1100px) {
+  body > main > .home-intro-v22 > .hero {
+    position: relative !important;
+    left: 50% !important;
+    width: min(1500px, calc(100vw - 72px)) !important;
+    max-width: none !important;
+    min-height: 500px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    transform: translateX(-50%) !important;
+    transform-origin: center center !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access {
+    width: min(1040px, 100%) !important;
+    max-width: 1040px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media (min-width: 1100px) and (max-height: 850px) {
+  body > main > .home-intro-v22 > .hero {
+    min-height: 450px !important;
+  }
+}
