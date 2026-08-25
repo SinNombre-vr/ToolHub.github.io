@@ -1,20 +1,52 @@
-/* ToolHub · Biblioteca de Assets · Grid v1
-   Catálogo: 4 tarjetas por fila en escritorio, manteniendo responsive. */
+/* ToolHub · Biblioteca de Assets · Grid v2
+   4 tarjetas por fila en escritorio sin reducirlas al tamaño de miniatura.
+   El catálogo puede sobresalir lateralmente del ancho del hero, pero sigue centrado. */
 
-@media (min-width: 1151px) {
+@media (min-width: 1500px) {
+  .asset-library-content {
+    width: min(1660px, calc(100vw - 96px));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .asset-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1499px) {
+  .asset-library-content {
+    width: calc(100vw - 48px);
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
   .asset-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
   }
 }
 
-@media (min-width: 901px) and (max-width: 1150px) {
+@media (min-width: 901px) and (max-width: 1279px) {
+  .asset-library-content {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
+
   .asset-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 900px) {
+  .asset-library-content {
+    width: 100%;
+    margin-left: 0;
+    transform: none;
+  }
+
   .asset-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
