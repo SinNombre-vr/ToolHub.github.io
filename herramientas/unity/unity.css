@@ -170,3 +170,15 @@
     min-height: 450px !important;
   }
 }
+
+/* v22.7 · Identificador de versión visible en el footer */
+.footer .copyright::after {
+  content: "Versión 22.7";
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  opacity: .78;
+}
