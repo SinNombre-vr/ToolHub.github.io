@@ -1,6 +1,9 @@
 (() => {
   "use strict";
 
+  const BASE_FIELDS = "id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at";
+  const V2_FIELDS = `${BASE_FIELDS},is_hidden,is_featured,updated_at`;
+
   const state = {
     assets: [],
     search: "",
@@ -9,6 +12,8 @@
     tags: new Set(),
     adminUnlocked: false,
     adminUser: null,
+    adminRole: null,
+    schemaV2: false,
     ready: false
   };
 
@@ -48,12 +53,18 @@
 
   let db = null;
 
+  function emit(name, detail = {}) {
+    document.dispatchEvent(new CustomEvent(name, { detail }));
+  }
+
   function setSyncStatus(text, mode = "") {
+    if (!els.syncStatus) return;
     els.syncStatus.textContent = text;
     els.syncStatus.className = "asset-sync-status" + (mode ? ` ${mode}` : "");
   }
 
   function setAdminMessage(text, mode = "") {
+    if (!els.adminMessage) return;
     els.adminMessage.textContent = text || "";
     els.adminMessage.className = "asset-admin-message" + (mode ? ` ${mode}` : "");
   }
@@ -68,13 +79,24 @@
   }
 
   function normalizeTags(input) {
+    const source = Array.isArray(input) ? input.join(",") : String(input || "");
     return [...new Set(
-      String(input || "")
+      source
         .split(",")
         .map((tag) => tag.trim().toLowerCase())
         .filter(Boolean)
         .map((tag) => tag.slice(0, 32))
     )].slice(0, 20);
+  }
+
+  function isNsfw(asset) {
+    return normalizeTags(asset?.tags).includes("nsfw");
+  }
+
+  function canDelete() {
+    if (!state.adminUnlocked) return false;
+    if (!state.schemaV2) return true;
+    return ["owner", "admin"].includes(state.adminRole);
   }
 
   function setActivePanel(name) {
@@ -96,37 +118,44 @@
 
   function filteredAssets() {
     const query = state.search.trim().toLowerCase();
-    return state.assets.filter((asset) => {
-      const haystack = [
-        asset.name,
-        asset.author,
-        asset.description,
-        asset.category,
-        asset.platform,
-        ...(Array.isArray(asset.tags) ? asset.tags : [])
-      ].join(" ").toLowerCase();
+    return state.assets
+      .filter((asset) => {
+        const haystack = [
+          asset.name,
+          asset.author,
+          asset.description,
+          asset.category,
+          asset.platform,
+          ...(Array.isArray(asset.tags) ? asset.tags : [])
+        ].join(" ").toLowerCase();
 
-      if (query && !haystack.includes(query)) return false;
-      if (state.category && asset.category !== state.category) return false;
-      if (state.platform && asset.platform !== state.platform) return false;
+        if (query && !haystack.includes(query)) return false;
+        if (state.category && asset.category !== state.category) return false;
+        if (state.platform && asset.platform !== state.platform) return false;
 
-      if (state.tags.size) {
-        const assetTags = new Set(Array.isArray(asset.tags) ? asset.tags : []);
-        for (const tag of state.tags) {
-          if (!assetTags.has(tag)) return false;
+        if (state.tags.size) {
+          const assetTags = new Set(Array.isArray(asset.tags) ? asset.tags : []);
+          for (const tag of state.tags) {
+            if (!assetTags.has(tag)) return false;
+          }
         }
-      }
-      return true;
-    });
+        return true;
+      })
+      .sort((a, b) => {
+        const featureDiff = Number(Boolean(b.is_featured)) - Number(Boolean(a.is_featured));
+        if (featureDiff) return featureDiff;
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      });
   }
 
   function renderStats() {
-    els.assetCount.textContent = String(state.assets.length);
-    els.tagCount.textContent = String(allTags().length);
-    els.categoryCount.textContent = String(allCategories().length);
+    if (els.assetCount) els.assetCount.textContent = String(state.assets.length);
+    if (els.tagCount) els.tagCount.textContent = String(allTags().length);
+    if (els.categoryCount) els.categoryCount.textContent = String(allCategories().length);
   }
 
   function renderFilterControls() {
+    if (!els.filterCategory || !els.filterTags || !els.searchTags) return;
     const categories = allCategories();
     const tags = allTags();
     const currentCategory = state.category;
@@ -154,7 +183,7 @@
             state.tags.has(tag) ? state.tags.delete(tag) : state.tags.add(tag);
           } else {
             state.search = tag;
-            els.search.value = tag;
+            if (els.search) els.search.value = tag;
             setActivePanel("search");
           }
           render();
@@ -168,25 +197,27 @@
   }
 
   function renderAdminState() {
+    if (!els.adminTrigger || !els.adminStatus) return;
+    const roleLabel = state.adminRole ? ` · ${state.adminRole}` : "";
     els.adminTrigger.classList.toggle("unlocked", state.adminUnlocked);
     els.adminTrigger.textContent = state.adminUnlocked ? "🔓 Administrador" : "🔒 Administrador";
     els.adminStatus.classList.toggle("unlocked", state.adminUnlocked);
     els.adminStatus.textContent = state.adminUnlocked
-      ? `🔓 Administrador activo${state.adminUser?.email ? ` · ${state.adminUser.email}` : ""}`
-      : "🔒 Administrador bloqueado · solo controla el borrado";
-    els.adminLogout.hidden = !state.adminUnlocked;
-    els.adminLogin.hidden = state.adminUnlocked;
+      ? `🔓 Administrador activo${roleLabel}${state.adminUser?.email ? ` · ${state.adminUser.email}` : ""}`
+      : "🔒 Administrador bloqueado · gestión protegida";
+    if (els.adminLogout) els.adminLogout.hidden = !state.adminUnlocked;
+    if (els.adminLogin) els.adminLogin.hidden = state.adminUnlocked;
   }
 
   async function deleteAsset(asset, card) {
-    if (!db || !state.adminUnlocked) return;
-    if (!confirm(`¿Eliminar "${asset.name}" de la biblioteca?`)) return;
+    if (!db || !canDelete()) return;
+    if (!confirm(`¿Eliminar definitivamente "${asset.name}" de la biblioteca?`)) return;
 
-    card.classList.add("is-deleting");
+    card?.classList.add("is-deleting");
     const { error } = await db.from("assets").delete().eq("id", asset.id);
 
     if (error) {
-      card.classList.remove("is-deleting");
+      card?.classList.remove("is-deleting");
       alert(`No se pudo eliminar: ${error.message}`);
       return;
     }
@@ -197,25 +228,27 @@
   }
 
   function renderCards() {
+    if (!els.grid || !els.template) return;
     const assets = filteredAssets();
     els.grid.replaceChildren();
-    els.resultCount.textContent = `${assets.length} ${assets.length === 1 ? "resultado" : "resultados"}`;
+    if (els.resultCount) els.resultCount.textContent = `${assets.length} ${assets.length === 1 ? "resultado" : "resultados"}`;
 
     if (!assets.length) {
-      els.empty.hidden = false;
+      if (els.empty) els.empty.hidden = false;
       if (!state.assets.length) {
-        els.emptyTitle.textContent = state.ready ? "La biblioteca está vacía" : "Supabase pendiente de configurar";
-        els.emptyText.textContent = state.ready
+        if (els.emptyTitle) els.emptyTitle.textContent = state.ready ? "La biblioteca está vacía" : "Supabase pendiente de configurar";
+        if (els.emptyText) els.emptyText.textContent = state.ready
           ? "Usa Crear para publicar la primera ficha. Aparecerá para todos automáticamente."
           : "En cuanto conectemos el proyecto de Supabase, la biblioteca quedará lista.";
       } else {
-        els.emptyTitle.textContent = "No hay coincidencias";
-        els.emptyText.textContent = "Prueba otra búsqueda o restablece los filtros.";
+        if (els.emptyTitle) els.emptyTitle.textContent = "No hay coincidencias";
+        if (els.emptyText) els.emptyText.textContent = "Prueba otra búsqueda o restablece los filtros.";
       }
+      emit("toolhub-assets-rendered", { assets: [] });
       return;
     }
 
-    els.empty.hidden = true;
+    if (els.empty) els.empty.hidden = true;
 
     assets.forEach((asset) => {
       const node = els.template.content.cloneNode(true);
@@ -233,12 +266,17 @@
       const downloadLink = node.querySelector(".asset-download-link");
       const del = node.querySelector(".asset-delete-x");
 
+      card.dataset.assetId = asset.id;
+      card.classList.toggle("is-featured", Boolean(asset.is_featured));
+      card.classList.toggle("is-hidden-admin", Boolean(asset.is_hidden));
+      card.classList.toggle("is-nsfw", isNsfw(asset));
+
       title.textContent = asset.name || "Sin nombre";
       category.textContent = asset.category || "OTRO";
       platform.textContent = asset.platform || "No especificado";
       author.textContent = asset.author ? `por ${asset.author}` : "Autor no especificado";
       description.textContent = asset.description || "Sin descripción.";
-      del.hidden = !state.adminUnlocked;
+      del.hidden = !canDelete();
 
       const date = new Date(asset.created_at || "");
       created.textContent = Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString("es-ES");
@@ -274,6 +312,8 @@
       del.addEventListener("click", () => deleteAsset(asset, card));
       els.grid.appendChild(node);
     });
+
+    emit("toolhub-assets-rendered", { assets });
   }
 
   function render() {
@@ -287,35 +327,59 @@
     if (!db) return;
     setSyncStatus("☁️ Cargando biblioteca…");
 
-    const { data, error } = await db
+    let result = await db
       .from("assets")
-      .select("id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at")
+      .select(V2_FIELDS)
+      .order("is_featured", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(500);
 
-    if (error) {
-      console.error(error);
-      setSyncStatus(`⚠️ ${error.message}`, "error");
-      return;
+    if (result.error) {
+      const fallback = await db
+        .from("assets")
+        .select(BASE_FIELDS)
+        .order("created_at", { ascending: false })
+        .limit(500);
+
+      if (fallback.error) {
+        console.error(fallback.error);
+        setSyncStatus(`⚠️ ${fallback.error.message}`, "error");
+        return;
+      }
+
+      state.schemaV2 = false;
+      state.assets = (Array.isArray(fallback.data) ? fallback.data : []).map((asset) => ({
+        ...asset,
+        is_hidden: false,
+        is_featured: false,
+        updated_at: asset.created_at
+      }));
+    } else {
+      state.schemaV2 = true;
+      state.assets = Array.isArray(result.data) ? result.data : [];
     }
 
-    state.assets = Array.isArray(data) ? data : [];
     state.ready = true;
     render();
-    setSyncStatus(`☁️ Supabase · ${state.assets.length} ${state.assets.length === 1 ? "asset" : "assets"}`, "ok");
+    const suffix = state.schemaV2 ? "" : " · Admin v2 pendiente";
+    setSyncStatus(`☁️ Supabase · ${state.assets.length} ${state.assets.length === 1 ? "asset" : "assets"}${suffix}`, state.schemaV2 ? "ok" : "warn");
   }
 
   function assetFromForm() {
-    const name = $("#assetName").value.trim();
-    const category = $("#assetCategory").value;
-    const author = $("#assetAuthor").value.trim();
-    const platform = $("#assetPlatform").value;
-    const authorUrl = safeUrl($("#assetAuthorUrl").value);
-    const previewRaw = $("#assetPreview").value.trim();
+    const name = $("#assetName")?.value.trim() || "";
+    const category = $("#assetCategory")?.value || "";
+    const author = $("#assetAuthor")?.value.trim() || "";
+    const platform = $("#assetPlatform")?.value || "No especificado";
+    const authorUrl = safeUrl($("#assetAuthorUrl")?.value || "");
+    const previewRaw = $("#assetPreview")?.value.trim() || "";
     const preview = previewRaw ? safeUrl(previewRaw) : "";
-    const downloadUrl = safeUrl($("#assetDownloadUrl").value);
-    const tags = normalizeTags($("#assetTags").value);
-    const description = $("#assetDescription").value.trim();
+    const downloadUrl = safeUrl($("#assetDownloadUrl")?.value || "");
+    let tags = normalizeTags($("#assetTags")?.value || "");
+    const description = $("#assetDescription")?.value.trim() || "";
+    const nsfw = Boolean($("#assetNsfw")?.checked);
+
+    tags = tags.filter((tag) => tag !== "nsfw");
+    if (nsfw) tags.push("nsfw");
 
     if (!name) throw new Error("Introduce un nombre para el asset.");
     if (!category) throw new Error("Selecciona una categoría.");
@@ -354,10 +418,11 @@
     const originalText = els.publishButton.textContent;
     els.publishButton.textContent = "Publicando…";
 
+    const fields = state.schemaV2 ? V2_FIELDS : BASE_FIELDS;
     const { data, error } = await db
       .from("assets")
       .insert(asset)
-      .select("id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at")
+      .select(fields)
       .single();
 
     els.publishButton.disabled = false;
@@ -368,7 +433,7 @@
       return;
     }
 
-    state.assets.unshift(data);
+    state.assets.unshift({ is_hidden: false, is_featured: false, ...data });
     els.form.reset();
     setActivePanel("create");
     render();
@@ -377,16 +442,27 @@
 
   async function checkAdmin(user) {
     if (!db || !user) return false;
-    const { data, error } = await db
+
+    let result = await db
       .from("toolhub_admins")
-      .select("user_id")
+      .select("user_id,role")
       .eq("user_id", user.id)
       .maybeSingle();
 
-    if (error || !data) return false;
+    if (result.error) {
+      result = await db
+        .from("toolhub_admins")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+    }
+
+    if (result.error || !result.data) return false;
     state.adminUnlocked = true;
     state.adminUser = user;
+    state.adminRole = result.data.role || "admin";
     render();
+    emit("toolhub-admin-changed", { unlocked: true, role: state.adminRole, user });
     return true;
   }
 
@@ -419,20 +495,25 @@
       await db.auth.signOut();
       state.adminUnlocked = false;
       state.adminUser = null;
+      state.adminRole = null;
       render();
       setAdminMessage("La cuenta es válida, pero no está autorizada como administrador.", "error");
       return;
     }
 
     els.adminPassword.value = "";
-    setAdminMessage("Administrador activado. Ya aparecen las X de borrado.", "ok");
+    await loadAssets();
+    setAdminMessage("Panel de administración activado.", "ok");
   }
 
   async function adminLogout() {
     if (db) await db.auth.signOut();
     state.adminUnlocked = false;
     state.adminUser = null;
+    state.adminRole = null;
     render();
+    emit("toolhub-admin-changed", { unlocked: false, role: null, user: null });
+    await loadAssets();
     setAdminMessage("Administrador bloqueado.");
   }
 
@@ -441,27 +522,27 @@
       button.addEventListener("click", () => setActivePanel(button.dataset.panel));
     });
 
-    els.form.addEventListener("submit", (event) => {
+    els.form?.addEventListener("submit", (event) => {
       event.preventDefault();
       publishAsset();
     });
 
-    els.search.addEventListener("input", () => {
+    els.search?.addEventListener("input", () => {
       state.search = els.search.value;
       render();
     });
 
-    els.filterCategory.addEventListener("change", () => {
+    els.filterCategory?.addEventListener("change", () => {
       state.category = els.filterCategory.value;
       render();
     });
 
-    els.filterPlatform.addEventListener("change", () => {
+    els.filterPlatform?.addEventListener("change", () => {
       state.platform = els.filterPlatform.value;
       render();
     });
 
-    els.clearFilters.addEventListener("click", () => {
+    els.clearFilters?.addEventListener("click", () => {
       state.category = "";
       state.platform = "";
       state.tags.clear();
@@ -470,12 +551,12 @@
       render();
     });
 
-    els.adminTrigger.addEventListener("click", () => {
+    els.adminTrigger?.addEventListener("click", () => {
       setAdminMessage("");
       els.adminDialog.showModal();
     });
-    els.adminLogin.addEventListener("click", adminLogin);
-    els.adminLogout.addEventListener("click", adminLogout);
+    els.adminLogin?.addEventListener("click", adminLogin);
+    els.adminLogout?.addEventListener("click", adminLogout);
   }
 
   async function init() {
@@ -507,7 +588,22 @@
     if (data?.session?.user) await checkAdmin(data.session.user);
 
     await loadAssets();
+    emit("toolhub-assets-ready", { schemaV2: state.schemaV2 });
   }
+
+  window.ToolHubAssets = {
+    getDb: () => db,
+    getState: () => state,
+    getAsset: (id) => state.assets.find((asset) => String(asset.id) === String(id)) || null,
+    safeUrl,
+    normalizeTags,
+    isNsfw,
+    render,
+    refresh: loadAssets,
+    setSyncStatus,
+    setAdminMessage,
+    canDelete
+  };
 
   init();
 })();
