@@ -16,7 +16,7 @@
       <input id="assetNsfw" type="checkbox">
       <span class="asset-nsfw-copy">
         <strong>Marcar como NSFW</strong>
-        <small>No bloquea ni elimina la publicación. Solo difumina la preview y añade una etiqueta NSFW en la tarjeta.</small>
+        <small>No bloquea ni elimina la publicación. La preview queda oculta en la tarjeta y solo se muestra si el visitante pulsa Ver imagen.</small>
       </span>
     </label>
   `;
@@ -47,8 +47,6 @@
 
   tagsInput.addEventListener("input", syncCheckboxFromTags);
 
-  // Captura el submit antes que el script principal para guardar el estado NSFW
-  // dentro del tag "nsfw". Así no hace falta cambiar la estructura de Supabase.
   form.addEventListener("submit", () => {
     setNsfwTag(nsfwCheckbox.checked || parsedTags().includes("nsfw"));
   }, true);
@@ -66,8 +64,8 @@
       <div class="asset-preview-dialog-title">Vista previa</div>
       <button class="asset-preview-dialog-close" type="button" aria-label="Cerrar">×</button>
     </div>
-    <div class="asset-preview-dialog-warning" hidden>
-      NSFW · Has solicitado mostrar esta preview sin difuminado.
+    <div class="asset-preview-dialog-warning">
+      NSFW · Has solicitado mostrar esta preview.
     </div>
     <div class="asset-preview-dialog-media">
       <img alt="Vista previa del asset">
@@ -76,17 +74,15 @@
   document.body.appendChild(dialog);
 
   const dialogTitle = dialog.querySelector(".asset-preview-dialog-title");
-  const dialogWarning = dialog.querySelector(".asset-preview-dialog-warning");
   const dialogImage = dialog.querySelector("img");
   const dialogClose = dialog.querySelector(".asset-preview-dialog-close");
 
-  function openPreview(card, image, isNsfw) {
+  function openPreview(card, image) {
     const src = image.currentSrc || image.src || image.getAttribute("src") || "";
     if (!src) return;
 
     const title = card.querySelector(".asset-title")?.textContent?.trim() || "Vista previa";
     dialogTitle.textContent = title;
-    dialogWarning.hidden = !isNsfw;
     dialogImage.src = src;
     dialogImage.alt = `Vista previa de ${title}`;
 
@@ -125,6 +121,9 @@
     const isNsfw = cardIsNsfw(card);
     card.classList.toggle("is-nsfw", isNsfw);
 
+    // En fichas normales no añadimos botón ni cambiamos la preview.
+    if (!isNsfw) return;
+
     let badgeStack = previewWrap.querySelector(".asset-badge-stack");
     if (!badgeStack) {
       badgeStack = document.createElement("div");
@@ -133,7 +132,7 @@
       badgeStack.appendChild(platform);
     }
 
-    if (isNsfw && !badgeStack.querySelector(".asset-nsfw-badge")) {
+    if (!badgeStack.querySelector(".asset-nsfw-badge")) {
       const nsfwBadge = document.createElement("span");
       nsfwBadge.className = "asset-nsfw-badge";
       nsfwBadge.textContent = "NSFW";
@@ -144,7 +143,7 @@
     previewButton.type = "button";
     previewButton.className = "asset-preview-view-button";
     previewButton.innerHTML = "👁 <span>Ver imagen</span>";
-    previewButton.title = isNsfw ? "Mostrar preview NSFW" : "Ver preview ampliada";
+    previewButton.title = "Mostrar preview NSFW";
     previewButton.hidden = !image.getAttribute("src");
     previewWrap.appendChild(previewButton);
 
@@ -158,7 +157,7 @@
       watchImage.observe(image, { attributes: true, attributeFilter: ["src"] });
     }
 
-    previewButton.addEventListener("click", () => openPreview(card, image, isNsfw));
+    previewButton.addEventListener("click", () => openPreview(card, image));
   }
 
   function enhanceCards() {
