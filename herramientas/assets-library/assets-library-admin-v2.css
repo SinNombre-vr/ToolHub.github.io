@@ -1,0 +1,527 @@
+/* ToolHub · Admin v2 · v23.0 */
+
+.asset-admin-dialog:has(#adminWorkspace:not([hidden])) {
+  width: min(1120px, calc(100% - 28px));
+  max-height: 92vh;
+  overflow: auto;
+}
+
+.asset-admin-card {
+  overflow: hidden;
+}
+
+.asset-admin-muted,
+.asset-admin-hint {
+  color: var(--asset-muted);
+  line-height: 1.5;
+}
+
+.asset-admin-workspace {
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--asset-line);
+}
+
+.asset-admin-v2-head,
+.asset-admin-section-head,
+.asset-admin-list-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.asset-admin-v2-head h3 {
+  margin: 5px 0 0;
+  font-size: 1.35rem;
+}
+
+.asset-admin-role {
+  padding: 6px 10px;
+  border: 1px solid rgba(75,227,174,.28);
+  border-radius: 999px;
+  color: var(--asset-green);
+  background: rgba(75,227,174,.06);
+  font-size: .7rem;
+  font-weight: 950;
+  letter-spacing: .08em;
+}
+
+.asset-admin-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0;
+  padding: 5px;
+  overflow-x: auto;
+  border: 1px solid var(--asset-line);
+  border-radius: 13px;
+  background: #08111b;
+}
+
+.asset-admin-tabs button,
+.asset-admin-bulk-actions button,
+.asset-admin-maintenance-actions button,
+.asset-admin-mini-actions button,
+.asset-admin-list-actions button,
+.asset-admin-add-user button {
+  border: 1px solid var(--asset-line);
+  border-radius: 9px;
+  background: #0a1521;
+  color: var(--asset-muted);
+  cursor: pointer;
+  font-weight: 800;
+  transition: .16s ease;
+}
+
+.asset-admin-tabs button {
+  min-height: 36px;
+  padding: 7px 12px;
+  white-space: nowrap;
+}
+
+.asset-admin-tabs button:hover,
+.asset-admin-tabs button.active,
+.asset-admin-bulk-actions button:hover,
+.asset-admin-maintenance-actions button:hover,
+.asset-admin-mini-actions button:hover,
+.asset-admin-list-actions button:hover,
+.asset-admin-add-user button:hover {
+  color: var(--asset-text);
+  border-color: rgba(56,156,255,.34);
+  background: #102238;
+}
+
+.asset-admin-tabs span:not(:empty) {
+  display: inline-grid;
+  min-width: 20px;
+  min-height: 20px;
+  margin-left: 5px;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255,107,120,.16);
+  color: #ff9aa4;
+  font-size: .68rem;
+}
+
+.asset-admin-tab-panel {
+  display: none;
+}
+
+.asset-admin-tab-panel.active {
+  display: block;
+}
+
+.asset-admin-migration {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 13px 14px;
+  border: 1px solid rgba(230,187,107,.28);
+  border-radius: 12px;
+  background: rgba(230,187,107,.055);
+  color: var(--asset-muted);
+}
+
+.asset-admin-migration strong { color: #e6bb6b; }
+.asset-admin-migration a { color: #cfe7ff; font-weight: 850; }
+
+.asset-admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.asset-admin-stat {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--asset-line);
+  border-radius: 12px;
+  background: #08111b;
+}
+
+.asset-admin-stat strong,
+.asset-admin-stat span {
+  display: block;
+}
+
+.asset-admin-stat strong {
+  color: var(--asset-blue);
+  font-size: 1.35rem;
+}
+
+.asset-admin-stat span {
+  margin-top: 4px;
+  color: var(--asset-muted);
+  font-size: .69rem;
+  line-height: 1.3;
+}
+
+.asset-admin-stat.danger strong { color: #ff8590; }
+.asset-admin-stat.feature strong { color: #ffd36a; }
+
+.asset-admin-section {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid var(--asset-line);
+  border-radius: 13px;
+  background: rgba(8,17,27,.72);
+}
+
+.asset-admin-section-head {
+  margin-bottom: 11px;
+}
+
+.asset-admin-section-head span {
+  color: var(--asset-muted);
+  font-size: .75rem;
+}
+
+.asset-admin-bulk-actions,
+.asset-admin-maintenance-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.asset-admin-bulk-actions button,
+.asset-admin-maintenance-actions button {
+  min-height: 36px;
+  padding: 7px 10px;
+}
+
+.asset-admin-bulk-actions button.danger,
+.asset-admin-list-actions button.danger {
+  color: #ff8490;
+  border-color: rgba(255,107,120,.25);
+}
+
+.asset-admin-progress {
+  min-height: 18px;
+  margin-top: 10px;
+  color: var(--asset-muted);
+  font-size: .76rem;
+}
+
+.asset-admin-list {
+  display: grid;
+  gap: 9px;
+  max-height: 470px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.asset-admin-list-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  border: 1px solid var(--asset-line);
+  border-radius: 12px;
+  background: #08111b;
+}
+
+.asset-admin-list-item.report-pending {
+  border-color: rgba(255,193,82,.22);
+}
+
+.asset-admin-list-item.compact {
+  padding-block: 10px;
+}
+
+.asset-admin-list-main {
+  min-width: 0;
+}
+
+.asset-admin-list-title strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.asset-admin-list-title span {
+  flex: 0 0 auto;
+  color: var(--asset-green);
+  font-size: .7rem;
+  font-weight: 850;
+}
+
+.asset-admin-list-item p {
+  margin: 6px 0;
+  color: var(--asset-muted);
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+.asset-admin-list-item small {
+  color: var(--asset-muted);
+  font-size: .7rem;
+}
+
+.asset-admin-list-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.asset-admin-list-actions button {
+  min-height: 32px;
+  padding: 6px 9px;
+}
+
+.asset-admin-empty {
+  padding: 28px 16px;
+  border: 1px dashed var(--asset-line);
+  border-radius: 12px;
+  color: var(--asset-muted);
+  text-align: center;
+}
+
+.asset-admin-add-user {
+  display: grid;
+  grid-template-columns: 1fr 160px auto;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.asset-admin-add-user input,
+.asset-admin-add-user select,
+.asset-report-card select,
+.asset-report-card textarea,
+.asset-edit-card select,
+.asset-edit-card textarea {
+  width: 100%;
+  border: 1px solid var(--asset-line);
+  border-radius: 10px;
+  background: #08111c;
+  color: var(--asset-text);
+  padding: 10px 11px;
+}
+
+.asset-admin-add-user button {
+  padding: 8px 11px;
+}
+
+.asset-report-dialog {
+  width: min(600px, calc(100% - 28px));
+}
+
+.asset-report-target {
+  margin: 14px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--asset-line);
+  border-radius: 10px;
+  background: #08111b;
+  color: var(--asset-text);
+  font-weight: 850;
+}
+
+.asset-report-card label + label {
+  margin-top: 12px;
+}
+
+.asset-edit-dialog {
+  width: min(900px, calc(100% - 28px));
+  max-height: 92vh;
+  overflow: auto;
+}
+
+.asset-admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.asset-admin-wide {
+  grid-column: 1 / -1;
+}
+
+.asset-edit-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.asset-edit-switches label {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 11px;
+  border: 1px solid var(--asset-line);
+  border-radius: 10px;
+  background: #08111b;
+  cursor: pointer;
+}
+
+.asset-edit-switches input {
+  width: 17px !important;
+  height: 17px;
+  padding: 0 !important;
+  accent-color: var(--asset-blue);
+}
+
+/* Tarjetas: controles de administración */
+.asset-admin-card-controls {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(128,160,198,.12);
+}
+
+.asset-admin-select-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--asset-muted);
+  font-size: .7rem;
+  cursor: pointer;
+}
+
+.asset-admin-select-label input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--asset-blue);
+}
+
+.asset-admin-mini-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.asset-admin-mini-actions button {
+  min-height: 29px;
+  padding: 5px 7px;
+  font-size: .68rem;
+}
+
+.asset-link-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.asset-link-chip {
+  padding: 4px 6px;
+  border: 1px solid var(--asset-line);
+  border-radius: 999px;
+  color: var(--asset-muted);
+  font-size: .62rem;
+}
+
+.asset-link-chip.ok {
+  color: var(--asset-green);
+  border-color: rgba(75,227,174,.25);
+}
+
+.asset-link-chip.broken {
+  color: #ff8a95;
+  border-color: rgba(255,107,120,.25);
+}
+
+.asset-report-button {
+  margin-top: 9px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #7088a3;
+  cursor: pointer;
+  font-size: .68rem;
+}
+
+.asset-report-button:hover {
+  color: #9fb9d5;
+}
+
+.asset-admin-public-badges {
+  position: absolute;
+  z-index: 7;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: calc(100% - 20px);
+  pointer-events: none;
+}
+
+.asset-featured-badge,
+.asset-hidden-badge {
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: .65rem;
+  font-weight: 950;
+  backdrop-filter: blur(8px);
+}
+
+.asset-featured-badge {
+  color: #ffe4a0;
+  border: 1px solid rgba(255,207,92,.35);
+  background: rgba(52,39,8,.88);
+}
+
+.asset-hidden-badge {
+  color: #c6d6e8;
+  border: 1px solid rgba(154,180,208,.25);
+  background: rgba(8,15,24,.88);
+}
+
+.asset-card.is-featured {
+  border-color: rgba(255,207,92,.28);
+  box-shadow: inset 0 1px 0 rgba(255,226,150,.035);
+}
+
+.asset-card.is-hidden-admin {
+  border-style: dashed;
+  opacity: .76;
+}
+
+/* Evita que badges de admin tapen la papelera. */
+.asset-card .asset-delete-x:not([hidden]) ~ .asset-preview-wrap .asset-admin-public-badges {
+  right: 40px;
+}
+
+@media (max-width: 900px) {
+  .asset-admin-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .asset-admin-add-user {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .asset-admin-dialog:has(#adminWorkspace:not([hidden])) {
+    width: calc(100% - 14px);
+  }
+
+  .asset-admin-card {
+    padding: 20px;
+  }
+
+  .asset-admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .asset-admin-list-item {
+    grid-template-columns: 1fr;
+  }
+
+  .asset-admin-list-actions {
+    justify-content: flex-start;
+  }
+
+  .asset-admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .asset-admin-wide {
+    grid-column: 1;
+  }
+}
