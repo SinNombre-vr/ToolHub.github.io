@@ -96,7 +96,6 @@
   const style = document.createElement("style");
   style.id = "toolhub-home-hero-v20";
   style.textContent = `
-    /* Logo superior: solo un aumento moderado para darle más identidad. */
     .topbar .brand {
       gap: 12px;
       font-size: 1.24rem;
@@ -107,7 +106,6 @@
       filter: drop-shadow(0 0 10px rgba(51, 148, 255, .16));
     }
 
-    /* Anula el barrido antiguo aplicado al h1 completo; el acabado pasa a cada línea. */
     .home-hero-v20 .hero-motion-title {
       width: fit-content;
       max-width: 780px;
@@ -203,7 +201,6 @@
       48%, 100% { background-position: -115% 50%; }
     }
 
-    /* El panel aparece una vez que las tres líneas ya están colocadas. */
     .home-hero-v20 .hero-panel {
       opacity: 0;
       transform: translate3d(0, 15px, 0) scale(.988);
@@ -248,7 +245,6 @@
       }
     }
 
-    /* Luz de borde: el elemento queda recortado al borde, nunca cruza el contenido. */
     .home-hero-v20::after,
     .home-hero-v20 .hero-panel::before {
       content: "";
@@ -373,8 +369,6 @@
     });
   }
 
-  /* En primera visita esperamos a que el aviso de privacidad desaparezca,
-     para que la animación sea realmente la primera impresión visible. */
   if (document.documentElement.classList.contains("privacy-pending")) {
     const privacyObserver = new MutationObserver(() => {
       if (!document.documentElement.classList.contains("privacy-pending")) {
@@ -389,4 +383,206 @@
   } else {
     startHeroAnimation();
   }
+})();
+
+
+/* ==========================================================
+   ToolHub · Inicio v21
+   Primera pantalla dedicada al hero + acceso rápido.
+   El resto de la portada aparece progresivamente al hacer scroll.
+   ========================================================== */
+(() => {
+  "use strict";
+
+  const main = document.querySelector("body > main");
+  const hero = document.querySelector("#inicio.hero");
+  const quick = document.querySelector("main > .quick-access.section");
+  if (!main || !hero || !quick) return;
+  if (main.dataset.homeRevealV21 === "1") return;
+  main.dataset.homeRevealV21 = "1";
+
+  const intro = document.createElement("div");
+  intro.className = "home-intro-stage";
+  hero.before(intro);
+  intro.append(hero, quick);
+
+  const revealSections = Array.from(main.children).filter((node) => node !== intro);
+  revealSections.forEach((section, index) => {
+    section.classList.add("home-scroll-reveal");
+    section.style.setProperty("--home-reveal-order", String(index));
+  });
+
+  const style = document.createElement("style");
+  style.id = "toolhub-home-reveal-v21";
+  style.textContent = `
+    .home-intro-stage {
+      width: 100%;
+      min-height: calc(100svh - 76px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: clamp(24px, 3.2vh, 42px);
+      padding: clamp(20px, 3vh, 34px) 0 clamp(36px, 5vh, 64px);
+    }
+
+    .home-intro-stage > .hero {
+      margin-top: 0 !important;
+      min-height: auto !important;
+      padding-top: clamp(50px, 6vh, 76px) !important;
+      padding-bottom: clamp(34px, 4.5vh, 48px) !important;
+    }
+
+    .home-intro-stage > .quick-access {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 0 !important;
+    }
+
+    .home-intro-stage > .quick-access .section-heading {
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .home-intro-stage > .quick-access .section-heading > div {
+      width: 100%;
+    }
+
+    .home-intro-stage > .quick-access .quick-grid {
+      width: min(1080px, 100%);
+      margin: 0 auto;
+    }
+
+    .home-intro-stage > .quick-access .quick-card {
+      min-height: 92px;
+      justify-content: center;
+      background:
+        linear-gradient(145deg, rgba(13, 20, 33, .90), rgba(9, 15, 25, .82));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .02),
+        0 16px 38px rgba(0, 0, 0, .10);
+    }
+
+    .home-intro-stage > .quick-access .quick-card:hover {
+      border-color: rgba(51, 148, 255, .38);
+      box-shadow:
+        0 16px 42px rgba(17, 89, 170, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .03);
+    }
+
+    .home-scroll-reveal {
+      opacity: 0;
+      transform: translate3d(0, 72px, 0) scale(.985);
+      filter: blur(10px);
+      transition:
+        opacity .78s cubic-bezier(.16, 1, .3, 1),
+        transform .92s cubic-bezier(.16, 1, .3, 1),
+        filter .78s ease;
+      will-change: opacity, transform, filter;
+    }
+
+    .home-scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+      filter: blur(0);
+    }
+
+    .home-scroll-reveal .category-card,
+    .home-scroll-reveal .guide-card,
+    .home-scroll-reveal .asset-library-home-card {
+      opacity: 0;
+      transform: translate3d(0, 28px, 0);
+      transition:
+        opacity .56s ease,
+        transform .68s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .home-scroll-reveal.is-visible .category-card,
+    .home-scroll-reveal.is-visible .guide-card,
+    .home-scroll-reveal.is-visible .asset-library-home-card {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .home-scroll-reveal.is-visible .category-card:nth-child(2),
+    .home-scroll-reveal.is-visible .guide-card:nth-child(2) { transition-delay: .08s; }
+    .home-scroll-reveal.is-visible .category-card:nth-child(3),
+    .home-scroll-reveal.is-visible .guide-card:nth-child(3) { transition-delay: .16s; }
+    .home-scroll-reveal.is-visible .category-card:nth-child(4),
+    .home-scroll-reveal.is-visible .guide-card:nth-child(4) { transition-delay: .24s; }
+    .home-scroll-reveal.is-visible .category-card:nth-child(5) { transition-delay: .32s; }
+    .home-scroll-reveal.is-visible .category-card:nth-child(6) { transition-delay: .40s; }
+
+    @media (min-width: 1100px) and (min-height: 820px) {
+      .home-intro-stage > .hero {
+        transform: translateX(-50%) scale(.965);
+        transform-origin: center center;
+        margin-bottom: -10px;
+      }
+
+      .home-intro-stage > .quick-access {
+        margin-top: -8px;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .home-intro-stage {
+        min-height: auto;
+        padding-top: 18px;
+        padding-bottom: 78px;
+      }
+
+      .home-intro-stage > .quick-access .section-heading {
+        text-align: left;
+        justify-content: flex-start;
+      }
+
+      .home-intro-stage > .quick-access .quick-card {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .home-intro-stage {
+        gap: 34px;
+        padding-bottom: 64px;
+      }
+
+      .home-scroll-reveal {
+        transform: translate3d(0, 46px, 0) scale(.99);
+        filter: blur(6px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .home-scroll-reveal,
+      .home-scroll-reveal .category-card,
+      .home-scroll-reveal .guide-card,
+      .home-scroll-reveal .asset-library-home-card {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    revealSections.forEach((section) => section.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      observer.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.12,
+    rootMargin: "0px 0px -10% 0px",
+  });
+
+  revealSections.forEach((section) => observer.observe(section));
 })();
