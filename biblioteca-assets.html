@@ -10,9 +10,10 @@
   <meta name="description" content="Biblioteca visual de assets para Unity y VRChat.">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="herramientas/assets-library/assets-library.css">
-  <link rel="stylesheet" href="herramientas/assets-library/assets-library-nsfw.css?v=4">
-  <link rel="stylesheet" href="herramientas/assets-library/assets-library-admin-polish.css?v=1">
-  <link rel="stylesheet" href="herramientas/assets-library/assets-library-grid.css?v=1">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-nsfw.css?v=5">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-admin-polish.css?v=2">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-admin-v2.css?v=1">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-grid.css?v=2">
 </head>
 <body class="asset-library-page">
   <header class="asset-topbar">
@@ -63,7 +64,7 @@
 
         <div class="asset-shared-notice">
           <strong>☁️ Publicación compartida</strong>
-          <span>Cualquier visitante puede publicar una ficha. Se guarda directamente en Supabase y aparece para todos. Solo el administrador puede borrar.</span>
+          <span>Cualquier visitante puede publicar una ficha. Se guarda directamente en Supabase y aparece para todos. La administración puede editar, moderar, ocultar, destacar o borrar.</span>
         </div>
 
         <form id="assetForm" class="asset-form">
@@ -127,6 +128,16 @@
               <input id="assetTags" type="text" placeholder="avatar, ropa, cyber, pc">
               <small>Sepáralos con comas.</small>
             </label>
+
+            <div class="asset-nsfw-option asset-form-wide">
+              <label class="asset-nsfw-check" for="assetNsfw">
+                <input id="assetNsfw" type="checkbox">
+                <span class="asset-nsfw-copy">
+                  <strong>Marcar como NSFW</strong>
+                  <small>No bloquea la publicación. La preview quedará oculta hasta que el visitante pulse Ver imagen.</small>
+                </span>
+              </label>
+            </div>
 
             <label class="asset-form-wide">
               <span>Descripción / notas</span>
@@ -220,12 +231,12 @@
     <form method="dialog" class="asset-admin-card" id="adminForm">
       <button class="asset-dialog-close" value="cancel" aria-label="Cerrar">×</button>
       <span class="asset-panel-kicker">ADMINISTRADOR</span>
-      <h2>Borrado protegido</h2>
+      <h2>Panel de administración</h2>
       <p>
-        Inicia sesión con la cuenta administradora de Supabase. Este modo únicamente habilita las X para borrar publicaciones.
+        Inicia sesión con una cuenta autorizada de Supabase. Los visitantes siguen pudiendo ver y publicar sin contraseña; este modo habilita las herramientas de gestión.
       </p>
 
-      <div class="asset-admin-status" id="adminStatus">🔒 Administrador bloqueado · solo controla el borrado</div>
+      <div class="asset-admin-status" id="adminStatus">🔒 Administrador bloqueado · gestión protegida</div>
 
       <label>
         <span>Email</span>
@@ -274,8 +285,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
-  <script src="herramientas/assets-library/assets-library.js?v=2"></script>
-  <script src="herramientas/assets-library/assets-library-nsfw.js?v=3"></script>
+  <script src="herramientas/assets-library/assets-library.js?v=3"></script>
+  <script src="herramientas/assets-library/assets-library-admin-v2.js?v=1"></script>
   <script src="herramientas/assets-library/assets-library-preview.js?v=1"></script>
 </body>
 </html>
