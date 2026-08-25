@@ -171,11 +171,7 @@
     message.textContent = "Enviando…";
     message.className = "asset-admin-message";
 
-    const { error } = await client.from("toolhub_reports").insert({
-      asset_id: reportAssetId,
-      reason,
-      details
-    });
+    const { error } = await client.from("toolhub_reports").insert({ asset_id: reportAssetId, reason, details });
 
     if (submit) submit.disabled = false;
     if (error) {
@@ -244,7 +240,6 @@
       tags,
       description: $("#editDescription").value.trim()
     };
-
     if (state().schemaV2) {
       payload.is_featured = $("#editFeatured").checked;
       payload.is_hidden = $("#editHidden").checked;
@@ -254,13 +249,12 @@
     if (submit) submit.disabled = true;
     message.textContent = "Guardando…";
     message.className = "asset-admin-message";
-
     const fields = state().schemaV2
       ? "id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at,is_hidden,is_featured,updated_at"
       : "id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at";
     const { data, error } = await client.from("assets").update(payload).eq("id", asset.id).select(fields).single();
-
     if (submit) submit.disabled = false;
+
     if (error) {
       message.textContent = `No se pudo guardar: ${error.message}`;
       message.className = "asset-admin-message error";
@@ -359,7 +353,6 @@
   function ensureFeaturedHiddenBadges(card, asset) {
     const previewWrap = $(".asset-preview-wrap", card);
     if (!previewWrap) return;
-
     let topBadges = $(".asset-admin-public-badges", previewWrap);
     if (!topBadges) {
       topBadges = document.createElement("div");
@@ -384,7 +377,7 @@
 
   function ensureReportButton(card, asset) {
     const actions = $(".asset-card-actions", card);
-    if (!actions || $(".asset-report-button", actions)) return;
+    if (!actions || $(".asset-report-button", card)) return;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "asset-report-button";
@@ -396,11 +389,7 @@
   function renderLinkStatus(container, result) {
     container.replaceChildren();
     if (!result) return;
-    [
-      ["Origen", result.author],
-      ["Preview", result.preview],
-      ["Descarga", result.download]
-    ].forEach(([label, status]) => {
+    [["Origen", result.author], ["Preview", result.preview], ["Descarga", result.download]].forEach(([label, status]) => {
       const chip = document.createElement("span");
       chip.className = `asset-link-chip ${status}`;
       chip.textContent = `${label}: ${status === "ok" ? "OK" : status === "broken" ? "ERROR" : "?"}`;
@@ -412,7 +401,6 @@
     const body = $(".asset-card-body", card);
     if (!body) return;
     let controls = $(".asset-admin-card-controls", card);
-
     if (!canManage()) {
       controls?.remove();
       return;
@@ -422,10 +410,7 @@
       controls = document.createElement("div");
       controls.className = "asset-admin-card-controls";
       controls.innerHTML = `
-        <label class="asset-admin-select-label" title="Seleccionar para acciones múltiples">
-          <input class="asset-admin-select" type="checkbox">
-          <span>Seleccionar</span>
-        </label>
+        <label class="asset-admin-select-label" title="Seleccionar para acciones múltiples"><input class="asset-admin-select" type="checkbox"><span>Seleccionar</span></label>
         <div class="asset-admin-mini-actions">
           <button type="button" data-admin-action="edit">✏️ Editar</button>
           <button type="button" data-admin-action="hidden"></button>
@@ -433,8 +418,7 @@
           <button type="button" data-admin-action="nsfw"></button>
           <button type="button" data-admin-action="links">🔗 Revisar</button>
         </div>
-        <div class="asset-link-status"></div>
-      `;
+        <div class="asset-link-status"></div>`;
       body.insertBefore(controls, $(".asset-card-actions", body));
 
       const checkbox = $(".asset-admin-select", controls);
@@ -479,89 +463,40 @@
   function ensureAdminWorkspace() {
     const adminCard = $("#adminForm");
     if (!adminCard || $("#adminWorkspace")) return;
-
     const workspace = document.createElement("section");
     workspace.id = "adminWorkspace";
     workspace.className = "asset-admin-workspace";
     workspace.hidden = true;
     workspace.innerHTML = `
-      <div class="asset-admin-v2-head">
-        <div>
-          <span class="asset-panel-kicker">ADMIN V2</span>
-          <h3>Centro de gestión</h3>
-        </div>
-        <span class="asset-admin-role" id="adminRoleBadge"></span>
-      </div>
-
+      <div class="asset-admin-v2-head"><div><span class="asset-panel-kicker">ADMIN V2</span><h3>Centro de gestión</h3></div><span class="asset-admin-role" id="adminRoleBadge"></span></div>
       <nav class="asset-admin-tabs" aria-label="Secciones de administración">
         <button type="button" class="active" data-admin-tab="overview">Resumen</button>
         <button type="button" data-admin-tab="reports">Reportes <span id="adminPendingBadge"></span></button>
         <button type="button" data-admin-tab="activity">Actividad</button>
         <button type="button" data-admin-tab="team">Equipo</button>
       </nav>
-
       <div class="asset-admin-tab-panel active" data-admin-panel="overview">
-        <div class="asset-admin-migration" id="adminMigrationNotice" hidden>
-          <strong>⚙️ Falta activar Admin v2 en Supabase</strong>
-          <span>El frontend ya está preparado. Ejecuta el SQL de migración una sola vez.</span>
-          <a href="https://github.com/SinNombre-vr/ToolHub.github.io/blob/main/supabase/toolhub-admin-v2.sql" target="_blank" rel="noopener noreferrer">Abrir SQL ↗</a>
-        </div>
+        <div class="asset-admin-migration" id="adminMigrationNotice" hidden><strong>⚙️ Falta activar Admin v2 en Supabase</strong><span>El frontend ya está preparado. Ejecuta el SQL de migración una sola vez.</span><a href="https://github.com/SinNombre-vr/ToolHub.github.io/blob/main/supabase/toolhub-admin-v2.sql" target="_blank" rel="noopener noreferrer">Abrir SQL ↗</a></div>
         <div class="asset-admin-stats-grid" id="adminStatsGrid"></div>
-        <div class="asset-admin-section">
-          <div class="asset-admin-section-head"><strong>Acciones múltiples</strong><span id="bulkSelectionCount">0 seleccionados</span></div>
-          <div class="asset-admin-bulk-actions">
-            <button type="button" data-bulk="hide">🙈 Ocultar</button>
-            <button type="button" data-bulk="show">👁 Publicar</button>
-            <button type="button" data-bulk="feature">★ Destacar</button>
-            <button type="button" data-bulk="unfeature">☆ Quitar destacado</button>
-            <button type="button" data-bulk="nsfw">🔞 Marcar NSFW</button>
-            <button type="button" data-bulk="safe">✓ Quitar NSFW</button>
-            <button type="button" data-bulk="category">🏷️ Categoría</button>
-            <button type="button" data-bulk="delete" class="danger">🗑️ Eliminar</button>
-          </div>
-        </div>
-        <div class="asset-admin-section">
-          <div class="asset-admin-section-head"><strong>Mantenimiento</strong></div>
-          <div class="asset-admin-maintenance-actions">
-            <button type="button" id="adminCheckLinks">🔗 Comprobar enlaces cargados</button>
-            <button type="button" id="adminExportJson">💾 Exportar JSON</button>
-            <button type="button" id="adminExportCsv">📄 Exportar CSV</button>
-            <button type="button" id="adminRefresh">↻ Actualizar datos</button>
-          </div>
-          <div class="asset-admin-progress" id="adminMaintenanceStatus"></div>
-        </div>
+        <div class="asset-admin-section"><div class="asset-admin-section-head"><strong>Acciones múltiples</strong><span id="bulkSelectionCount">0 seleccionados</span></div><div class="asset-admin-bulk-actions">
+          <button type="button" data-bulk="hide">🙈 Ocultar</button><button type="button" data-bulk="show">👁 Publicar</button><button type="button" data-bulk="feature">★ Destacar</button><button type="button" data-bulk="unfeature">☆ Quitar destacado</button><button type="button" data-bulk="nsfw">🔞 Marcar NSFW</button><button type="button" data-bulk="safe">✓ Quitar NSFW</button><button type="button" data-bulk="category">🏷️ Categoría</button><button type="button" data-bulk="delete" class="danger">🗑️ Eliminar</button>
+        </div></div>
+        <div class="asset-admin-section"><div class="asset-admin-section-head"><strong>Mantenimiento</strong></div><div class="asset-admin-maintenance-actions"><button type="button" id="adminCheckLinks">🔗 Comprobar enlaces cargados</button><button type="button" id="adminExportJson">💾 Exportar JSON</button><button type="button" id="adminExportCsv">📄 Exportar CSV</button><button type="button" id="adminRefresh">↻ Actualizar datos</button></div><div class="asset-admin-progress" id="adminMaintenanceStatus"></div></div>
       </div>
-
-      <div class="asset-admin-tab-panel" data-admin-panel="reports">
-        <div class="asset-admin-list" id="adminReportsList"></div>
-      </div>
-
-      <div class="asset-admin-tab-panel" data-admin-panel="activity">
-        <div class="asset-admin-list" id="adminActivityList"></div>
-      </div>
-
-      <div class="asset-admin-tab-panel" data-admin-panel="team">
-        <div id="adminTeamOwnerOnly"></div>
-        <div class="asset-admin-list" id="adminTeamList"></div>
-      </div>
-    `;
+      <div class="asset-admin-tab-panel" data-admin-panel="reports"><div class="asset-admin-list" id="adminReportsList"></div></div>
+      <div class="asset-admin-tab-panel" data-admin-panel="activity"><div class="asset-admin-list" id="adminActivityList"></div></div>
+      <div class="asset-admin-tab-panel" data-admin-panel="team"><div id="adminTeamOwnerOnly"></div><div class="asset-admin-list" id="adminTeamList"></div></div>`;
     adminCard.appendChild(workspace);
 
-    $$("[data-admin-tab]", workspace).forEach((button) => {
-      button.addEventListener("click", () => {
-        $$("[data-admin-tab]", workspace).forEach((x) => x.classList.toggle("active", x === button));
-        $$("[data-admin-panel]", workspace).forEach((panel) => panel.classList.toggle("active", panel.dataset.adminPanel === button.dataset.adminTab));
-      });
-    });
-
+    $$("[data-admin-tab]", workspace).forEach((button) => button.addEventListener("click", () => {
+      $$("[data-admin-tab]", workspace).forEach((x) => x.classList.toggle("active", x === button));
+      $$("[data-admin-panel]", workspace).forEach((panel) => panel.classList.toggle("active", panel.dataset.adminPanel === button.dataset.adminTab));
+    }));
     $$("[data-bulk]", workspace).forEach((button) => button.addEventListener("click", () => runBulkAction(button.dataset.bulk)));
     $("#adminCheckLinks").addEventListener("click", checkAllLoadedLinks);
     $("#adminExportJson").addEventListener("click", exportJson);
     $("#adminExportCsv").addEventListener("click", exportCsv);
-    $("#adminRefresh").addEventListener("click", async () => {
-      await api.refresh();
-      await refreshAdminData();
-    });
+    $("#adminRefresh").addEventListener("click", async () => { await api.refresh(); await refreshAdminData(); });
   }
 
   function updateAdminWorkspaceVisibility() {
@@ -583,21 +518,13 @@
     const grid = $("#adminStatsGrid");
     if (!grid) return;
     const assets = state().assets;
-    const now = Date.now();
-    const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
     const hidden = assets.filter((a) => a.is_hidden).length;
     const featured = assets.filter((a) => a.is_featured).length;
     const nsfw = assets.filter(isNsfw).length;
     const weekly = assets.filter((a) => new Date(a.created_at || 0).getTime() >= weekAgo).length;
     const pending = adminData.reports.filter((r) => r.status === "pending").length;
-    grid.innerHTML = [
-      statCard(assets.length, "Assets"),
-      statCard(nsfw, "NSFW", nsfw ? "danger" : ""),
-      statCard(featured, "Destacados", "feature"),
-      statCard(hidden, "Ocultos"),
-      statCard(weekly, "Últimos 7 días"),
-      statCard(pending, "Reportes pendientes", pending ? "danger" : "")
-    ].join("");
+    grid.innerHTML = [statCard(assets.length,"Assets"), statCard(nsfw,"NSFW",nsfw?"danger":""), statCard(featured,"Destacados","feature"), statCard(hidden,"Ocultos"), statCard(weekly,"Últimos 7 días"), statCard(pending,"Reportes pendientes",pending?"danger":"")].join("");
     const badge = $("#adminPendingBadge");
     if (badge) badge.textContent = pending ? String(pending) : "";
   }
@@ -610,26 +537,17 @@
   async function runBulkAction(action) {
     if (!canManage()) return;
     const ids = [...selected];
-    if (!ids.length) {
-      alert("Selecciona al menos una ficha.");
-      return;
-    }
+    if (!ids.length) return alert("Selecciona al menos una ficha.");
     const assets = ids.map(findAsset).filter(Boolean);
     const client = db();
     if (!client) return;
-
-    if (["hide", "show", "feature", "unfeature"].includes(action) && !state().schemaV2) return alertMigration();
-    if (action === "delete" && !canDelete()) {
-      alert("Tu rol no puede eliminar definitivamente.");
-      return;
-    }
+    if (["hide","show","feature","unfeature"].includes(action) && !state().schemaV2) return alertMigration();
+    if (action === "delete" && !canDelete()) return alert("Tu rol no puede eliminar definitivamente.");
 
     let error = null;
-    if (action === "hide" || action === "show") {
-      ({ error } = await client.from("assets").update({ is_hidden: action === "hide" }).in("id", ids));
-    } else if (action === "feature" || action === "unfeature") {
-      ({ error } = await client.from("assets").update({ is_featured: action === "feature" }).in("id", ids));
-    } else if (action === "nsfw" || action === "safe") {
+    if (action === "hide" || action === "show") ({ error } = await client.from("assets").update({ is_hidden: action === "hide" }).in("id", ids));
+    else if (action === "feature" || action === "unfeature") ({ error } = await client.from("assets").update({ is_featured: action === "feature" }).in("id", ids));
+    else if (action === "nsfw" || action === "safe") {
       const results = await Promise.all(assets.map((asset) => {
         let tags = normalizeTags(asset.tags).filter((tag) => tag !== "nsfw");
         if (action === "nsfw") tags.push("nsfw");
@@ -646,12 +564,7 @@
       if (!confirm(`¿Eliminar definitivamente ${ids.length} fichas?`)) return;
       ({ error } = await client.from("assets").delete().in("id", ids));
     }
-
-    if (error) {
-      alert(`La acción no se pudo completar: ${error.message}`);
-      return;
-    }
-
+    if (error) return alert(`La acción no se pudo completar: ${error.message}`);
     selected.clear();
     await api.refresh();
     await refreshAdminData();
@@ -659,17 +572,8 @@
   }
 
   async function loadReports() {
-    if (!canManage() || !state().schemaV2) {
-      adminData.reports = [];
-      renderReports();
-      return;
-    }
-    const client = db();
-    const { data, error } = await client
-      .from("toolhub_reports")
-      .select("id,asset_id,reason,details,status,created_at,reviewed_at,resolution_note,assets(name)")
-      .order("created_at", { ascending: false })
-      .limit(200);
+    if (!canManage() || !state().schemaV2) { adminData.reports = []; renderReports(); return; }
+    const { data, error } = await db().from("toolhub_reports").select("id,asset_id,reason,details,status,created_at,reviewed_at,resolution_note,assets(name)").order("created_at", { ascending: false }).limit(200);
     adminData.reports = error ? [] : (data || []);
     renderReports();
   }
@@ -677,309 +581,138 @@
   function renderReports() {
     const list = $("#adminReportsList");
     if (!list) return;
-    if (!state().schemaV2) {
-      list.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para usar reportes.</div>';
-      return;
-    }
-    if (!adminData.reports.length) {
-      list.innerHTML = '<div class="asset-admin-empty">No hay reportes.</div>';
-      return;
-    }
+    if (!state().schemaV2) { list.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para usar reportes.</div>'; return; }
+    if (!adminData.reports.length) { list.innerHTML = '<div class="asset-admin-empty">No hay reportes.</div>'; return; }
     list.innerHTML = "";
     adminData.reports.forEach((report) => {
       const item = document.createElement("article");
       item.className = `asset-admin-list-item report-${report.status}`;
-      const date = new Date(report.created_at).toLocaleString("es-ES");
-      item.innerHTML = `
-        <div class="asset-admin-list-main">
-          <div class="asset-admin-list-title"><strong>${escapeHtml(report.assets?.name || "Asset eliminado")}</strong><span>${escapeHtml(REASONS[report.reason] || report.reason)}</span></div>
-          <p>${escapeHtml(report.details || "Sin detalles.")}</p>
-          <small>${escapeHtml(date)} · ${escapeHtml(report.status)}</small>
-        </div>
-        <div class="asset-admin-list-actions"></div>
-      `;
+      item.innerHTML = `<div class="asset-admin-list-main"><div class="asset-admin-list-title"><strong>${escapeHtml(report.assets?.name || "Asset eliminado")}</strong><span>${escapeHtml(REASONS[report.reason] || report.reason)}</span></div><p>${escapeHtml(report.details || "Sin detalles.")}</p><small>${escapeHtml(new Date(report.created_at).toLocaleString("es-ES"))} · ${escapeHtml(report.status)}</small></div><div class="asset-admin-list-actions"></div>`;
       const actions = $(".asset-admin-list-actions", item);
       if (report.status === "pending") {
-        const resolve = document.createElement("button");
-        resolve.type = "button";
-        resolve.textContent = "✓ Resolver";
-        resolve.addEventListener("click", () => resolveReport(report, "resolved"));
-        actions.appendChild(resolve);
-        const dismiss = document.createElement("button");
-        dismiss.type = "button";
-        dismiss.textContent = "Descartar";
-        dismiss.addEventListener("click", () => resolveReport(report, "dismissed"));
-        actions.appendChild(dismiss);
+        const resolve = document.createElement("button"); resolve.type = "button"; resolve.textContent = "✓ Resolver"; resolve.addEventListener("click", () => resolveReport(report, "resolved")); actions.appendChild(resolve);
+        const dismiss = document.createElement("button"); dismiss.type = "button"; dismiss.textContent = "Descartar"; dismiss.addEventListener("click", () => resolveReport(report, "dismissed")); actions.appendChild(dismiss);
       }
-      if (canDelete()) {
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "danger";
-        remove.textContent = "Eliminar";
-        remove.addEventListener("click", () => deleteReport(report));
-        actions.appendChild(remove);
-      }
+      if (canDelete()) { const remove = document.createElement("button"); remove.type = "button"; remove.className = "danger"; remove.textContent = "Eliminar"; remove.addEventListener("click", () => deleteReport(report)); actions.appendChild(remove); }
       list.appendChild(item);
     });
   }
 
   async function resolveReport(report, status) {
     const note = prompt("Nota de resolución (opcional):", report.resolution_note || "") ?? "";
-    const { error } = await db().from("toolhub_reports").update({
-      status,
-      resolution_note: note,
-      reviewed_at: new Date().toISOString(),
-      reviewer_id: state().adminUser?.id || null
-    }).eq("id", report.id);
+    const { error } = await db().from("toolhub_reports").update({ status, resolution_note: note, reviewed_at: new Date().toISOString(), reviewer_id: state().adminUser?.id || null }).eq("id", report.id);
     if (error) return alert(error.message);
-    await loadReports();
-    renderAdminStats();
+    await loadReports(); renderAdminStats();
   }
 
   async function deleteReport(report) {
     if (!confirm("¿Eliminar este reporte?")) return;
     const { error } = await db().from("toolhub_reports").delete().eq("id", report.id);
     if (error) return alert(error.message);
-    await loadReports();
-    renderAdminStats();
+    await loadReports(); renderAdminStats();
   }
 
   async function loadActivity() {
-    if (!canManage() || !state().schemaV2) {
-      adminData.activity = [];
-      renderActivity();
-      return;
-    }
+    if (!canManage() || !state().schemaV2) { adminData.activity = []; renderActivity(); return; }
     const { data, error } = await db().from("toolhub_activity").select("id,actor_id,action,asset_id,asset_name,metadata,created_at").order("created_at", { ascending: false }).limit(150);
-    adminData.activity = error ? [] : (data || []);
-    renderActivity();
+    adminData.activity = error ? [] : (data || []); renderActivity();
   }
 
   function activityLabel(action) {
-    return ({
-      asset_created: "Publicado",
-      asset_deleted: "Eliminado",
-      asset_hidden: "Ocultado",
-      asset_published: "Vuelto a publicar",
-      asset_featured: "Destacado",
-      asset_unfeatured: "Destacado retirado",
-      asset_tags_updated: "Tags / NSFW actualizados",
-      asset_updated: "Ficha editada"
-    })[action] || action;
+    return ({ asset_created:"Publicado", asset_deleted:"Eliminado", asset_hidden:"Ocultado", asset_published:"Vuelto a publicar", asset_featured:"Destacado", asset_unfeatured:"Destacado retirado", asset_tags_updated:"Tags / NSFW actualizados", asset_updated:"Ficha editada" })[action] || action;
   }
 
   function renderActivity() {
     const list = $("#adminActivityList");
     if (!list) return;
-    if (!state().schemaV2) {
-      list.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para registrar actividad.</div>';
-      return;
-    }
-    if (!adminData.activity.length) {
-      list.innerHTML = '<div class="asset-admin-empty">Todavía no hay actividad registrada.</div>';
-      return;
-    }
-    list.innerHTML = adminData.activity.map((entry) => `
-      <article class="asset-admin-list-item compact">
-        <div class="asset-admin-list-main">
-          <div class="asset-admin-list-title"><strong>${escapeHtml(entry.asset_name || "Asset")}</strong><span>${escapeHtml(activityLabel(entry.action))}</span></div>
-          <small>${escapeHtml(new Date(entry.created_at).toLocaleString("es-ES"))}</small>
-        </div>
-      </article>
-    `).join("");
+    if (!state().schemaV2) { list.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para registrar actividad.</div>'; return; }
+    if (!adminData.activity.length) { list.innerHTML = '<div class="asset-admin-empty">Todavía no hay actividad registrada.</div>'; return; }
+    list.innerHTML = adminData.activity.map((entry) => `<article class="asset-admin-list-item compact"><div class="asset-admin-list-main"><div class="asset-admin-list-title"><strong>${escapeHtml(entry.asset_name || "Asset")}</strong><span>${escapeHtml(activityLabel(entry.action))}</span></div><small>${escapeHtml(new Date(entry.created_at).toLocaleString("es-ES"))}</small></div></article>`).join("");
   }
 
   async function loadAdmins() {
-    if (!canManageAdmins() || !state().schemaV2) {
-      adminData.admins = [];
-      renderTeam();
-      return;
-    }
+    if (!canManageAdmins() || !state().schemaV2) { adminData.admins = []; renderTeam(); return; }
     const { data, error } = await db().rpc("toolhub_list_admins");
-    adminData.admins = error ? [] : (data || []);
-    renderTeam(error);
+    adminData.admins = error ? [] : (data || []); renderTeam(error);
   }
 
   function renderTeam(error = null) {
-    const ownerBox = $("#adminTeamOwnerOnly");
-    const list = $("#adminTeamList");
+    const ownerBox = $("#adminTeamOwnerOnly"); const list = $("#adminTeamList");
     if (!ownerBox || !list) return;
-    if (!canManageAdmins()) {
-      ownerBox.innerHTML = '<div class="asset-admin-empty">Solo el propietario puede gestionar el equipo.</div>';
-      list.innerHTML = "";
-      return;
-    }
-    if (!state().schemaV2 || error) {
-      ownerBox.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para gestionar roles.</div>';
-      list.innerHTML = "";
-      return;
-    }
-    ownerBox.innerHTML = `
-      <div class="asset-admin-add-user">
-        <input id="adminNewEmail" type="email" placeholder="correo@ejemplo.com" autocomplete="off">
-        <select id="adminNewRole"><option value="moderator">Moderador</option><option value="admin">Administrador</option><option value="owner">Propietario</option></select>
-        <button type="button" id="adminAddUser">Añadir / actualizar</button>
-      </div>
-      <small class="asset-admin-hint">La cuenta debe existir primero en Supabase Authentication.</small>
-    `;
+    if (!canManageAdmins()) { ownerBox.innerHTML = '<div class="asset-admin-empty">Solo el propietario puede gestionar el equipo.</div>'; list.innerHTML = ""; return; }
+    if (!state().schemaV2 || error) { ownerBox.innerHTML = '<div class="asset-admin-empty">Activa Admin v2 en Supabase para gestionar roles.</div>'; list.innerHTML = ""; return; }
+    ownerBox.innerHTML = `<div class="asset-admin-add-user"><input id="adminNewEmail" type="email" placeholder="correo@ejemplo.com" autocomplete="off"><select id="adminNewRole"><option value="moderator">Moderador</option><option value="admin">Administrador</option><option value="owner">Propietario</option></select><button type="button" id="adminAddUser">Añadir / actualizar</button></div><small class="asset-admin-hint">La cuenta debe existir primero en Supabase Authentication.</small>`;
     $("#adminAddUser").addEventListener("click", addAdmin);
-
     list.innerHTML = "";
     adminData.admins.forEach((user) => {
-      const item = document.createElement("article");
-      item.className = "asset-admin-list-item compact";
-      item.innerHTML = `
-        <div class="asset-admin-list-main">
-          <div class="asset-admin-list-title"><strong>${escapeHtml(user.email || user.user_id)}</strong><span>${escapeHtml(user.role)}</span></div>
-          <small>${escapeHtml(user.user_id)}</small>
-        </div>
-        <div class="asset-admin-list-actions"></div>
-      `;
-      if (String(user.user_id) !== String(state().adminUser?.id)) {
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "danger";
-        remove.textContent = "Quitar";
-        remove.addEventListener("click", () => removeAdmin(user));
-        $(".asset-admin-list-actions", item).appendChild(remove);
-      }
+      const item = document.createElement("article"); item.className = "asset-admin-list-item compact";
+      item.innerHTML = `<div class="asset-admin-list-main"><div class="asset-admin-list-title"><strong>${escapeHtml(user.email || user.user_id)}</strong><span>${escapeHtml(user.role)}</span></div><small>${escapeHtml(user.user_id)}</small></div><div class="asset-admin-list-actions"></div>`;
+      if (String(user.user_id) !== String(state().adminUser?.id)) { const remove = document.createElement("button"); remove.type = "button"; remove.className = "danger"; remove.textContent = "Quitar"; remove.addEventListener("click", () => removeAdmin(user)); $(".asset-admin-list-actions", item).appendChild(remove); }
       list.appendChild(item);
     });
   }
 
   async function addAdmin() {
-    const email = $("#adminNewEmail").value.trim();
-    const role = $("#adminNewRole").value;
+    const email = $("#adminNewEmail").value.trim(); const role = $("#adminNewRole").value;
     if (!email) return;
     const { error } = await db().rpc("toolhub_add_admin_by_email", { target_email: email, target_role: role });
-    if (error) return alert(error.message);
-    await loadAdmins();
+    if (error) return alert(error.message); await loadAdmins();
   }
 
   async function removeAdmin(user) {
     if (!confirm(`¿Quitar a ${user.email || user.user_id} del equipo?`)) return;
     const { error } = await db().rpc("toolhub_remove_admin", { target_user_id: user.user_id });
-    if (error) return alert(error.message);
-    await loadAdmins();
+    if (error) return alert(error.message); await loadAdmins();
   }
 
   async function refreshAdminData() {
     updateAdminWorkspaceVisibility();
     if (!canManage()) return;
     await Promise.all([loadReports(), loadActivity(), loadAdmins()]);
-    renderAdminStats();
-    enhanceCards();
+    renderAdminStats(); enhanceCards();
   }
 
   function downloadText(filename, text, type) {
-    const blob = new Blob([text], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    const blob = new Blob([text], { type }); const url = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   function exportJson() {
-    const payload = {
-      exportedAt: new Date().toISOString(),
-      version: "23.0",
-      count: state().assets.length,
-      assets: state().assets
-    };
-    downloadText(`toolhub-assets-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify(payload, null, 2), "application/json");
+    const payload = { exportedAt: new Date().toISOString(), version: "23.0", count: state().assets.length, assets: state().assets };
+    downloadText(`toolhub-assets-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2), "application/json");
   }
 
-  function csvCell(value) {
-    const text = Array.isArray(value) ? value.join("|") : String(value ?? "");
-    return `"${text.replaceAll('"', '""')}"`;
-  }
-
+  function csvCell(value) { const text = Array.isArray(value) ? value.join("|") : String(value ?? ""); return `"${text.replaceAll('"', '""')}"`; }
   function exportCsv() {
     const headers = ["id","name","category","author","platform","author_url","preview_url","download_url","tags","description","nsfw","featured","hidden","created_at","updated_at"];
-    const rows = state().assets.map((asset) => [
-      asset.id, asset.name, asset.category, asset.author, asset.platform, asset.author_url, asset.preview_url,
-      asset.download_url, asset.tags, asset.description, isNsfw(asset), Boolean(asset.is_featured), Boolean(asset.is_hidden), asset.created_at, asset.updated_at
-    ]);
-    downloadText(`toolhub-assets-${new Date().toISOString().slice(0, 10)}.csv`, [headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\n"), "text/csv;charset=utf-8");
+    const rows = state().assets.map((asset) => [asset.id,asset.name,asset.category,asset.author,asset.platform,asset.author_url,asset.preview_url,asset.download_url,asset.tags,asset.description,isNsfw(asset),Boolean(asset.is_featured),Boolean(asset.is_hidden),asset.created_at,asset.updated_at]);
+    downloadText(`toolhub-assets-${new Date().toISOString().slice(0,10)}.csv`, [headers,...rows].map((row) => row.map(csvCell).join(",")).join("\n"), "text/csv;charset=utf-8");
   }
 
-  function withTimeout(promise, ms = 7000) {
-    return Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))
-    ]);
-  }
-
+  function withTimeout(promise, ms = 7000) { return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))]); }
   async function checkHttpUrl(url) {
-    const safe = api.safeUrl(url);
-    if (!safe) return "broken";
-    try {
-      const response = await withTimeout(fetch(safe, { method: "HEAD", mode: "cors", cache: "no-store" }));
-      if (response.ok) return "ok";
-      if ([404, 410].includes(response.status)) return "broken";
-      return "unknown";
-    } catch {
-      return "unknown";
-    }
+    const safe = api.safeUrl(url); if (!safe) return "broken";
+    try { const response = await withTimeout(fetch(safe, { method:"HEAD", mode:"cors", cache:"no-store" })); if (response.ok) return "ok"; if ([404,410].includes(response.status)) return "broken"; return "unknown"; } catch { return "unknown"; }
   }
-
   function checkImageUrl(url) {
-    const safe = api.safeUrl(url);
-    if (!safe) return Promise.resolve("broken");
-    return withTimeout(new Promise((resolve) => {
-      const image = new Image();
-      image.onload = () => resolve("ok");
-      image.onerror = () => resolve("broken");
-      image.src = `${safe}${safe.includes("?") ? "&" : "?"}toolhub_check=${Date.now()}`;
-    })).catch(() => "unknown");
+    const safe = api.safeUrl(url); if (!safe) return Promise.resolve("broken");
+    return withTimeout(new Promise((resolve) => { const image = new Image(); image.onload = () => resolve("ok"); image.onerror = () => resolve("broken"); image.src = safe; })).catch(() => "unknown");
   }
-
   async function checkAssetLinks(asset) {
-    const [author, preview, download] = await Promise.all([
-      checkHttpUrl(asset.author_url),
-      asset.preview_url ? checkImageUrl(asset.preview_url) : Promise.resolve("unknown"),
-      checkHttpUrl(asset.download_url)
-    ]);
+    const [author,preview,download] = await Promise.all([checkHttpUrl(asset.author_url), asset.preview_url ? checkImageUrl(asset.preview_url) : Promise.resolve("unknown"), checkHttpUrl(asset.download_url)]);
     return { author, preview, download };
   }
-
   async function checkAllLoadedLinks() {
     if (!canManage()) return;
-    const button = $("#adminCheckLinks");
-    const status = $("#adminMaintenanceStatus");
-    const assets = state().assets;
-    button.disabled = true;
-    for (let i = 0; i < assets.length; i += 1) {
-      status.textContent = `Comprobando ${i + 1}/${assets.length} · ${assets[i].name}`;
-      adminData.linkResults.set(String(assets[i].id), await checkAssetLinks(assets[i]));
-      enhanceCards();
-    }
+    const button = $("#adminCheckLinks"); const status = $("#adminMaintenanceStatus"); const assets = state().assets; button.disabled = true;
+    for (let i = 0; i < assets.length; i += 1) { status.textContent = `Comprobando ${i + 1}/${assets.length} · ${assets[i].name}`; adminData.linkResults.set(String(assets[i].id), await checkAssetLinks(assets[i])); enhanceCards(); }
     const broken = [...adminData.linkResults.values()].filter((r) => Object.values(r).includes("broken")).length;
-    status.textContent = broken ? `Comprobación terminada · ${broken} fichas con algún error confirmado.` : "Comprobación terminada · sin errores confirmados. Los '?' indican sitios que bloquean la comprobación por CORS.";
-    button.disabled = false;
+    status.textContent = broken ? `Comprobación terminada · ${broken} fichas con algún error confirmado.` : "Comprobación terminada · sin errores confirmados. Los '?' indican sitios que bloquean la comprobación por CORS."; button.disabled = false;
   }
 
-  document.addEventListener("toolhub-assets-rendered", () => {
-    enhanceCards();
-    renderAdminStats();
-  });
-
-  document.addEventListener("toolhub-admin-changed", () => {
-    selected.clear();
-    updateAdminWorkspaceVisibility();
-    refreshAdminData();
-  });
-
-  document.addEventListener("toolhub-assets-ready", () => {
-    ensureAdminWorkspace();
-    updateAdminWorkspaceVisibility();
-    enhanceCards();
-    refreshAdminData();
-  });
+  document.addEventListener("toolhub-assets-rendered", () => { enhanceCards(); renderAdminStats(); });
+  document.addEventListener("toolhub-admin-changed", () => { selected.clear(); updateAdminWorkspaceVisibility(); refreshAdminData(); });
+  document.addEventListener("toolhub-assets-ready", () => { ensureAdminWorkspace(); updateAdminWorkspaceVisibility(); enhanceCards(); refreshAdminData(); });
 
   ensureAdminWorkspace();
   updateAdminWorkspaceVisibility();
