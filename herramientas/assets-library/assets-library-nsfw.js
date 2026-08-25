@@ -16,7 +16,7 @@
       <input id="assetNsfw" type="checkbox">
       <span class="asset-nsfw-copy">
         <strong>Marcar como NSFW</strong>
-        <small>No bloquea ni elimina la publicación. La preview queda oculta en la tarjeta y solo se muestra si el visitante pulsa Ver imagen.</small>
+        <small>No bloquea ni elimina la publicación. La imagen queda oculta en la tarjeta hasta que el visitante pulse Ver imagen.</small>
       </span>
     </label>
   `;
@@ -57,53 +57,6 @@
     }, 0);
   });
 
-  const dialog = document.createElement("dialog");
-  dialog.className = "asset-preview-dialog";
-  dialog.innerHTML = `
-    <div class="asset-preview-dialog-head">
-      <div class="asset-preview-dialog-title">Vista previa</div>
-      <button class="asset-preview-dialog-close" type="button" aria-label="Cerrar">×</button>
-    </div>
-    <div class="asset-preview-dialog-warning">
-      NSFW · Has solicitado mostrar esta preview.
-    </div>
-    <div class="asset-preview-dialog-media">
-      <img alt="Vista previa del asset">
-    </div>
-  `;
-  document.body.appendChild(dialog);
-
-  const dialogTitle = dialog.querySelector(".asset-preview-dialog-title");
-  const dialogImage = dialog.querySelector("img");
-  const dialogClose = dialog.querySelector(".asset-preview-dialog-close");
-
-  function openPreview(card, image) {
-    const src = image.currentSrc || image.src || image.getAttribute("src") || "";
-    if (!src) return;
-
-    const title = card.querySelector(".asset-title")?.textContent?.trim() || "Vista previa";
-    dialogTitle.textContent = title;
-    dialogImage.src = src;
-    dialogImage.alt = `Vista previa de ${title}`;
-
-    if (typeof dialog.showModal === "function") dialog.showModal();
-    else dialog.setAttribute("open", "");
-  }
-
-  function closePreview() {
-    if (dialog.open && typeof dialog.close === "function") dialog.close();
-    else dialog.removeAttribute("open");
-    dialogImage.removeAttribute("src");
-  }
-
-  dialogClose.addEventListener("click", closePreview);
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) closePreview();
-  });
-  dialog.addEventListener("close", () => {
-    dialogImage.removeAttribute("src");
-  });
-
   function cardIsNsfw(card) {
     return Array.from(card.querySelectorAll(".asset-card-tags span"))
       .some((chip) => chip.textContent.trim().toLowerCase() === "#nsfw");
@@ -121,7 +74,7 @@
     const isNsfw = cardIsNsfw(card);
     card.classList.toggle("is-nsfw", isNsfw);
 
-    // En fichas normales no añadimos botón ni cambiamos la preview.
+    // Las fichas normales quedan exactamente como siempre.
     if (!isNsfw) return;
 
     let badgeStack = previewWrap.querySelector(".asset-badge-stack");
@@ -143,7 +96,8 @@
     previewButton.type = "button";
     previewButton.className = "asset-preview-view-button";
     previewButton.innerHTML = "👁 <span>Ver imagen</span>";
-    previewButton.title = "Mostrar preview NSFW";
+    previewButton.title = "Mostrar imagen NSFW en esta tarjeta";
+    previewButton.setAttribute("aria-pressed", "false");
     previewButton.hidden = !image.getAttribute("src");
     previewWrap.appendChild(previewButton);
 
@@ -157,7 +111,18 @@
       watchImage.observe(image, { attributes: true, attributeFilter: ["src"] });
     }
 
-    previewButton.addEventListener("click", () => openPreview(card, image));
+    // Importante: NO abre modal ni agranda la imagen.
+    // Solo quita/activa la censura dentro de la propia tarjeta.
+    previewButton.addEventListener("click", () => {
+      const revealed = card.classList.toggle("is-nsfw-revealed");
+      previewButton.setAttribute("aria-pressed", String(revealed));
+      previewButton.innerHTML = revealed
+        ? "🙈 <span>Ocultar imagen</span>"
+        : "👁 <span>Ver imagen</span>";
+      previewButton.title = revealed
+        ? "Volver a ocultar la imagen NSFW"
+        : "Mostrar imagen NSFW en esta tarjeta";
+    });
   }
 
   function enhanceCards() {
