@@ -251,9 +251,113 @@
   }
 }
 
-/* v22.8 · Identificador de versión visible en el footer */
+/* v22.9 · Inicio adaptado a la altura real disponible en pantallas 1080p.
+   Mantiene el hero grande en 1440p, pero evita que en navegadores con muchas barras
+   la primera pantalla quede cortada antes de "Empieza por aquí". */
+@media (min-width: 1100px) and (max-height: 980px) {
+  body > main > .home-intro-v22 {
+    min-height: calc(100svh - 76px) !important;
+    align-content: center !important;
+    gap: 18px !important;
+    padding-top: 12px !important;
+    padding-bottom: 18px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero {
+    min-height: 390px !important;
+    padding: 42px clamp(40px, 4vw, 72px) 28px !important;
+    gap: 42px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-motion-title {
+    max-width: 680px !important;
+    font-size: clamp(3.8rem, 4.7vw, 4.8rem) !important;
+    line-height: .98 !important;
+    margin-top: 12px !important;
+    margin-bottom: 14px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-content > p {
+    max-width: 690px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: .96rem !important;
+    line-height: 1.55 !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-actions {
+    margin-top: 18px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-panel {
+    gap: 10px !important;
+    padding: 15px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-stat {
+    padding: 13px 15px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-stat strong {
+    margin-bottom: 3px !important;
+    font-size: 1.5rem !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-stat span {
+    font-size: .82rem !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .section-heading {
+    margin-bottom: 12px !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .section-heading h2 {
+    margin-top: 5px !important;
+    margin-bottom: 0 !important;
+    font-size: 2.15rem !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .quick-grid {
+    gap: 12px !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .quick-card {
+    min-height: 70px !important;
+    padding: 13px 15px !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .quick-card h3 {
+    font-size: .95rem !important;
+  }
+
+  body > main > .home-intro-v22 > .quick-access .quick-card p {
+    margin-top: 3px !important;
+    font-size: .76rem !important;
+    line-height: 1.35 !important;
+  }
+}
+
+@media (min-width: 1100px) and (max-height: 820px) {
+  body > main > .home-intro-v22 {
+    gap: 12px !important;
+    padding-top: 8px !important;
+    padding-bottom: 12px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero {
+    min-height: 350px !important;
+    padding-top: 30px !important;
+    padding-bottom: 22px !important;
+  }
+
+  body > main > .home-intro-v22 > .hero .hero-motion-title {
+    font-size: clamp(3.35rem, 4.2vw, 4.25rem) !important;
+  }
+}
+
+/* v22.9 · Identificador de versión visible en el footer */
 .footer .copyright::after {
-  content: "Versión 22.8";
+  content: "Versión 22.9";
   display: block;
   margin-top: 5px;
   color: var(--muted);
