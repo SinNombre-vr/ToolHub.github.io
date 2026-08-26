@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Almacén Privado de Assets · ToolHub</title>
+  <meta name="description" content="Almacén privado de assets de ToolHub protegido mediante Supabase RLS.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library.css">
+  <link rel="stylesheet" href="herramientas/assets-library/assets-library-private.css?v=1">
+</head>
+<body class="asset-library-page private-library-page">
+  <header class="asset-topbar">
+    <a class="asset-brand" href="index.html#asset-library" aria-label="Volver a ToolHub">
+      <span class="asset-brand-mark">⬡</span>
+      <strong>TOOLHUB</strong>
+    </a>
+
+    <div class="private-topbar-actions">
+      <a class="private-back-link" href="index.html#asset-library">← Principal</a>
+      <div class="private-topbar-status" id="privateTopbarStatus">
+        <span aria-hidden="true">🔒</span>
+        <span id="privateTopbarText">Comprobando acceso…</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="private-access-gate" id="privateAccessGate">
+    <div class="private-access-icon" aria-hidden="true">🔐</div>
+    <span class="private-eyebrow">ACCESO PRIVADO</span>
+    <h1 id="privateGateTitle">Comprobando sesión</h1>
+    <p id="privateGateText">Verificando tu cuenta autorizada de ToolHub.</p>
+
+    <div class="private-login-fields" id="privateLoginFields" hidden>
+      <label>
+        Email
+        <input id="privateLoginEmail" type="email" autocomplete="username" placeholder="tu@email.com">
+      </label>
+      <label>
+        Contraseña
+        <input id="privateLoginPassword" type="password" autocomplete="current-password" placeholder="Contraseña de Supabase">
+      </label>
+      <div class="private-access-actions">
+        <button class="private-primary" id="privateLoginButton" type="button">Entrar</button>
+        <a class="private-secondary" href="index.html#asset-library">Volver</a>
+      </div>
+    </div>
+
+    <p class="private-access-message" id="privateGateMessage"></p>
+  </section>
+
+  <main class="private-library-shell" id="privateLibraryShell" hidden>
+    <section class="private-hero">
+      <div>
+        <span class="private-eyebrow">OWNER · ADMIN · PRIVADO</span>
+        <h1>Almacén Privado</h1>
+        <p>
+          Catálogo independiente del almacén público. Las fichas de esta zona solo se solicitan
+          a Supabase después de validar una cuenta Owner o Admin y la tabla está protegida con RLS.
+        </p>
+      </div>
+
+      <div>
+        <div class="private-stats" aria-label="Resumen del almacén privado">
+          <div><strong id="privateAssetCount">0</strong><span>Assets</span></div>
+          <div><strong id="privateTagCount">0</strong><span>Tags</span></div>
+          <div><strong id="privateCategoryCount">0</strong><span>Categorías</span></div>
+        </div>
+        <div class="private-sync" id="privateSyncStatus" aria-live="polite">Conectando…</div>
+      </div>
+    </section>
+
+    <nav class="private-nav" aria-label="Herramientas del almacén privado">
+      <button class="active" type="button" data-private-panel="create">Crear</button>
+      <button type="button" data-private-panel="search">Buscar</button>
+      <button type="button" data-private-panel="filter">Filtrar</button>
+      <button type="button" id="privateLogoutButton">Cerrar sesión</button>
+    </nav>
+
+    <section class="private-panel-deck">
+      <article class="private-panel active" id="private-panel-create" data-private-panel-name="create">
+        <div class="private-panel-head">
+          <div>
+            <span class="private-panel-kicker">CREAR</span>
+            <h2>Nueva ficha privada</h2>
+          </div>
+          <span class="private-badge">NO PÚBLICO</span>
+        </div>
+
+        <form id="privateAssetForm">
+          <div class="private-form-grid">
+            <label>
+              <span>Nombre *</span>
+              <input id="privateAssetName" type="text" maxlength="90" required placeholder="Ej. Avatar base privada">
+            </label>
+
+            <label>
+              <span>Categoría *</span>
+              <select id="privateAssetCategory" required>
+                <option value="">Seleccionar</option>
+                <option>Avatar</option>
+                <option>Ropa</option>
+                <option>Pelo</option>
+                <option>Accesorio</option>
+                <option>Shader</option>
+                <option>Textura</option>
+                <option>Prefab</option>
+                <option>Animación</option>
+                <option>Herramienta</option>
+                <option>Otro</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Autor / creador</span>
+              <input id="privateAssetAuthor" type="text" maxlength="70" placeholder="Nombre del creador">
+            </label>
+
+            <label>
+              <span>Compatibilidad</span>
+              <select id="privateAssetPlatform">
+                <option>PC</option>
+                <option>Quest / Android</option>
+                <option>PC + Quest</option>
+                <option>No especificado</option>
+              </select>
+            </label>
+
+            <label class="private-form-wide">
+              <span>Enlace de autor / origen</span>
+              <input id="privateAssetAuthorUrl" type="url" placeholder="https://...">
+            </label>
+
+            <label class="private-form-wide">
+              <span>Preview / imagen</span>
+              <input id="privateAssetPreview" type="url" placeholder="https://.../preview.png">
+            </label>
+
+            <label class="private-form-wide">
+              <span>Enlace de descarga</span>
+              <input id="privateAssetDownloadUrl" type="url" placeholder="https://...">
+            </label>
+
+            <label class="private-form-wide">
+              <span>Tags</span>
+              <input id="privateAssetTags" type="text" placeholder="avatar, base, shader, pc">
+            </label>
+
+            <label class="private-form-wide">
+              <span>Descripción / notas</span>
+              <textarea id="privateAssetDescription" rows="4" maxlength="700" placeholder="Notas internas, dependencias, versiones..."></textarea>
+            </label>
+          </div>
+
+          <div class="private-form-actions">
+            <button class="private-primary" id="privateAssetPublishButton" type="submit">Guardar en privado</button>
+            <button class="private-secondary" type="reset">Limpiar</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="private-panel" id="private-panel-search" data-private-panel-name="search">
+        <div class="private-panel-head">
+          <div>
+            <span class="private-panel-kicker">BUSCAR</span>
+            <h2>Encuentra una ficha privada</h2>
+          </div>
+        </div>
+        <label class="private-search-field">
+          <span>Buscar por nombre, autor, descripción, categoría o tag</span>
+          <input id="privateAssetSearch" type="search" autocomplete="off" placeholder="Ej. avatar, poiyomi, base...">
+        </label>
+      </article>
+
+      <article class="private-panel" id="private-panel-filter" data-private-panel-name="filter">
+        <div class="private-panel-head">
+          <div>
+            <span class="private-panel-kicker">FILTRAR</span>
+            <h2>Refina el almacén privado</h2>
+          </div>
+        </div>
+
+        <div class="private-filter-grid">
+          <label>
+            <span>Categoría</span>
+            <select id="privateFilterCategory"><option value="">Todas</option></select>
+          </label>
+          <label>
+            <span>Compatibilidad</span>
+            <select id="privateFilterPlatform">
+              <option value="">Todas</option>
+              <option>PC</option>
+              <option>Quest / Android</option>
+              <option>PC + Quest</option>
+              <option>No especificado</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="private-tag-cloud" id="privateFilterTags"></div>
+        <div class="private-form-actions">
+          <button class="private-secondary" id="privateClearFilters" type="button">Restablecer filtros</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="private-library-content">
+      <div class="private-library-toolbar">
+        <div>
+          <span class="private-panel-kicker">CATÁLOGO PRIVADO</span>
+          <h2>Assets guardados</h2>
+        </div>
+        <span class="private-result-count" id="privateResultCount">0 resultados</span>
+      </div>
+
+      <div class="private-empty" id="privateAssetEmpty">
+        <div aria-hidden="true">🔐</div>
+        <h3 id="privateAssetEmptyTitle">Cargando almacén privado…</h3>
+        <p id="privateAssetEmptyText">Conectando con Supabase.</p>
+      </div>
+
+      <div class="private-grid" id="privateAssetGrid"></div>
+    </section>
+  </main>
+
+  <template id="privateAssetCardTemplate">
+    <article class="private-card">
+      <div class="private-preview-wrap">
+        <img class="private-preview" alt="">
+        <div class="private-preview-fallback" aria-hidden="true"></div>
+        <span class="private-platform"></span>
+      </div>
+      <div class="private-card-body">
+        <div class="private-card-top">
+          <span class="private-category"></span>
+          <span class="private-created"></span>
+        </div>
+        <h3 class="private-title"></h3>
+        <p class="private-author"></p>
+        <p class="private-description"></p>
+        <div class="private-card-tags"></div>
+        <div class="private-card-actions">
+          <a class="private-secondary private-author-link" target="_blank" rel="noopener noreferrer">Origen ↗</a>
+          <a class="private-primary private-download-link" target="_blank" rel="noopener noreferrer">Descargar ↗</a>
+          <button class="private-danger private-delete" type="button">Eliminar</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
+  <script src="herramientas/assets-library/assets-library-private.js?v=1"></script>
+</body>
+</html>
