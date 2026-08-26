@@ -2,26 +2,27 @@
   "use strict";
 
   const scripts = [
-    ["script-main.js?v=24", "toolhubMain"],
-    ["herramientas/admin/toolhub-admin.js?v=1", "toolhubAdmin"]
+    { src: "script-main.js?v=24", attr: "data-toolhub-main" },
+    { src: "herramientas/admin/toolhub-admin.js?v=1", attr: "data-toolhub-admin" }
   ];
 
   function load(index) {
     if (index >= scripts.length) return;
-    const [src, marker] = scripts[index];
 
-    if (document.querySelector(`script[data-${marker}]`)) {
+    const item = scripts[index];
+
+    if (document.querySelector(`script[${item.attr}]`)) {
       load(index + 1);
       return;
     }
 
     const script = document.createElement("script");
-    script.src = src;
+    script.src = item.src;
     script.defer = true;
-    script.dataset[marker] = "1";
+    script.setAttribute(item.attr, "1");
     script.addEventListener("load", () => load(index + 1), { once: true });
     script.addEventListener("error", () => {
-      console.error(`ToolHub: no se pudo cargar ${src}`);
+      console.error(`ToolHub: no se pudo cargar ${item.src}`);
     }, { once: true });
     document.body.appendChild(script);
   }
