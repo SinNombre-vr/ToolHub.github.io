@@ -4,7 +4,7 @@
 
   const config = {
     iconSrc: 'assets/profile/cris-profile-icon.webp',
-    cardSrc: 'assets/profile/tarjeta-cris.html',
+    cardSrc: 'assets/profile/tarjeta-cris.html?v=cris-layers-4',
     iconSize: 86,
     edge: 20,
     maxTilt: 4.2,
@@ -39,7 +39,6 @@
     }
     .cris-profile-orb:hover { filter:drop-shadow(0 13px 21px rgba(0,0,0,.52)) drop-shadow(0 0 12px rgba(255,255,255,.11)); }
     .cris-profile-orb:focus-visible { outline:2px solid rgba(255,255,255,.72); outline-offset:5px; }
-    html.privacy-pending .cris-profile-orb { opacity:0; pointer-events:none; }
     @keyframes crisMetalSweep {
       0%,68%,100% { transform:translateX(-58%) rotate(-7deg); opacity:.08; }
       78% { opacity:.32; }
@@ -130,7 +129,6 @@
     orb.style.setProperty('--shift-y',`${(ny*config.maxShift).toFixed(2)}px`);
   };
   const open=()=>{
-    if(document.documentElement.classList.contains('privacy-pending')) return;
     lastFocused=document.activeElement;
     if(!frame.src) frame.src=frame.dataset.src;
     modal.classList.add('is-open'); modal.setAttribute('aria-hidden','false');
