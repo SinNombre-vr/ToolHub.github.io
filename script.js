@@ -390,3 +390,173 @@ const sectionObserver = new IntersectionObserver(
 observedSections.forEach((section) => {
   if (section) sectionObserver.observe(section);
 });
+
+/* =========================================================
+   ToolHub v23.1 · Me gusta de la página
+   - Se coloca justo a la izquierda del buscador.
+   - No usa un contador falso: solo expresa la preferencia del visitante.
+   - La elección se recuerda únicamente en este navegador.
+   ========================================================= */
+(() => {
+  const headerActions = document.querySelector(".header-actions");
+  const searchBox = document.querySelector(".search-box");
+  if (!headerActions || !searchBox) return;
+
+  const LIKE_STORAGE_KEY = "toolhub_site_like_v1";
+
+  const style = document.createElement("style");
+  style.textContent = `
+    .site-like-button {
+      position: relative;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      padding: 0 13px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 750;
+      line-height: 1;
+      overflow: hidden;
+      transition:
+        transform .18s cubic-bezier(.16,1,.3,1),
+        color .18s ease,
+        border-color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
+    }
+
+    .site-like-button:hover {
+      transform: translateY(-1px);
+      color: var(--text);
+      border-color: rgba(255, 103, 139, .38);
+    }
+
+    .site-like-heart {
+      display: inline-grid;
+      place-items: center;
+      width: 19px;
+      color: #a8b5c8;
+      font-size: 1.18rem;
+      line-height: 1;
+      transform-origin: center;
+      transition: color .18s ease, transform .22s cubic-bezier(.16,1,.3,1), filter .18s ease;
+    }
+
+    .site-like-button.is-liked {
+      color: #ffdce5;
+      border-color: rgba(255, 89, 129, .42);
+      background: linear-gradient(135deg, rgba(255, 75, 120, .10), rgba(155, 104, 255, .065)), var(--panel);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025), 0 0 22px rgba(255, 71, 118, .06);
+    }
+
+    .site-like-button.is-liked .site-like-heart {
+      color: #ff5f86;
+      filter: drop-shadow(0 0 7px rgba(255, 76, 122, .38));
+    }
+
+    .site-like-button.like-pop .site-like-heart {
+      animation: toolhub-like-pop .42s cubic-bezier(.2,1.65,.35,1);
+    }
+
+    .site-like-button:focus-visible {
+      outline: 2px solid rgba(255, 103, 139, .65);
+      outline-offset: 3px;
+    }
+
+    @keyframes toolhub-like-pop {
+      0% { transform: scale(1); }
+      42% { transform: scale(1.48) rotate(-9deg); }
+      72% { transform: scale(.9) rotate(4deg); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 680px) {
+      .site-like-button {
+        width: 44px;
+        padding: 0;
+      }
+      .site-like-label {
+        display: none;
+      }
+    }
+
+    /* La versión visible del sitio se mantiene aquí para no depender de cachés de otros CSS. */
+    .footer .copyright::after {
+      content: "Versión 23.1" !important;
+    }
+  `;
+  document.head.appendChild(style);
+
+  const button = document.createElement("button");
+  button.id = "siteLikeButton";
+  button.className = "site-like-button";
+  button.type = "button";
+  button.setAttribute("aria-pressed", "false");
+  button.innerHTML = `
+    <span class="site-like-heart" aria-hidden="true">♡</span>
+    <span class="site-like-label">Me gusta</span>
+  `;
+  headerActions.insertBefore(button, searchBox);
+
+  const heart = button.querySelector(".site-like-heart");
+  const label = button.querySelector(".site-like-label");
+
+  function readLiked() {
+    try {
+      return localStorage.getItem(LIKE_STORAGE_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  function storeLiked(liked) {
+    try {
+      if (liked) localStorage.setItem(LIKE_STORAGE_KEY, "1");
+      else localStorage.removeItem(LIKE_STORAGE_KEY);
+    } catch {
+      // La interacción sigue funcionando durante la visita aunque el navegador bloquee localStorage.
+    }
+  }
+
+  function renderLiked(liked, animate = false) {
+    button.classList.toggle("is-liked", liked);
+    button.setAttribute("aria-pressed", String(liked));
+    button.setAttribute("aria-label", liked ? "Quitar Me gusta de ToolHub" : "Marcar ToolHub como Me gusta");
+    button.title = liked ? "Te gusta ToolHub · pulsa para quitarlo" : "¿Te gusta ToolHub?";
+    heart.textContent = liked ? "♥" : "♡";
+    label.textContent = liked ? "Te gusta" : "Me gusta";
+
+    if (animate) {
+      button.classList.remove("like-pop");
+      void button.offsetWidth;
+      button.classList.add("like-pop");
+      setTimeout(() => button.classList.remove("like-pop"), 460);
+    }
+  }
+
+  let liked = readLiked();
+  renderLiked(liked);
+
+  button.addEventListener("click", () => {
+    liked = !liked;
+    storeLiked(liked);
+    renderLiked(liked, true);
+  });
+
+  // Mantiene la información de privacidad coherente con esta preferencia local.
+  infoModalContent.about.html = infoModalContent.about.html.replace(
+    "Se usa almacenamiento local para recordar la aceptación del aviso inicial y, si el usuario lo activa, para conservar una memoria de preferencias del Generador de MatCap.",
+    "Se usa almacenamiento local para recordar la aceptación del aviso inicial, la preferencia del botón Me gusta y, si el usuario lo activa, para conservar una memoria de preferencias del Generador de MatCap."
+  );
+
+  infoModalContent.privacy.html = infoModalContent.privacy.html.replace(
+    "Se guarda una marca en localStorage para recordar la aceptación del aviso inicial. Si el usuario activa la memoria de MatCap, también se guarda localmente un breve resumen de sus preferencias. No se almacenan imágenes ni archivos en esa memoria.",
+    "Se guardan en localStorage la aceptación del aviso inicial y, si el visitante pulsa Me gusta, esa preferencia local. Si activa la memoria de MatCap, también se guarda localmente un breve resumen de sus preferencias. No se almacenan imágenes ni archivos mediante estas preferencias."
+  );
+})();
