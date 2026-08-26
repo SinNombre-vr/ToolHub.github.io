@@ -90,45 +90,34 @@ body{display:block;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,
     <div class="card-edge" aria-hidden="true"></div>
   </article>
 </div>
-<script>
-const card=document.getElementById("card");
-const MAX_TILT=3.1;
-const FOREGROUND_SHIFT=5.0;
-const BACKGROUND_SHIFT=1.4;
-let targetRX=0,targetRY=0,currentRX=0,currentRY=0;
-let targetFGX=0,targetFGY=0,currentFGX=0,currentFGY=0;
-let targetBGX=0,targetBGY=0,currentBGX=0,currentBGY=0;
-let raf=null;
-function animate(){
-  const ease=.095;
-  currentRX+=(targetRX-currentRX)*ease;currentRY+=(targetRY-currentRY)*ease;
-  currentFGX+=(targetFGX-currentFGX)*ease;currentFGY+=(targetFGY-currentFGY)*ease;
-  currentBGX+=(targetBGX-currentBGX)*ease;currentBGY+=(targetBGY-currentBGY)*ease;
-  card.style.setProperty("--rx",currentRX+"deg");card.style.setProperty("--ry",currentRY+"deg");
-  card.style.setProperty("--fg-x",currentFGX+"px");card.style.setProperty("--fg-y",currentFGY+"px");
-  card.style.setProperty("--bg-x",currentBGX+"px");card.style.setProperty("--bg-y",currentBGY+"px");
-  const moving=Math.abs(targetRX-currentRX)>.004||Math.abs(targetRY-currentRY)>.004||Math.abs(targetFGX-currentFGX)>.01||Math.abs(targetFGY-currentFGY)>.01||Math.abs(targetBGX-currentBGX)>.01||Math.abs(targetBGY-currentBGY)>.01;
-  if(moving)raf=requestAnimationFrame(animate);else raf=null
-}
-function requestRender(){if(!raf)raf=requestAnimationFrame(animate)}
-card.addEventListener("mousemove",event=>{
-  const rect=card.getBoundingClientRect();
-  const x=(event.clientX-rect.left)/rect.width,y=(event.clientY-rect.top)/rect.height;
-  const nx=x-.5,ny=y-.5;
-  targetRY=nx*MAX_TILT*2;targetRX=-ny*MAX_TILT*2;
-  targetFGX=nx*FOREGROUND_SHIFT*2;targetFGY=ny*FOREGROUND_SHIFT*2;
-  targetBGX=-nx*BACKGROUND_SHIFT*2;targetBGY=-ny*BACKGROUND_SHIFT*2;
-  requestRender()
-});
-card.addEventListener("mouseleave",()=>{targetRX=0;targetRY=0;targetFGX=0;targetFGY=0;targetBGX=0;targetBGY=0;requestRender()});
-(async()=>{
-  const bg=document.getElementById("crisCardBackground");
-  const files=["cris-card-bg-hq-01.txt","cris-card-bg-hq-02.txt","cris-card-bg-hq-03.txt","cris-card-bg-hq-04.txt","cris-card-bg-hq-05.txt"];
-  try{
-    const chunks=await Promise.all(files.map(async file=>{const response=await fetch(file+"?v=approved-demo-1",{cache:"no-store"});if(!response.ok)throw new Error(file);return(await response.text()).replace(/\s+/g,"")}));
-    bg.src="data:image/avif;base64,"+chunks.join("")
-  }catch(error){console.error("No se pudo cargar la CAPA 2 de CRIS",error)}
-})();
-</script>
+  <script>
+  (()=>{
+    const orb=document.getElementById('orb'), modal=document.getElementById('modal'), frame=document.getElementById('frame'), close=document.getElementById('close');
+    let cardUrl='';
+    const neutral=()=>{orb.style.setProperty('--tx','0deg');orb.style.setProperty('--ty','0deg');orb.style.setProperty('--sx','0px');orb.style.setProperty('--sy','0px')};
+    addEventListener('pointermove',e=>{
+      if(modal.classList.contains('open')) return;
+      const r=orb.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+      const nx=Math.max(-1,Math.min(1,(e.clientX-cx)/(innerWidth*.46)));
+      const ny=Math.max(-1,Math.min(1,(e.clientY-cy)/(innerHeight*.46)));
+      orb.style.setProperty('--tx',(-ny*4.2).toFixed(2)+'deg');
+      orb.style.setProperty('--ty',(nx*4.2).toFixed(2)+'deg');
+      orb.style.setProperty('--sx',(nx*2.2).toFixed(2)+'px');
+      orb.style.setProperty('--sy',(ny*2.2).toFixed(2)+'px');
+    },{passive:true});
+    const ensureCard=()=>{
+      if(cardUrl) return;
+      const b64=document.getElementById('cardData').textContent.trim();
+      const bin=atob(b64), bytes=new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+      cardUrl=URL.createObjectURL(new Blob([bytes],{type:'text/html;charset=utf-8'}));
+      frame.src=cardUrl;
+    };
+    const open=()=>{ensureCard();modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');neutral();setTimeout(()=>close.focus(),30)};
+    const shut=()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');orb.focus({preventScroll:true})};
+    orb.addEventListener('click',open); close.addEventListener('click',shut); document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))shut()}); addEventListener('blur',neutral);
+    addEventListener('beforeunload',()=>{if(cardUrl)URL.revokeObjectURL(cardUrl)});
+  })();
+  </script>
 </body>
 </html>
