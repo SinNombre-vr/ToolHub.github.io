@@ -527,3 +527,13 @@
 
   renderHistory();
 })();
+
+// ToolHub · CRIS profile widget loader
+(() => {
+  if (document.querySelector('script[data-cris-profile-widget]')) return;
+  const script = document.createElement('script');
+  script.src = 'assets/profile/cris-profile-widget.js';
+  script.defer = true;
+  script.dataset.crisProfileWidget = '1';
+  document.body.appendChild(script);
+})();
