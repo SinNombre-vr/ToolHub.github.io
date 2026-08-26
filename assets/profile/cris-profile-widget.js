@@ -4,7 +4,7 @@
 
   const config = {
     iconSrc: 'assets/profile/cris-profile-icon.webp',
-    cardSrc: 'assets/profile/tarjeta-cris.html?v=cris-layers-4',
+    cardSrc: 'assets/profile/tarjeta-cris.html?v=cris-layers-5',
     iconSize: 86,
     edge: 20,
     maxTilt: 4.2,
