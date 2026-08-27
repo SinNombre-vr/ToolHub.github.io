@@ -1,18 +1,29 @@
 (() => {
   "use strict";
 
+  // Este loader se ejecuta desde biblioteca-assets-privada.html (raíz del sitio),
+  // por lo que las rutas de los módulos deben apuntar explícitamente a su carpeta.
+  const base = "herramientas/assets-library/";
   const scripts = [
-    "assets-library-private-core.js?v=2",
-    "assets-library-private-admin.js?v=2"
+    `${base}assets-library-private-core.js?v=3`,
+    `${base}assets-library-private-admin.js?v=3`
   ];
 
   function load(index) {
     if (index >= scripts.length) return;
+
+    const src = scripts[index];
+    if (document.querySelector(`script[src="${src}"]`)) {
+      load(index + 1);
+      return;
+    }
+
     const script = document.createElement("script");
-    script.src = scripts[index];
+    script.src = src;
+    script.defer = true;
     script.addEventListener("load", () => load(index + 1), { once: true });
     script.addEventListener("error", () => {
-      console.error(`ToolHub privado: no se pudo cargar ${scripts[index]}`);
+      console.error(`ToolHub privado: no se pudo cargar ${src}`);
     }, { once: true });
     document.body.appendChild(script);
   }
