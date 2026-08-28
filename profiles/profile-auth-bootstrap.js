@@ -3,6 +3,9 @@
 
   const STORAGE_KEY = "toolhub-community-auth-v2";
   const PENDING_EMAIL_KEY = "toolhub-pending-email-verification";
+  const LAST_EMAIL_SENT_AT_KEY = "toolhub-last-verification-email-at";
+  const RESEND_COOLDOWN_SECONDS = 60;
+
   if (!window.supabase?.createClient || window.__TOOLHUB_PROFILE_AUTH_BOOTSTRAP__) return;
   window.__TOOLHUB_PROFILE_AUTH_BOOTSTRAP__ = true;
 
@@ -16,7 +19,6 @@
       detectSessionInUrl: true,
       storageKey: STORAGE_KEY,
     };
-
     return originalCreateClient(url, key, { ...options, auth });
   };
 
@@ -56,9 +58,35 @@
     return pendingEmail;
   }
 
+  function markEmailSent() {
+    try { sessionStorage.setItem(LAST_EMAIL_SENT_AT_KEY, String(Date.now())); } catch {}
+  }
+
+  function remainingCooldown() {
+    try {
+      const sentAt = Number(sessionStorage.getItem(LAST_EMAIL_SENT_AT_KEY) || 0);
+      if (!sentAt) return 0;
+      return Math.max(0, Math.ceil((RESEND_COOLDOWN_SECONDS * 1000 - (Date.now() - sentAt)) / 1000));
+    } catch {
+      return 0;
+    }
+  }
+
   function clearPendingEmail() {
     pendingEmail = "";
-    try { sessionStorage.removeItem(PENDING_EMAIL_KEY); } catch {}
+    try {
+      sessionStorage.removeItem(PENDING_EMAIL_KEY);
+      sessionStorage.removeItem(LAST_EMAIL_SENT_AT_KEY);
+    } catch {}
+  }
+
+  function friendlyAuthError(error, fallback = "No se pudo completar la operación.") {
+    const message = String(error?.message || "");
+    const seconds = message.match(/after\s+(\d+)\s+seconds?/i)?.[1];
+    if (seconds) return `Por seguridad, espera ${seconds} segundos antes de solicitar otro código.`;
+    if (/rate limit|too many requests/i.test(message)) return "Has solicitado demasiados códigos. Espera un momento antes de intentarlo de nuevo.";
+    if (/email not confirmed/i.test(message)) return "Tu correo todavía no está verificado.";
+    return message || fallback;
   }
 
   function injectStyles() {
@@ -115,7 +143,6 @@
     `;
 
     card.insertBefore(form, message);
-
     form.addEventListener("submit", verifyCode, true);
     $("#profileOtpResend", form)?.addEventListener("click", resendCode);
     $("#profileOtpBack", form)?.addEventListener("click", () => showAuth("login"));
@@ -148,23 +175,32 @@
     if (!form) return;
     savePendingEmail(email);
     $(".profile-auth-card")?.classList.add("is-verifying");
+
     const login = $("#profileLoginForm");
     const register = $("#profileRegisterForm");
     if (login) login.hidden = true;
     if (register) register.hidden = true;
     form.hidden = false;
+
     const emailEl = $("#profileOtpEmail", form);
     if (emailEl) emailEl.textContent = maskEmail(email);
     const code = $("#profileOtpCode", form);
     if (code) { code.value = ""; setTimeout(() => code.focus(), 0); }
-    setMessage("Revisa también Spam o Correo no deseado si no lo ves en la bandeja de entrada.");
+    setMessage("Revisa también Spam o Correo no deseado si no ves el código en la bandeja de entrada.");
   }
 
-  function startResendCooldown(seconds = 60) {
+  function startResendCooldown(seconds = RESEND_COOLDOWN_SECONDS) {
     clearInterval(resendTimer);
     const button = $("#profileOtpResend");
     if (!button) return;
-    let remaining = seconds;
+
+    let remaining = Math.max(0, Math.ceil(Number(seconds) || 0));
+    if (!remaining) {
+      button.disabled = false;
+      button.textContent = "Reenviar código";
+      return;
+    }
+
     button.disabled = true;
     button.textContent = `Reenviar en ${remaining}s`;
     resendTimer = setInterval(() => {
@@ -179,12 +215,10 @@
     }, 1000);
   }
 
-  async function sendOtp(email) {
-    const { error } = await db.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: false }
-    });
+  async function resendSignupCode(email) {
+    const { error } = await db.auth.resend({ type: "signup", email });
     if (error) throw error;
+    markEmailSent();
     showVerification(email);
     startResendCooldown();
   }
@@ -231,15 +265,19 @@
   async function resendCode() {
     const email = loadPendingEmail();
     if (!email) return setMessage("No encontramos un correo pendiente.", "error");
+
     const button = $("#profileOtpResend");
     if (button) button.disabled = true;
     setMessage("Enviando un código nuevo…");
+
     try {
-      await sendOtp(email);
+      await resendSignupCode(email);
       setMessage("Código reenviado. Revisa tu correo.", "ok");
     } catch (error) {
-      if (button) button.disabled = false;
-      setMessage(error?.message || "No se pudo reenviar el código.", "error");
+      const wait = Number(String(error?.message || "").match(/after\s+(\d+)\s+seconds?/i)?.[1] || 0);
+      if (wait) startResendCooldown(wait);
+      else if (button) button.disabled = false;
+      setMessage(friendlyAuthError(error, "No se pudo reenviar el código."), "error");
     }
   }
 
@@ -273,21 +311,20 @@
 
     if (error) {
       if (submit) submit.disabled = false;
-      return setMessage(error.message, "error");
+      return setMessage(friendlyAuthError(error, "No se pudo crear la cuenta."), "error");
     }
 
-    // If Supabase currently auto-confirms email signups, remove that password session.
-    // ToolHub still requires the separate OTP/magic-link proof below before enabling private features.
+    // signUp ya envía el correo de confirmación. No solicitamos un segundo OTP aquí:
+    // hacerlo inmediatamente provoca el límite de seguridad 429 de Supabase.
     if (data?.session) await db.auth.signOut();
 
-    try {
-      await sendOtp(email);
-      setMessage("Cuenta creada. Introduce el código que hemos enviado a tu correo.", "ok");
-    } catch (otpError) {
-      setMessage(`La cuenta se creó, pero no pudimos enviar el código: ${otpError?.message || "error de correo"}.`, "error");
-    } finally {
-      if (submit) submit.disabled = false;
-    }
+    savePendingEmail(email);
+    markEmailSent();
+    showVerification(email);
+    startResendCooldown();
+    setMessage("Cuenta creada. Te hemos enviado un código de 6 dígitos para verificar tu correo.", "ok");
+
+    if (submit) submit.disabled = false;
   }
 
   async function handleLogin(event) {
@@ -304,14 +341,23 @@
     const { data, error } = await db.auth.signInWithPassword({ email, password });
 
     if (error || !data?.user) {
-      if (submit) submit.disabled = false;
       if (/confirm|verified|verification/i.test(error?.message || "")) {
+        savePendingEmail(email);
+        showVerification(email);
         try {
-          await sendOtp(email);
-          return setMessage("Tu cuenta necesita verificar el correo. Te enviamos un código nuevo.", "ok");
-        } catch {}
+          await resendSignupCode(email);
+          setMessage("Tu cuenta necesita verificar el correo. Te enviamos un código nuevo.", "ok");
+        } catch (resendError) {
+          const wait = Number(String(resendError?.message || "").match(/after\s+(\d+)\s+seconds?/i)?.[1] || 0);
+          if (wait) startResendCooldown(wait);
+          setMessage(friendlyAuthError(resendError, "Tu correo todavía no está verificado."), wait ? "error" : "error");
+        }
+        if (submit) submit.disabled = false;
+        return;
       }
-      return setMessage(error?.message || "No se pudo iniciar sesión.", "error");
+
+      if (submit) submit.disabled = false;
+      return setMessage(friendlyAuthError(error, "No se pudo iniciar sesión."), "error");
     }
 
     const { data: profile, error: profileError } = await db
@@ -322,11 +368,15 @@
 
     if (profileError || !profile?.email_verified_at) {
       await db.auth.signOut();
+      savePendingEmail(email);
+      showVerification(email);
       try {
-        await sendOtp(email);
-        setMessage("Antes de entrar debes verificar que este correo es tuyo.", "ok");
-      } catch (otpError) {
-        setMessage(otpError?.message || "No se pudo enviar el código de verificación.", "error");
+        await resendSignupCode(email);
+        setMessage("Antes de entrar debes verificar que este correo es tuyo. Te enviamos un código nuevo.", "ok");
+      } catch (resendError) {
+        const wait = Number(String(resendError?.message || "").match(/after\s+(\d+)\s+seconds?/i)?.[1] || 0);
+        if (wait) startResendCooldown(wait);
+        setMessage(friendlyAuthError(resendError, "No se pudo enviar el código de verificación."), "error");
       }
       if (submit) submit.disabled = false;
       return;
@@ -357,8 +407,7 @@
   async function init() {
     prepareFields();
 
-    // When the default Supabase email template is still a Magic Link, clicking it
-    // also proves ownership. Automatically finalize that secure fallback session.
+    // Compatibilidad con sesiones verificadas mediante un enlace antiguo.
     try {
       if (await markVerifiedFromCurrentSession()) {
         setMessage("✓ Correo verificado. Perfil activado.", "ok");
@@ -367,7 +416,11 @@
     } catch {}
 
     const email = loadPendingEmail();
-    if (email) showVerification(email);
+    if (email) {
+      showVerification(email);
+      const cooldown = remainingCooldown();
+      if (cooldown) startResendCooldown(cooldown);
+    }
   }
 
   init();
