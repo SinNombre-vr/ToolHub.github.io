@@ -1,6 +1,15 @@
 (() => {
   "use strict";
 
+  const currentScriptUrl = document.currentScript?.src || location.href;
+  if (!document.querySelector("script[data-toolhub-user]")) {
+    const accountScript = document.createElement("script");
+    accountScript.src = new URL("../../toolhub-user.js?v=1", currentScriptUrl).href;
+    accountScript.defer = true;
+    accountScript.setAttribute("data-toolhub-user", "1");
+    document.head.appendChild(accountScript);
+  }
+
   const originInput = document.querySelector("#assetAuthorUrl");
   const previewInput = document.querySelector("#assetPreview");
   const form = document.querySelector("#assetForm");
