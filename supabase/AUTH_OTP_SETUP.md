@@ -2,7 +2,7 @@
 
 El frontend de ToolHub ya usa `signInWithOtp(...)` y verifica el código con `verifyOtp(..., type: "email")`.
 
-## 1. Authentication > Email Templates > Magic Link
+## Authentication > Email Templates > Magic Link
 
 Para que Supabase envíe un código de 6 dígitos y no un enlace, la plantilla **Magic Link** debe usar `{{ .Token }}` y no debe contener `{{ .ConfirmationURL }}`.
 
@@ -14,10 +14,6 @@ Contenido:
 
 Copiar el archivo `supabase/toolhub-email-otp-template.html`.
 
-## 2. Authentication > URL Configuration
-
-Como medida de seguridad/fallback, añadir también esta Redirect URL permitida:
-
-`https://sinnombre-vr.github.io/profile.html`
-
 Cuando la plantilla sea OTP-only, el usuario no necesita salir de ToolHub ni abrir ningún enlace: recibe el código y lo introduce directamente en `profile.html`.
+
+Los correos Magic Link generados antes de este cambio siguen siendo enlaces antiguos y no deben reutilizarse; solicita un código nuevo desde ToolHub después de guardar la plantilla.
