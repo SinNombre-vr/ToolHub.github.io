@@ -1,0 +1,126 @@
+/* ToolHub profile auth visual refresh — neon frame matching the main site palette. */
+.profile-auth-shell{
+  grid-template-columns:minmax(0,1.48fr) minmax(360px,.64fr);
+  gap:18px;
+}
+
+.profile-auth-copy{
+  position:relative;
+  padding:36px 38px 38px;
+  border:1px solid rgba(51,148,255,.92);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(51,148,255,.075),transparent 34%),
+    linear-gradient(145deg,rgba(13,20,33,.36),rgba(7,11,18,.18));
+  box-shadow:
+    0 0 0 1px rgba(51,148,255,.08),
+    0 0 8px rgba(51,148,255,.24),
+    0 0 28px rgba(51,148,255,.10),
+    inset 0 0 28px rgba(51,148,255,.025);
+  overflow:hidden;
+}
+
+.profile-auth-copy::before{
+  content:"";
+  position:absolute;
+  left:18px;
+  right:42%;
+  top:-1px;
+  height:1px;
+  background:linear-gradient(90deg,rgba(51,201,255,.96),rgba(51,148,255,.55),transparent);
+  box-shadow:0 0 10px rgba(51,184,255,.50);
+  pointer-events:none;
+}
+
+.profile-auth-copy::after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  right:-105px;
+  bottom:-115px;
+  border-radius:50%;
+  background:rgba(155,104,255,.055);
+  filter:blur(18px);
+  pointer-events:none;
+}
+
+.profile-auth-copy h1{
+  max-width:760px;
+  margin-top:14px;
+  font-size:clamp(3rem,5.3vw,5.25rem);
+}
+
+.profile-auth-copy>p{
+  max-width:730px;
+}
+
+.profile-feature-grid{
+  max-width:none;
+  margin-top:30px;
+}
+
+.profile-feature-grid>div{
+  background:rgba(11,17,28,.78);
+  border-color:rgba(77,105,145,.34);
+  transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+
+.profile-feature-grid>div:hover{
+  border-color:rgba(51,148,255,.52);
+  box-shadow:0 0 16px rgba(51,148,255,.055);
+  transform:translateY(-1px);
+}
+
+.profile-auth-card{
+  border-color:rgba(155,104,255,.30);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,.22),
+    0 0 20px rgba(155,104,255,.045);
+}
+
+.profile-auth-tabs button.active{
+  position:relative;
+}
+
+.profile-auth-tabs button.active::after{
+  content:"";
+  position:absolute;
+  left:16%;
+  right:16%;
+  bottom:-5px;
+  height:2px;
+  border-radius:999px;
+  background:var(--purple);
+  box-shadow:0 0 9px rgba(155,104,255,.48);
+}
+
+@media(max-width:900px){
+  .profile-auth-shell{
+    grid-template-columns:1fr;
+    gap:26px;
+  }
+  .profile-auth-copy{
+    padding:30px;
+  }
+  .profile-auth-card{
+    width:min(100%,620px);
+    justify-self:center;
+  }
+}
+
+@media(max-width:620px){
+  .profile-auth-copy{
+    padding:23px 20px 24px;
+    border-radius:17px;
+    box-shadow:
+      0 0 0 1px rgba(51,148,255,.07),
+      0 0 14px rgba(51,148,255,.10);
+  }
+  .profile-auth-copy h1{
+    font-size:clamp(2.45rem,13vw,3.6rem);
+  }
+  .profile-auth-copy::before{
+    right:28%;
+  }
+}
