@@ -40,16 +40,16 @@
         <form id="profileLoginForm" class="profile-auth-form">
           <div><span class="profile-kicker">ACCESO</span><h2 id="authTitle">Entrar a ToolHub</h2></div>
           <label><span>Email</span><input id="loginEmail" type="email" autocomplete="email" required placeholder="tu@email.com"></label>
-          <label><span>Contraseña</span><input id="loginPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+          <label><span>Contraseña</span><input id="loginPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="••••••••"></label>
           <button class="button primary" type="submit">Entrar</button>
         </form>
 
         <form id="profileRegisterForm" class="profile-auth-form" hidden>
           <div><span class="profile-kicker">NUEVA CUENTA</span><h2>Crear perfil</h2></div>
-          <label><span>Nombre de usuario</span><input id="registerUsername" type="text" required minlength="3" maxlength="32" pattern="[A-Za-z0-9._-]{3,32}" placeholder="cris.vr"></label>
-          <label><span>Nombre visible</span><input id="registerDisplayName" type="text" maxlength="60" placeholder="Cris"></label>
+          <label><span>Nombre de usuario</span><input id="registerUsername" type="text" required minlength="3" maxlength="32" pattern="[A-Za-z0-9._-]{3,32}" placeholder="Example"></label>
+          <label><span>Nombre visible</span><input id="registerDisplayName" type="text" maxlength="60" placeholder="Example"></label>
           <label><span>Email</span><input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@email.com"></label>
-          <label><span>Contraseña</span><input id="registerPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo 6 caracteres"></label>
+          <label><span>Contraseña</span><input id="registerPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="Mínimo 8 caracteres"></label>
           <button class="button primary" type="submit">Crear cuenta</button>
         </form>
         <div class="profile-message" id="authMessage" aria-live="polite"></div>
@@ -154,7 +154,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
-  <script src="profiles/profile-auth-bootstrap.js?v=1"></script>
+  <script src="profiles/profile-auth-bootstrap.js?v=2"></script>
   <script src="profiles/profile.js?v=2"></script>
   <script src="profiles/profile-usability-v2.js?v=1"></script>
 </body>

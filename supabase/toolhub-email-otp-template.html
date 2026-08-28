@@ -1,9 +1,13 @@
 <!--
-ToolHub · Supabase Auth > Email Templates > Magic Link
+ToolHub · Supabase Auth > Emails > Templates
+
+Usar esta misma plantilla en:
+1) Confirm sign up      -> primer código al crear la cuenta.
+2) Magic link or OTP    -> códigos solicitados posteriormente si se usa ese flujo.
 
 IMPORTANTE:
-- Esta plantilla usa SOLO {{ .Token }} para forzar un OTP de 6 dígitos.
-- NO añadir {{ .ConfirmationURL }} aquí. Si se incluye, Supabase puede enviar un Magic Link en lugar del código.
+- La plantilla usa SOLO {{ .Token }} para mostrar un OTP de 6 dígitos.
+- NO añadir {{ .ConfirmationURL }} si se quiere mantener el flujo totalmente dentro de ToolHub.
 -->
 <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:28px;color:#111827">
   <div style="font-size:13px;font-weight:800;letter-spacing:.14em;color:#6d4aff;margin-bottom:18px">TOOLHUB · SEGURIDAD</div>
