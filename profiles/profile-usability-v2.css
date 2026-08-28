@@ -1,3 +1,4 @@
+@import url("profile-neon-v3.css");
 .profile-role-badge{display:inline-flex;align-items:center;gap:7px;width:max-content;margin-top:9px;padding:5px 9px;border:1px solid var(--border);border-radius:999px;background:var(--bg-soft);font-size:.69rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.profile-role-badge.owner{color:#f4cf72;border-color:rgba(244,207,114,.28)}.profile-role-badge.admin{color:#9dc5ff;border-color:rgba(103,162,255,.3)}
 .profile-role-emblem{font-size:1rem;line-height:1}.profile-avatar.has-staff-role{box-shadow:0 0 0 2px rgba(143,114,255,.16),0 15px 45px rgba(68,35,160,.24)}
 .profile-stats.profile-stats-v2{grid-template-columns:repeat(5,1fr)}
