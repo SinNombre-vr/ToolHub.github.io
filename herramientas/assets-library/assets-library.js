@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BASE_FIELDS = "id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at";
+  const BASE_FIELDS = "id,name,category,author,platform,author_url,preview_url,download_url,tags,description,created_at,submitted_by";
   const V2_FIELDS = `${BASE_FIELDS},is_hidden,is_featured,updated_at`;
 
   const state = {
@@ -52,6 +52,7 @@
   };
 
   let db = null;
+  let publishDb = null;
 
   function emit(name, detail = {}) {
     document.dispatchEvent(new CustomEvent(name, { detail }));
@@ -419,7 +420,8 @@
     els.publishButton.textContent = "Publicando…";
 
     const fields = state.schemaV2 ? V2_FIELDS : BASE_FIELDS;
-    const { data, error } = await db
+    const publishingClient = publishDb || db;
+    const { data, error } = await publishingClient
       .from("assets")
       .insert(asset)
       .select(fields)
@@ -437,7 +439,7 @@
     els.form.reset();
     setActivePanel("create");
     render();
-    setSyncStatus("✅ Publicado · visible para todos", "ok");
+    setSyncStatus(data?.submitted_by ? "✅ Publicado · asociado a tu perfil" : "✅ Publicado · visible para todos", "ok");
   }
 
   async function checkAdmin(user) {
@@ -581,6 +583,15 @@
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: false
+      }
+    });
+
+    publishDb = window.supabase.createClient(config.url, config.publishableKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false,
+        storageKey: "toolhub-community-auth-v2"
       }
     });
 
