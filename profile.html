@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="profiles/profile.css">
   <link rel="stylesheet" href="profiles/profile-auth-fix.css?v=1">
+  <link rel="stylesheet" href="profiles/profile-usability-v2.css?v=1">
 </head>
 <body class="profile-page">
   <header class="topbar profile-topbar">
@@ -127,11 +128,11 @@
           </section>
 
           <section class="profile-panel" data-profile-panel="contributions">
-            <div class="profile-section-head"><div><span class="profile-kicker">COMUNIDAD</span><h2>Contribuciones</h2><p>Propón recursos, correcciones o presets para ToolHub.</p></div></div>
+            <div class="profile-section-head"><div><span class="profile-kicker">COMUNIDAD</span><h2>Contribuciones</h2><p>Propón recursos, sitios, correcciones, presets o mejoras para ToolHub.</p></div></div>
             <form class="contribution-form" id="contributionForm">
-              <label><span>Tipo</span><select id="contributionKind"><option value="new_resource">Nuevo recurso</option><option value="edit">Edición / mejora</option><option value="link_update">Actualizar enlace</option><option value="report_fix">Corrección de reporte</option><option value="preset">Preset MatCap / Shader</option><option value="other">Otro</option></select></label>
+              <label><span>Tipo</span><select id="contributionKind"><option value="new_resource">Nuevo recurso</option><option value="edit">Edición / mejora</option><option value="link_update">Actualizar enlace</option><option value="report_fix">Corrección de reporte</option><option value="preset">Preset MatCap / Shader</option><option value="site_suggestion">Sitio / fuente para añadir</option><option value="improvement">Mejora de ToolHub</option><option value="other">Otro</option></select></label>
               <label><span>Título</span><input id="contributionTitle" type="text" maxlength="120" required placeholder="Resume tu aporte"></label>
-              <label class="full"><span>Descripción</span><textarea id="contributionDescription" maxlength="4000" placeholder="Explica qué propones y por qué."></textarea></label>
+              <label class="full"><span>Descripción</span><textarea id="contributionDescription" maxlength="4000" placeholder="Explica qué propones, qué sitio quieres añadir o qué mejorarías."></textarea></label>
               <button class="button primary" type="submit">Enviar contribución</button><span class="profile-message inline" id="contributionMessage"></span>
             </form>
             <div id="contributionsList" class="profile-list"></div>
@@ -155,5 +156,6 @@
   <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
   <script src="profiles/profile-auth-bootstrap.js?v=1"></script>
   <script src="profiles/profile.js?v=2"></script>
+  <script src="profiles/profile-usability-v2.js?v=1"></script>
 </body>
 </html>
