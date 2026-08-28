@@ -8,6 +8,7 @@
   <title>Mi perfil - ToolHub</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="profiles/profile.css">
+  <link rel="stylesheet" href="profiles/profile-auth-fix.css?v=1">
 </head>
 <body class="profile-page">
   <header class="topbar profile-topbar">
@@ -30,9 +31,9 @@
       </div>
 
       <section class="profile-auth-card" aria-labelledby="authTitle">
-        <div class="profile-auth-tabs" role="tablist">
-          <button class="active" type="button" data-auth-tab="login">Iniciar sesión</button>
-          <button type="button" data-auth-tab="register">Crear cuenta</button>
+        <div class="profile-auth-tabs" role="tablist" aria-label="Acceso a ToolHub">
+          <button class="active" type="button" data-auth-tab="login" aria-selected="true">Iniciar sesión</button>
+          <button type="button" data-auth-tab="register" aria-selected="false">Crear cuenta</button>
         </div>
 
         <form id="profileLoginForm" class="profile-auth-form">
@@ -152,6 +153,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
-  <script src="profiles/profile.js?v=1"></script>
+  <script src="profiles/profile-auth-bootstrap.js?v=1"></script>
+  <script src="profiles/profile.js?v=2"></script>
 </body>
 </html>
