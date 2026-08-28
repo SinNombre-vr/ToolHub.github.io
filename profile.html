@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="匚尺丨丂">
+  <meta name="description" content="Perfil de ToolHub: favoritos, colecciones, contribuciones, reputación y creaciones guardadas.">
+  <title>Mi perfil - ToolHub</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="profiles/profile.css">
+</head>
+<body class="profile-page">
+  <header class="topbar profile-topbar">
+    <a class="brand" href="index.html#inicio" aria-label="Ir al inicio"><span class="brand-icon">⬡</span><span class="brand-text"><strong>TOOL</strong>HUB</span></a>
+    <div class="profile-top-actions"><a class="button secondary" href="index.html#inicio">← Volver a ToolHub</a></div>
+  </header>
+
+  <main class="profile-main">
+    <section class="profile-auth-shell" id="profileAuthShell">
+      <div class="profile-auth-copy">
+        <span class="eyebrow purple">TOOLHUB · CUENTA</span>
+        <h1>Tu espacio dentro de ToolHub.</h1>
+        <p>Guarda recursos, organiza colecciones, conserva tus configuraciones de MatCap y Shader y construye reputación con contribuciones.</p>
+        <div class="profile-feature-grid">
+          <div><strong>♡ Favoritos</strong><span>Recursos que quieres conservar.</span></div>
+          <div><strong>▣ Colecciones</strong><span>Organiza tus favoritos por tema.</span></div>
+          <div><strong>★ Reputación</strong><span>Reconocimiento por aportes aprobados.</span></div>
+          <div><strong>⬡ Creaciones</strong><span>Configuraciones de MatCap y Shader.</span></div>
+        </div>
+      </div>
+
+      <section class="profile-auth-card" aria-labelledby="authTitle">
+        <div class="profile-auth-tabs" role="tablist">
+          <button class="active" type="button" data-auth-tab="login">Iniciar sesión</button>
+          <button type="button" data-auth-tab="register">Crear cuenta</button>
+        </div>
+
+        <form id="profileLoginForm" class="profile-auth-form">
+          <div><span class="profile-kicker">ACCESO</span><h2 id="authTitle">Entrar a ToolHub</h2></div>
+          <label><span>Email</span><input id="loginEmail" type="email" autocomplete="email" required placeholder="tu@email.com"></label>
+          <label><span>Contraseña</span><input id="loginPassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+          <button class="button primary" type="submit">Entrar</button>
+        </form>
+
+        <form id="profileRegisterForm" class="profile-auth-form" hidden>
+          <div><span class="profile-kicker">NUEVA CUENTA</span><h2>Crear perfil</h2></div>
+          <label><span>Nombre de usuario</span><input id="registerUsername" type="text" required minlength="3" maxlength="32" pattern="[A-Za-z0-9._-]{3,32}" placeholder="cris.vr"></label>
+          <label><span>Nombre visible</span><input id="registerDisplayName" type="text" maxlength="60" placeholder="Cris"></label>
+          <label><span>Email</span><input id="registerEmail" type="email" autocomplete="email" required placeholder="tu@email.com"></label>
+          <label><span>Contraseña</span><input id="registerPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo 6 caracteres"></label>
+          <button class="button primary" type="submit">Crear cuenta</button>
+        </form>
+        <div class="profile-message" id="authMessage" aria-live="polite"></div>
+        <p class="profile-auth-note">El nombre visible, avatar, bio y reputación forman parte del perfil público. Favoritos y colecciones privadas solo son visibles para tu cuenta.</p>
+      </section>
+    </section>
+
+    <section class="profile-dashboard" id="profileDashboard" hidden>
+      <div class="profile-hero-card">
+        <div class="profile-avatar-block">
+          <button class="profile-avatar" id="profileAvatarButton" type="button" aria-label="Cambiar avatar"><span id="profileAvatarFallback">T</span><img id="profileAvatarImage" alt="" hidden><span class="profile-avatar-edit">✎</span></button>
+          <input id="profileAvatarInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+        </div>
+        <div class="profile-identity">
+          <span class="eyebrow purple">MI PERFIL</span>
+          <h1 id="profileDisplayTitle">ToolHub User</h1>
+          <div class="profile-handle" id="profileHandle">@usuario</div>
+          <p id="profileBioPreview">Sin bio todavía.</p>
+        </div>
+        <div class="profile-hero-actions">
+          <span class="profile-reputation"><b>★</b><strong id="profileReputation">0</strong><small>reputación</small></span>
+          <button class="button secondary" id="profileLogout" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="profile-stats" id="profileStats">
+        <div><strong data-stat="favorites">0</strong><span>Favoritos</span></div>
+        <div><strong data-stat="collections">0</strong><span>Colecciones</span></div>
+        <div><strong data-stat="contributions">0</strong><span>Contribuciones</span></div>
+        <div><strong data-stat="creations">0</strong><span>Creaciones</span></div>
+      </div>
+
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <nav class="profile-nav" aria-label="Secciones del perfil">
+            <button class="active" type="button" data-profile-tab="overview">⌂ Resumen</button>
+            <button type="button" data-profile-tab="favorites">♡ Favoritos</button>
+            <button type="button" data-profile-tab="collections">▣ Colecciones</button>
+            <button type="button" data-profile-tab="creations">⬡ Mis creaciones</button>
+            <button type="button" data-profile-tab="contributions">✦ Contribuciones</button>
+            <button type="button" data-profile-tab="settings">⚙ Perfil</button>
+          </nav>
+        </aside>
+
+        <div class="profile-content">
+          <section class="profile-panel active" data-profile-panel="overview">
+            <div class="profile-section-head"><div><span class="profile-kicker">RESUMEN</span><h2>Actividad de tu cuenta</h2></div></div>
+            <div class="profile-overview-grid">
+              <article><span>★</span><div><strong id="overviewReputation">0 reputación</strong><p>Se obtiene cuando una contribución es aprobada.</p></div></article>
+              <article><span>⬡</span><div><strong id="overviewCreations">0 creaciones</strong><p>Configuraciones guardadas desde los estudios de ToolHub.</p></div></article>
+              <article><span>▣</span><div><strong id="overviewCollections">0 colecciones</strong><p>Organiza recursos de la biblioteca y otras páginas.</p></div></article>
+              <article><span>✦</span><div><strong id="overviewContributions">0 contribuciones</strong><p>Consulta su estado de revisión y reputación otorgada.</p></div></article>
+            </div>
+            <div class="profile-subpanel"><h3>Historial de reputación</h3><div id="reputationList" class="profile-list compact"><div class="profile-empty">Todavía no hay movimientos de reputación.</div></div></div>
+          </section>
+
+          <section class="profile-panel" data-profile-panel="favorites">
+            <div class="profile-section-head"><div><span class="profile-kicker">GUARDADOS</span><h2>Favoritos</h2><p>Recursos marcados con el corazón en ToolHub.</p></div></div>
+            <div id="favoritesList" class="profile-list"></div>
+          </section>
+
+          <section class="profile-panel" data-profile-panel="collections">
+            <div class="profile-section-head"><div><span class="profile-kicker">ORGANIZACIÓN</span><h2>Colecciones</h2></div><button class="button primary" id="newCollectionButton" type="button">+ Nueva colección</button></div>
+            <form class="profile-inline-form" id="collectionForm" hidden>
+              <input id="collectionName" type="text" maxlength="80" required placeholder="Nombre de la colección">
+              <input id="collectionDescription" type="text" maxlength="300" placeholder="Descripción opcional">
+              <label class="profile-check"><input id="collectionPublic" type="checkbox"><span>Pública</span></label>
+              <button class="button primary" type="submit">Crear</button><button class="button secondary" id="cancelCollection" type="button">Cancelar</button>
+            </form>
+            <div id="collectionsList" class="profile-list"></div>
+          </section>
+
+          <section class="profile-panel" data-profile-panel="creations">
+            <div class="profile-section-head"><div><span class="profile-kicker">ESTUDIOS</span><h2>Mis creaciones</h2><p>Configuraciones guardadas desde MatCap Studio y Shader Studio.</p></div></div>
+            <div id="creationsList" class="profile-list"></div>
+          </section>
+
+          <section class="profile-panel" data-profile-panel="contributions">
+            <div class="profile-section-head"><div><span class="profile-kicker">COMUNIDAD</span><h2>Contribuciones</h2><p>Propón recursos, correcciones o presets para ToolHub.</p></div></div>
+            <form class="contribution-form" id="contributionForm">
+              <label><span>Tipo</span><select id="contributionKind"><option value="new_resource">Nuevo recurso</option><option value="edit">Edición / mejora</option><option value="link_update">Actualizar enlace</option><option value="report_fix">Corrección de reporte</option><option value="preset">Preset MatCap / Shader</option><option value="other">Otro</option></select></label>
+              <label><span>Título</span><input id="contributionTitle" type="text" maxlength="120" required placeholder="Resume tu aporte"></label>
+              <label class="full"><span>Descripción</span><textarea id="contributionDescription" maxlength="4000" placeholder="Explica qué propones y por qué."></textarea></label>
+              <button class="button primary" type="submit">Enviar contribución</button><span class="profile-message inline" id="contributionMessage"></span>
+            </form>
+            <div id="contributionsList" class="profile-list"></div>
+          </section>
+
+          <section class="profile-panel" data-profile-panel="settings">
+            <div class="profile-section-head"><div><span class="profile-kicker">CONFIGURACIÓN</span><h2>Editar perfil</h2></div></div>
+            <form class="profile-settings-form" id="profileSettingsForm">
+              <label><span>Usuario</span><input id="profileUsername" type="text" minlength="3" maxlength="32" pattern="[A-Za-z0-9._-]{3,32}" required></label>
+              <label><span>Nombre visible</span><input id="profileDisplayName" type="text" maxlength="60"></label>
+              <label class="full"><span>Bio</span><textarea id="profileBio" maxlength="500" placeholder="Cuéntanos brevemente qué haces en Unity, VRChat, diseño, etc."></textarea><small><span id="bioCount">0</span>/500</small></label>
+              <button class="button primary" type="submit">Guardar cambios</button><span class="profile-message inline" id="profileSaveMessage"></span>
+            </form>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="herramientas/assets-library/supabase-config.js?v=2"></script>
+  <script src="profiles/profile.js?v=1"></script>
+</body>
+</html>
