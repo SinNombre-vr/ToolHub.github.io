@@ -1,5 +1,23 @@
 
 (() => {
+  "use strict";
+
+  const commonScriptUrl = document.currentScript?.src || location.href;
+
+  function loadToolHubAddon(relativePath, marker) {
+    if (document.querySelector(`script[${marker}]`)) return;
+    const script = document.createElement("script");
+    script.src = new URL(relativePath, commonScriptUrl).href;
+    script.defer = true;
+    script.setAttribute(marker, "1");
+    document.head.appendChild(script);
+  }
+
+  loadToolHubAddon("../../toolhub-user.js?v=1", "data-toolhub-user");
+  loadToolHubAddon("../../toolhub-creator-enhancements.js?v=1", "data-toolhub-creator-enhancements");
+})();
+
+(() => {
   const PRIVACY_STORAGE_KEY = "toolhub_privacy_notice_v1";
 
   const privacyBackdrop = document.getElementById("pdfPrivacyBackdrop");
@@ -118,7 +136,7 @@
       title: "Finalidad de ToolHub",
       html: `
         <p>
-          ToolHub es un proyecto de uso propio orientado a reunir herramientas,
+          ToolHub es un proyecto orientado a reunir herramientas,
           guías y utilidades técnicas en un único sitio.
         </p>
         <dl class="privacy-details">
@@ -132,21 +150,17 @@
           </div>
           <div>
             <dt>Archivos</dt>
-            <dd>Las herramientas de imágenes de esta versión procesan los archivos directamente en el navegador y no los envían a servidores de ToolHub.</dd>
+            <dd>Las herramientas de imágenes procesan los archivos directamente en el navegador y no los envían a servidores de ToolHub salvo que una función indique expresamente lo contrario.</dd>
           </div>
           <div>
-            <dt>Datos locales</dt>
-            <dd>Se utiliza almacenamiento local para recordar que el aviso inicial ya fue aceptado y, si el usuario lo activa, para conservar una memoria de preferencias del Generador de MatCap.</dd>
+            <dt>Perfiles</dt>
+            <dd>Las cuentas usan Supabase Auth. El perfil permite guardar favoritos, colecciones, contribuciones, reputación y configuraciones de los estudios de ToolHub.</dd>
           </div>
           <div>
             <dt>Asistente de MatCap</dt>
-            <dd>El modo local gratuito funciona íntegramente en el navegador. Si eliges Ollama, el texto se procesa con un modelo instalado en tu propio PC. Solo si eliges OpenAI se envían a esa API el texto, parámetros y memoria seleccionada. No se envían imágenes ni archivos.</dd>
+            <dd>El modo local gratuito funciona íntegramente en el navegador. Si eliges Ollama, el texto se procesa con un modelo instalado en tu propio PC. Solo si eliges OpenAI se envían a esa API el texto, parámetros y memoria seleccionada. No se envían imágenes ni archivos desde esta función.</dd>
           </div>
         </dl>
-        <p class="privacy-warning">
-          Si en el futuro una función necesitara enviar información a un servidor,
-          deberá indicarlo claramente antes de utilizarse.
-        </p>
       `,
     },
     privacy: {
@@ -167,12 +181,20 @@
             <dd>La conversión, redimensionado, compresión, generación de gradientes, MatCaps y Normal Maps se ejecutan en el navegador del usuario.</dd>
           </div>
           <div>
-            <dt>PDF y archivos</dt>
-            <dd>Las herramientas PDF están planteadas para procesar documentos localmente y sin almacenarlos en servidores de ToolHub.</dd>
+            <dt>Cuenta y autenticación</dt>
+            <dd>Si creas una cuenta, Supabase Auth gestiona el correo y la autenticación. ToolHub mantiene un perfil asociado a ese identificador de usuario.</dd>
           </div>
           <div>
-            <dt>Almacenamiento local</dt>
-            <dd>Se guarda una marca en localStorage para recordar la aceptación del aviso inicial. Si el usuario activa la memoria de MatCap, también se conserva localmente un breve resumen de preferencias. No contiene imágenes, PDF ni archivos.</dd>
+            <dt>Perfil público</dt>
+            <dd>Nombre de usuario, nombre visible, avatar, bio y reputación pueden mostrarse públicamente. Los favoritos y las colecciones privadas se protegen mediante políticas de acceso de la base de datos.</dd>
+          </div>
+          <div>
+            <dt>Creaciones guardadas</dt>
+            <dd>Al elegir “Guardar en perfil” se almacena la configuración de parámetros del MatCap o Shader. Las texturas locales y archivos de trabajo no se suben por esa acción.</dd>
+          </div>
+          <div>
+            <dt>Avatares</dt>
+            <dd>El avatar elegido para el perfil se almacena en Supabase Storage. No es necesario subir un avatar para utilizar la cuenta.</dd>
           </div>
           <div>
             <dt>Asistente e IA opcional</dt>
@@ -183,10 +205,6 @@
             <dd>Reglamento (UE) 2016/679 (RGPD) y Ley Orgánica 3/2018 (LOPDGDD), junto con la normativa aplicable.</dd>
           </div>
         </dl>
-        <p class="privacy-warning">
-          Si se incorporan cuentas, analítica, formularios, servidores o servicios
-          externos, esta política deberá revisarse antes de activar dichas funciones.
-        </p>
       `,
     },
     terms: {
@@ -205,6 +223,10 @@
           <div>
             <dt>Archivos de terceros</dt>
             <dd>El usuario es responsable de disponer de los permisos necesarios cuando procese información o contenido de terceros.</dd>
+          </div>
+          <div>
+            <dt>Cuenta</dt>
+            <dd>El usuario es responsable de mantener seguras sus credenciales y de no usar perfiles, contribuciones o colecciones para suplantar a terceros o publicar contenido ilícito.</dd>
           </div>
           <div>
             <dt>Uso prohibido</dt>
