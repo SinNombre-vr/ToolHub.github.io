@@ -81,40 +81,40 @@ for each row execute function public.toolhub_protect_email_verification_fields()
 drop policy if exists toolhub_favorites_verified_gate on public.toolhub_favorites;
 create policy toolhub_favorites_verified_gate on public.toolhub_favorites
 as restrictive for all to authenticated
-using (public.toolhub_is_email_verified())
-with check (public.toolhub_is_email_verified());
+using ((select public.toolhub_is_email_verified()))
+with check ((select public.toolhub_is_email_verified()));
 
 drop policy if exists toolhub_collections_verified_gate on public.toolhub_collections;
 create policy toolhub_collections_verified_gate on public.toolhub_collections
 as restrictive for all to authenticated
-using (public.toolhub_is_email_verified())
-with check (public.toolhub_is_email_verified());
+using ((select public.toolhub_is_email_verified()))
+with check ((select public.toolhub_is_email_verified()));
 
 drop policy if exists toolhub_collection_items_verified_gate on public.toolhub_collection_items;
 create policy toolhub_collection_items_verified_gate on public.toolhub_collection_items
 as restrictive for all to authenticated
-using (public.toolhub_is_email_verified())
-with check (public.toolhub_is_email_verified());
+using ((select public.toolhub_is_email_verified()))
+with check ((select public.toolhub_is_email_verified()));
 
 drop policy if exists toolhub_contributions_verified_gate on public.toolhub_contributions;
 create policy toolhub_contributions_verified_gate on public.toolhub_contributions
 as restrictive for all to authenticated
-using (public.toolhub_is_email_verified())
-with check (public.toolhub_is_email_verified());
+using ((select public.toolhub_is_email_verified()))
+with check ((select public.toolhub_is_email_verified()));
 
 drop policy if exists toolhub_creations_verified_gate on public.toolhub_creations;
 create policy toolhub_creations_verified_gate on public.toolhub_creations
 as restrictive for all to authenticated
-using (public.toolhub_is_email_verified())
-with check (public.toolhub_is_email_verified());
+using ((select public.toolhub_is_email_verified()))
+with check ((select public.toolhub_is_email_verified()));
 
 drop policy if exists assets_public_insert on public.assets;
 drop policy if exists assets_verified_insert on public.assets;
 create policy assets_verified_insert on public.assets
 for insert to authenticated
 with check (
-  public.toolhub_is_email_verified()
+  (select public.toolhub_is_email_verified())
   and is_hidden = false
   and is_featured = false
-  and submitted_by = auth.uid()
+  and submitted_by = (select auth.uid())
 );
