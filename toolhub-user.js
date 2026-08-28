@@ -97,7 +97,7 @@
     style.textContent = `
       .toolhub-account-link{height:44px;min-width:44px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border);border-radius:11px;background:var(--panel);color:var(--text);text-decoration:none;font-size:.82rem;font-weight:800;white-space:nowrap;transition:.18s ease}
       .toolhub-account-link:hover{transform:translateY(-1px);border-color:rgba(117,91,255,.48);box-shadow:0 10px 28px rgba(38,20,100,.14)}
-      .asset-topbar .toolhub-account-link{margin-left:auto;margin-right:10px;background:rgba(255,255,255,.035)}
+      .asset-account-actions{justify-self:end;display:flex;align-items:center;gap:8px}.asset-account-actions .toolhub-account-link{background:rgba(255,255,255,.035)}.asset-account-actions .asset-admin-trigger{justify-self:auto}
       .toolhub-account-avatar{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#6d3cff,#8f58ff);color:#fff;font-size:.72rem;font-weight:900;flex:0 0 27px}
       .toolhub-account-avatar img{width:100%;height:100%;object-fit:cover}
       .toolhub-account-rep{color:#a995ff;font-size:.72rem}
@@ -105,7 +105,7 @@
       .toolhub-favorite-button{position:absolute;z-index:9;right:10px;top:10px;width:38px;height:38px;border-radius:11px;border:1px solid rgba(255,255,255,.13);background:rgba(8,10,16,.78);backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:1.05rem;transition:.18s ease}
       .toolhub-favorite-button:hover{transform:scale(1.05);border-color:rgba(255,92,134,.55)}
       .toolhub-favorite-button.is-favorite{color:#ff5f8f;border-color:rgba(255,79,131,.5);background:rgba(65,13,31,.84)}
-      @media(max-width:680px){.toolhub-account-label,.toolhub-account-rep{display:none}.toolhub-account-link{padding:0 8px}.asset-topbar .toolhub-account-link{margin-left:0;margin-right:6px}}
+      @media(max-width:680px){.toolhub-account-label,.toolhub-account-rep{display:none}.toolhub-account-link{padding:0 8px}.asset-account-actions{gap:5px}}
     `;
     document.head.appendChild(style);
   }
@@ -127,9 +127,20 @@
       link.className = "toolhub-account-link";
       const admin = document.getElementById("toolhubAdminLock");
       const assetAdmin = document.getElementById("adminTrigger");
-      if (admin) admin.insertAdjacentElement("beforebegin", link);
-      else if (assetAdmin) assetAdmin.insertAdjacentElement("beforebegin", link);
-      else host.appendChild(link);
+      if (admin) {
+        admin.insertAdjacentElement("beforebegin", link);
+      } else if (assetTopbar && assetAdmin) {
+        let actions = assetTopbar.querySelector(".asset-account-actions");
+        if (!actions) {
+          actions = document.createElement("div");
+          actions.className = "asset-account-actions";
+          assetAdmin.insertAdjacentElement("beforebegin", actions);
+          actions.appendChild(assetAdmin);
+        }
+        actions.insertAdjacentElement("afterbegin", link);
+      } else {
+        host.appendChild(link);
+      }
     }
     link.href = profileHref();
     const name = accountLabel();
