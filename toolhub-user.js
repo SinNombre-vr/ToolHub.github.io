@@ -8,6 +8,7 @@
   const PROFILE_URL = new URL("profile.html", rootUrl).href;
   const CONFIG_URL = new URL("herramientas/assets-library/supabase-config.js?v=2", rootUrl).href;
   const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+  const COMMUNITY_AUTH_STORAGE_KEY = "toolhub-community-auth-v2";
 
   const state = {
     client: null,
@@ -45,7 +46,12 @@
     const cfg = window.TOOLHUB_SUPABASE;
     if (!cfg?.url || !cfg?.publishableKey || !window.supabase?.createClient) throw new Error("Supabase no está configurado.");
     state.client = window.supabase.createClient(cfg.url, cfg.publishableKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: COMMUNITY_AUTH_STORAGE_KEY,
+      }
     });
     return state.client;
   }
@@ -76,6 +82,7 @@
         return state;
       }).catch((error) => {
         console.warn("ToolHub account:", error);
+        renderAccountButton();
         return state;
       });
     }
@@ -97,6 +104,7 @@
     style.textContent = `
       .toolhub-account-link{height:44px;min-width:44px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--border);border-radius:11px;background:var(--panel);color:var(--text);text-decoration:none;font-size:.82rem;font-weight:800;white-space:nowrap;transition:.18s ease}
       .toolhub-account-link:hover{transform:translateY(-1px);border-color:rgba(117,91,255,.48);box-shadow:0 10px 28px rgba(38,20,100,.14)}
+      .toolhub-account-link.is-guest{padding-inline:14px;border-color:rgba(117,91,255,.28);color:#c9bdff;background:linear-gradient(145deg,rgba(102,67,255,.08),transparent),var(--panel)}
       .asset-account-actions{justify-self:end;display:flex;align-items:center;gap:8px}.asset-account-actions .toolhub-account-link{background:rgba(255,255,255,.035)}.asset-account-actions .asset-admin-trigger{justify-self:auto}
       .toolhub-account-avatar{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(145deg,#6d3cff,#8f58ff);color:#fff;font-size:.72rem;font-weight:900;flex:0 0 27px}
       .toolhub-account-avatar img{width:100%;height:100%;object-fit:cover}
@@ -105,13 +113,13 @@
       .toolhub-favorite-button{position:absolute;z-index:9;right:10px;top:10px;width:38px;height:38px;border-radius:11px;border:1px solid rgba(255,255,255,.13);background:rgba(8,10,16,.78);backdrop-filter:blur(8px);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:1.05rem;transition:.18s ease}
       .toolhub-favorite-button:hover{transform:scale(1.05);border-color:rgba(255,92,134,.55)}
       .toolhub-favorite-button.is-favorite{color:#ff5f8f;border-color:rgba(255,79,131,.5);background:rgba(65,13,31,.84)}
-      @media(max-width:680px){.toolhub-account-label,.toolhub-account-rep{display:none}.toolhub-account-link{padding:0 8px}.asset-account-actions{gap:5px}}
+      @media(max-width:680px){.toolhub-account-rep{display:none}.toolhub-account-link{padding:0 8px}.asset-account-actions{gap:5px}.toolhub-account-link.is-guest .toolhub-account-label{display:inline}}
     `;
     document.head.appendChild(style);
   }
 
-  function accountLabel() {
-    return state.profile?.display_name || state.profile?.username || state.user?.email?.split("@")[0] || "Perfil";
+  function accountName() {
+    return state.profile?.display_name || state.user?.user_metadata?.display_name || state.profile?.username || state.user?.email?.split("@")[0] || "Usuario";
   }
 
   function renderAccountButton() {
@@ -142,15 +150,26 @@
         host.appendChild(link);
       }
     }
+
     link.href = profileHref();
-    const name = accountLabel();
-    const initial = name.trim().charAt(0).toUpperCase() || "👤";
+    link.classList.toggle("is-guest", !state.user);
+
+    if (!state.user) {
+      link.innerHTML = `<span aria-hidden="true">👤</span><span class="toolhub-account-label">Login / Register</span>`;
+      link.title = "Iniciar sesión o crear cuenta";
+      link.setAttribute("aria-label", "Login / Register");
+      return;
+    }
+
+    const name = accountName();
+    const initial = name.trim().charAt(0).toUpperCase() || "U";
     const avatar = state.profile?.avatar_url
       ? `<span class="toolhub-account-avatar"><img src="${escapeHtml(state.profile.avatar_url)}" alt=""></span>`
       : `<span class="toolhub-account-avatar">${escapeHtml(initial)}</span>`;
-    const rep = state.user ? `<span class="toolhub-account-rep">★ ${Number(state.profile?.reputation || 0)}</span>` : "";
-    link.innerHTML = `${avatar}<span class="toolhub-account-label">${escapeHtml(state.user ? name : "Perfil")}</span>${rep}`;
-    link.title = state.user ? `Abrir perfil de ${name}` : "Iniciar sesión o crear perfil";
+    const rep = `<span class="toolhub-account-rep">★ ${Number(state.profile?.reputation || 0)}</span>`;
+    link.innerHTML = `${avatar}<span class="toolhub-account-label">Mi perfil</span>${rep}`;
+    link.title = `Abrir mi perfil · ${name}`;
+    link.setAttribute("aria-label", `Abrir mi perfil de ${name}`);
   }
 
   function escapeHtml(value) {
@@ -245,6 +264,7 @@
   document.addEventListener("toolhub-assets-rendered", (event) => enhanceAssetCards(event.detail?.assets || []));
   document.addEventListener("DOMContentLoaded", () => {
     injectStyles();
+    renderAccountButton();
     ready().then(() => setTimeout(() => enhanceAssetCards(), 250));
   }, { once: true });
 
@@ -261,6 +281,7 @@
 
   if (document.readyState !== "loading") {
     injectStyles();
+    renderAccountButton();
     ready().then(() => setTimeout(() => enhanceAssetCards(), 250));
   }
 })();

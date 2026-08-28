@@ -1,0 +1,43 @@
+.profile-page [hidden] {
+  display: none !important;
+}
+
+.profile-auth-card > .profile-auth-form[hidden],
+.profile-dashboard[hidden],
+.profile-auth-shell[hidden],
+.profile-inline-form[hidden] {
+  display: none !important;
+}
+
+.profile-auth-tabs button {
+  position: relative;
+}
+
+.profile-auth-tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 24%;
+  right: 24%;
+  bottom: -5px;
+  height: 2px;
+  border-radius: 999px;
+  background: #8f72ff;
+  opacity: .8;
+}
+
+.profile-auth-card {
+  overflow: hidden;
+}
+
+.profile-auth-form {
+  animation: toolhub-profile-view-in .18s ease-out;
+}
+
+.profile-dashboard:not([hidden]) {
+  animation: toolhub-profile-view-in .22s ease-out;
+}
+
+@keyframes toolhub-profile-view-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
