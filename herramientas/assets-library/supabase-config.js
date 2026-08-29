@@ -4,3 +4,34 @@ window.TOOLHUB_SUPABASE = Object.freeze({
   url: "https://ntbylihedfkpebhgmfpt.supabase.co",
   publishableKey: "sb_publishable_GxIk_gqhh4SIxLmd7igoVA_v1wPRgsz"
 });
+
+// Auth 2.0: al cerrar sesión, permanecer siempre en el mismo entorno/origen.
+// Esto evita que una Preview de Cloudflare termine en la URL oficial de producción.
+(() => {
+  const button = document.getElementById("profileLogout");
+  if (!button || !window.supabase?.createClient) return;
+
+  button.addEventListener("click", async (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const cfg = window.TOOLHUB_SUPABASE;
+    const db = window.supabase.createClient(cfg.url, cfg.publishableKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        storageKey: "toolhub-community-auth-v2",
+      }
+    });
+
+    try {
+      await db.auth.signOut();
+    } finally {
+      const target = new URL("profile.html", window.location.href);
+      target.search = "";
+      target.hash = "";
+      window.location.replace(target.href);
+    }
+  }, true);
+})();
