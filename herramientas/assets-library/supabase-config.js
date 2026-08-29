@@ -1,8 +1,9 @@
 window.TOOLHUB_SUPABASE = Object.freeze({
-  // Valores públicos de frontend de Supabase.
-  // Nunca pongas aquí service_role, sb_secret_* ni contraseñas privadas.
+  // Valores públicos de frontend de Supabase / Turnstile.
+  // Nunca pongas aquí service_role, sb_secret_*, Secret Key de Turnstile ni contraseñas privadas.
   url: "https://ntbylihedfkpebhgmfpt.supabase.co",
-  publishableKey: "sb_publishable_GxIk_gqhh4SIxLmd7igoVA_v1wPRgsz"
+  publishableKey: "sb_publishable_GxIk_gqhh4SIxLmd7igoVA_v1wPRgsz",
+  turnstileSiteKey: "0x4AAAAAAEhH0mTveZlPd-Uo"
 });
 
 // Auth 2.0: al cerrar sesión, permanecer siempre en el mismo entorno/origen.
