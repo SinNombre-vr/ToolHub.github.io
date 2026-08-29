@@ -38,6 +38,7 @@
   function roleLabel(role) {
     if (role === "owner") return { icon: "♛", label: "Owner", cls: "owner" };
     if (role === "admin") return { icon: "◆", label: "Admin", cls: "admin" };
+    if (role === "official") return { icon: "✦", label: "Oficial", cls: "official" };
     return null;
   }
 
