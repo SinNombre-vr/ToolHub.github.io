@@ -17,7 +17,7 @@
     if (apiPromise) return apiPromise;
 
     apiPromise = new Promise((resolve, reject) => {
-      const existing = document.querySelector(`script[src^="https://challenges.cloudflare.com/turnstile/v0/api.js"]`);
+      const existing = document.querySelector('script[src^="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
       const finish = () => {
         let attempts = 0;
         const timer = setInterval(() => {
@@ -25,7 +25,7 @@
           if (window.turnstile?.render) {
             clearInterval(timer);
             resolve(window.turnstile);
-          } else if (attempts >= 80) {
+          } else if (attempts >= 100) {
             clearInterval(timer);
             reject(new Error("No se pudo cargar la comprobación anti-bot."));
           }
@@ -56,13 +56,24 @@
     host = document.createElement("div");
     host.id = "toolhubTurnstileHost";
     host.setAttribute("aria-live", "polite");
-    host.style.cssText = "display:flex;justify-content:center;align-items:center;min-height:0;margin:8px 0 2px;overflow:visible;";
+    host.style.cssText = "display:flex;justify-content:center;align-items:center;width:100%;min-height:0;margin:8px 0 2px;overflow:visible;";
 
     const message = document.getElementById("authMessage");
     const card = document.querySelector(".profile-auth-card");
     if (message?.parentNode) message.parentNode.insertBefore(host, message);
     else card?.appendChild(host);
     return host;
+  }
+
+  function turnstileErrorMessage(code) {
+    const value = String(code || "unknown");
+    if (value.startsWith("110100")) return `Turnstile rechazó la Site Key (error ${value}).`;
+    if (value.startsWith("110110")) return `Turnstile no encuentra la Site Key (error ${value}).`;
+    if (value.startsWith("110200")) return `Este dominio no está autorizado en Turnstile (error ${value}). Host: ${location.hostname}`;
+    if (value.startsWith("110600")) return `La comprobación Turnstile caducó (error ${value}). Inténtalo de nuevo.`;
+    if (value.startsWith("200100")) return `Turnstile detectó un problema de reloj o caché (error ${value}).`;
+    if (value.startsWith("200500")) return `No se pudo cargar el iframe de Turnstile (error ${value}).`;
+    return `No se pudo completar la comprobación anti-bot (Turnstile ${value}). Recarga la página e inténtalo de nuevo.`;
   }
 
   async function getCaptchaToken(action) {
@@ -94,21 +105,27 @@
       }
 
       try {
+        // El challenge se inicia automáticamente al renderizarse. Es el flujo más
+        // simple y estable para una comprobación que nace justo al enviar el formulario.
         widgetId = turnstile.render(host, {
           sitekey: siteKey,
           theme: "dark",
           size: "flexible",
           appearance: "interaction-only",
-          execution: "execute",
           action,
+          retry: "auto",
+          "retry-interval": 3000,
           callback: (token) => finish(null, token),
-          "error-callback": () => finish(new Error("No se pudo completar la comprobación anti-bot. Recarga la página e inténtalo de nuevo.")),
+          "error-callback": (errorCode) => {
+            finish(new Error(turnstileErrorMessage(errorCode)));
+            return true;
+          },
           "expired-callback": () => finish(new Error("La comprobación anti-bot ha caducado. Inténtalo de nuevo.")),
           "timeout-callback": () => finish(new Error("La comprobación anti-bot tardó demasiado. Inténtalo de nuevo.")),
+          "unsupported-callback": () => finish(new Error("Este navegador no es compatible con la comprobación anti-bot de Cloudflare.")),
         });
-        turnstile.execute(widgetId);
-      } catch {
-        finish(new Error("No se pudo iniciar la comprobación anti-bot. Recarga la página e inténtalo de nuevo."));
+      } catch (error) {
+        finish(error instanceof Error ? error : new Error("No se pudo iniciar la comprobación anti-bot."));
       }
     });
   }
