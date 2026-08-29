@@ -9,7 +9,8 @@
     { src: "toolhub-account-label.js?v=1", attr: "data-toolhub-account-label" },
     { src: "herramientas/admin/toolhub-admin.js?v=1", attr: "data-toolhub-admin" },
     { src: "toolhub-tree-menu.js?v=2", attr: "data-toolhub-tree-menu" },
-    { src: "toolhub-recent-assets.js?v=1", attr: "data-toolhub-recent-assets" }
+    { src: "toolhub-recent-assets.js?v=1", attr: "data-toolhub-recent-assets" },
+    { src: "toolhub-recent-position-fix.js?v=1", attr: "data-toolhub-recent-position-fix" }
   ];
 
   function load(index) {
