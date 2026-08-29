@@ -18,6 +18,14 @@
     document.head.appendChild(authScript);
   }
 
+  if (!document.querySelector("script[data-toolhub-asset-deeplink]")) {
+    const deepLinkScript = document.createElement("script");
+    deepLinkScript.src = new URL("assets-library-deeplink.js?v=1", currentScriptUrl).href;
+    deepLinkScript.defer = true;
+    deepLinkScript.setAttribute("data-toolhub-asset-deeplink", "1");
+    document.head.appendChild(deepLinkScript);
+  }
+
   const originInput = document.querySelector("#assetAuthorUrl");
   const previewInput = document.querySelector("#assetPreview");
   const form = document.querySelector("#assetForm");
