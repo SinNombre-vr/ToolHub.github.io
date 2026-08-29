@@ -6,7 +6,8 @@
   "description": "ToolHub con Shader Studio, MatCap Studio Pro y asistentes local/Ollama/OpenAI opcionales",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "build:pages": "node scripts/build-pages.mjs"
   },
   "dependencies": {
     "dotenv": "latest",
