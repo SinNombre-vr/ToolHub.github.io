@@ -12,7 +12,8 @@
     { src: "toolhub-recent-assets.js?v=2", attr: "data-toolhub-recent-assets" },
     { src: "toolhub-recent-auth-fix.js?v=2", attr: "data-toolhub-recent-auth-fix" },
     { src: "toolhub-recent-position-fix.js?v=2", attr: "data-toolhub-recent-position-fix" },
-    { src: "toolhub-recent-fill.js?v=2", attr: "data-toolhub-recent-fill" }
+    { src: "toolhub-recent-fill.js?v=2", attr: "data-toolhub-recent-fill" },
+    { src: "toolhub-recent-deeplink.js?v=1", attr: "data-toolhub-recent-deeplink" }
   ];
 
   function load(index) {
