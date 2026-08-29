@@ -4,10 +4,18 @@
   const currentScriptUrl = document.currentScript?.src || location.href;
   if (!document.querySelector("script[data-toolhub-user]")) {
     const accountScript = document.createElement("script");
-    accountScript.src = new URL("../../toolhub-user.js?v=2", currentScriptUrl).href;
+    accountScript.src = new URL("../../toolhub-user.js?v=3", currentScriptUrl).href;
     accountScript.defer = true;
     accountScript.setAttribute("data-toolhub-user", "1");
     document.head.appendChild(accountScript);
+  }
+
+  if (!document.querySelector("script[data-toolhub-asset-auth-session]")) {
+    const authScript = document.createElement("script");
+    authScript.src = new URL("assets-library-auth-session.js?v=1", currentScriptUrl).href;
+    authScript.defer = true;
+    authScript.setAttribute("data-toolhub-asset-auth-session", "1");
+    document.head.appendChild(authScript);
   }
 
   const originInput = document.querySelector("#assetAuthorUrl");
@@ -75,8 +83,6 @@
     button.disabled = true;
     setStatus("Buscando imagen principal…");
 
-    // La función se desplegó inicialmente con el slug "smooth-function".
-    // Cambiar el Name visible en Supabase no cambia el endpoint/slug.
     const { data, error } = await client.functions.invoke("smooth-function", {
       body: { url: sourceUrl }
     });
