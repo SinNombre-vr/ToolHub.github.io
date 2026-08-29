@@ -110,7 +110,7 @@
     const available = Math.max(0, rail.clientHeight - head.offsetHeight - actions.offsetHeight);
     if (!available) return 5;
 
-    // Mantiene las fichas legibles y aprovecha toda la altura disponible.
+    // Aprovecha la columna completa sin alargar la página por encima del contenido principal.
     return Math.max(5, Math.floor(available / 100));
   }
 
@@ -189,10 +189,30 @@
     return item;
   }
 
+  let cachedAssets = [];
+  let listObserver = null;
+
+  function observeList() {
+    if (!listObserver) {
+      listObserver = new MutationObserver(() => {
+        if (!cachedAssets.length) return;
+        const capacity = getDesktopCapacity();
+        const expected = Number.isFinite(capacity)
+          ? Math.min(capacity, cachedAssets.length)
+          : cachedAssets.length;
+
+        // El cargador antiguo puede terminar después y volver temporalmente a cinco fichas.
+        if (list.children.length !== expected) render(cachedAssets);
+      });
+    }
+    listObserver.observe(list, { childList: true });
+  }
+
   function render(assets) {
     const capacity = getDesktopCapacity();
     const visible = Number.isFinite(capacity) ? assets.slice(0, capacity) : assets;
 
+    listObserver?.disconnect();
     list.replaceChildren();
     visible.forEach((asset) => list.appendChild(renderAsset(asset)));
 
@@ -202,6 +222,7 @@
       status.textContent = "Todavía no hay incorporaciones públicas para mostrar.";
       list.appendChild(status);
     }
+    observeList();
   }
 
   async function loadConfig() {
@@ -254,8 +275,6 @@
     const data = await response.json();
     return Array.isArray(data) ? data : [];
   }
-
-  let cachedAssets = [];
 
   async function loadAllRecent() {
     try {
