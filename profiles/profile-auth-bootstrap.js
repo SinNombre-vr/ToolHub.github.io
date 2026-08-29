@@ -5,6 +5,8 @@
   const PENDING_EMAIL_KEY = "toolhub-pending-email-verification";
   const LAST_EMAIL_SENT_AT_KEY = "toolhub-last-verification-email-at";
   const RESEND_COOLDOWN_SECONDS = 60;
+  const OTP_MIN_LENGTH = 6;
+  const OTP_MAX_LENGTH = 10;
 
   if (!window.supabase?.createClient || window.__TOOLHUB_PROFILE_AUTH_BOOTSTRAP__) return;
   window.__TOOLHUB_PROFILE_AUTH_BOOTSTRAP__ = true;
@@ -99,7 +101,7 @@
       .profile-otp-head h2{margin:0;font-size:1.65rem}
       .profile-otp-head p{margin:0;color:var(--muted);font-size:.8rem;line-height:1.55}
       .profile-otp-email{color:#b7a8ff;font-weight:800}
-      .profile-otp-input{width:100%;min-height:54px;padding:0 14px;border:1px solid var(--border);border-radius:11px;background:var(--bg-soft);color:var(--text);outline:none;text-align:center;font-size:1.45rem;font-weight:900;letter-spacing:.32em;font-variant-numeric:tabular-nums}
+      .profile-otp-input{width:100%;min-height:54px;padding:0 14px;border:1px solid var(--border);border-radius:11px;background:var(--bg-soft);color:var(--text);outline:none;text-align:center;font-size:1.45rem;font-weight:900;letter-spacing:.22em;font-variant-numeric:tabular-nums}
       .profile-otp-input:focus{border-color:rgba(133,98,255,.7);box-shadow:0 0 0 3px rgba(119,82,255,.09)}
       .profile-otp-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
       .profile-otp-secondary{min-height:40px;border:1px solid var(--border);border-radius:10px;background:var(--bg-soft);color:var(--muted);cursor:pointer;font-weight:800}
@@ -128,11 +130,11 @@
       <div class="profile-otp-head">
         <span class="profile-kicker">VERIFICACIÓN DE EMAIL</span>
         <h2>Introduce el código</h2>
-        <p>Hemos enviado un código de 6 dígitos a <span class="profile-otp-email" id="profileOtpEmail"></span>.</p>
+        <p>Hemos enviado un código de verificación a <span class="profile-otp-email" id="profileOtpEmail"></span>.</p>
       </div>
       <label>
         <span style="display:block;margin-bottom:7px;color:var(--muted);font-size:.79rem;font-weight:800">Código de verificación</span>
-        <input class="profile-otp-input" id="profileOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required aria-label="Código de verificación de 6 dígitos">
+        <input class="profile-otp-input" id="profileOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" pattern="[0-9]{6,10}" placeholder="Código" required aria-label="Código de verificación">
       </label>
       <button class="button primary" id="profileOtpVerify" type="submit">Verificar cuenta</button>
       <div class="profile-otp-actions">
@@ -147,7 +149,7 @@
     $("#profileOtpResend", form)?.addEventListener("click", resendCode);
     $("#profileOtpBack", form)?.addEventListener("click", () => showAuth("login"));
     $("#profileOtpCode", form)?.addEventListener("input", (event) => {
-      event.target.value = event.target.value.replace(/\D/g, "").slice(0, 6);
+      event.target.value = event.target.value.replace(/\D/g, "").slice(0, OTP_MAX_LENGTH);
     });
     return form;
   }
@@ -240,7 +242,7 @@
     const code = $("#profileOtpCode")?.value.replace(/\D/g, "") || "";
     const button = $("#profileOtpVerify");
     if (!email) return setMessage("No encontramos el correo pendiente. Vuelve a crear la cuenta.", "error");
-    if (!/^\d{6}$/.test(code)) return setMessage("Introduce los 6 dígitos del código.", "error");
+    if (code.length < OTP_MIN_LENGTH || code.length > OTP_MAX_LENGTH) return setMessage("Introduce el código completo que aparece en el correo.", "error");
 
     if (button) button.disabled = true;
     setMessage("Verificando código…");
@@ -322,7 +324,7 @@
     markEmailSent();
     showVerification(email);
     startResendCooldown();
-    setMessage("Cuenta creada. Te hemos enviado un código de 6 dígitos para verificar tu correo.", "ok");
+    setMessage("Cuenta creada. Te hemos enviado un código para verificar tu correo.", "ok");
 
     if (submit) submit.disabled = false;
   }
