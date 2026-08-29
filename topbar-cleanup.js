@@ -37,6 +37,12 @@
         }
       }
 
+      @media (max-width: 760px) {
+        .toolhub-mega-shell {
+          inset: 76px 0 0 !important;
+        }
+      }
+
       @media (max-width: 680px) {
         .topbar.toolhub-topbar-clean {
           grid-template-columns: auto 1fr auto !important;
