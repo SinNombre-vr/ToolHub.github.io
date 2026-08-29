@@ -17,13 +17,21 @@
   style.textContent = `
     @media (min-width: 1321px) {
       main.toolhub-home-with-recent > .toolhub-recent-rail {
+        position: static !important;
+        top: auto !important;
+        align-self: stretch !important;
+        height: auto !important;
+        min-height: 0 !important;
         margin-top: var(--toolhub-recent-offset, 86px) !important;
+        margin-bottom: 0 !important;
       }
     }
 
     @media (max-width: 1320px) {
       .toolhub-home-flow > .toolhub-recent-rail {
         order: 4 !important;
+        position: relative !important;
+        top: auto !important;
         margin-top: 18px !important;
       }
     }
