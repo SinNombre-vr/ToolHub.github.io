@@ -5,7 +5,9 @@
   // por lo que las rutas de los módulos deben apuntar explícitamente a su carpeta.
   const base = "herramientas/assets-library/";
   const scripts = [
+    `${base}assets-library-private-auth2.js?v=1`,
     `${base}assets-library-private-core.js?v=3`,
+    `${base}assets-library-private-session-ui.js?v=1`,
     `${base}assets-library-private-admin.js?v=3`
   ];
 
@@ -24,6 +26,7 @@
     script.addEventListener("load", () => load(index + 1), { once: true });
     script.addEventListener("error", () => {
       console.error(`ToolHub privado: no se pudo cargar ${src}`);
+      load(index + 1);
     }, { once: true });
     document.body.appendChild(script);
   }
