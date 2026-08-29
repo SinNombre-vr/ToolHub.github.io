@@ -36,3 +36,14 @@ window.TOOLHUB_SUPABASE = Object.freeze({
     }
   }, true);
 })();
+
+// Perfil: cargar badges decorativos sin acoplarlos a los permisos administrativos.
+(() => {
+  if (!document.body?.classList.contains("profile-page")) return;
+  if (document.querySelector('script[data-toolhub-profile-badges]')) return;
+  const script = document.createElement("script");
+  script.src = "profiles/profile-badges.js?v=1";
+  script.defer = true;
+  script.dataset.toolhubProfileBadges = "1";
+  document.body.appendChild(script);
+})();
