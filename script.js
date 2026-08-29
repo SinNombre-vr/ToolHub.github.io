@@ -9,8 +9,8 @@
     { src: "toolhub-account-label.js?v=1", attr: "data-toolhub-account-label" },
     { src: "herramientas/admin/toolhub-admin.js?v=2", attr: "data-toolhub-admin" },
     { src: "toolhub-tree-menu.js?v=2", attr: "data-toolhub-tree-menu" },
-    { src: "toolhub-recent-assets.js?v=1", attr: "data-toolhub-recent-assets" },
-    { src: "toolhub-recent-auth-fix.js?v=1", attr: "data-toolhub-recent-auth-fix" },
+    { src: "toolhub-recent-assets.js?v=2", attr: "data-toolhub-recent-assets" },
+    { src: "toolhub-recent-auth-fix.js?v=2", attr: "data-toolhub-recent-auth-fix" },
     { src: "toolhub-recent-position-fix.js?v=2", attr: "data-toolhub-recent-position-fix" },
     { src: "toolhub-recent-fill.js?v=2", attr: "data-toolhub-recent-fill" }
   ];
