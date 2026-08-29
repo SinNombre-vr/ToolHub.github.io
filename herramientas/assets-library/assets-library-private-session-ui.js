@@ -16,7 +16,8 @@
   }
 
   function ensureActions() {
-    fields.hidden = true;
+    if (!fields.hidden) fields.hidden = true;
+
     let actions = document.getElementById("privateAuth2Actions");
     if (!actions) {
       actions = document.createElement("div");
