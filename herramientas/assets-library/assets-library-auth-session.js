@@ -4,37 +4,47 @@
   if (window.__TOOLHUB_ASSET_AUTH_SESSION__) return;
   window.__TOOLHUB_ASSET_AUTH_SESSION__ = true;
 
-  const STORAGE_KEY = "toolhub-community-auth-v2";
   const ADMIN_ROLES = new Set(["owner", "admin"]);
+  const scriptUrl = document.currentScript?.src || location.href;
+  const accountUrl = new URL("../../toolhub-user.js?v=3", scriptUrl).href;
 
-  if (window.supabase?.createClient && !window.__TOOLHUB_ASSET_CREATECLIENT_PATCH__) {
-    window.__TOOLHUB_ASSET_CREATECLIENT_PATCH__ = true;
-    const originalCreateClient = window.supabase.createClient.bind(window.supabase);
-    window.supabase.createClient = (url, key, options = {}) => originalCreateClient(url, key, {
-      ...options,
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: false,
-        ...(options.auth || {}),
-        storageKey: options.auth?.storageKey || STORAGE_KEY,
-      },
+  function ensureAccountModule() {
+    if (window.ToolHubAccount) return Promise.resolve(window.ToolHubAccount);
+    return new Promise((resolve, reject) => {
+      let script = document.querySelector("script[data-toolhub-user]");
+      if (!script) {
+        script = document.createElement("script");
+        script.src = accountUrl;
+        script.defer = true;
+        script.setAttribute("data-toolhub-user", "1");
+        document.head.appendChild(script);
+      }
+
+      let attempts = 0;
+      const timer = setInterval(() => {
+        attempts += 1;
+        if (window.ToolHubAccount) {
+          clearInterval(timer);
+          resolve(window.ToolHubAccount);
+        } else if (attempts > 120) {
+          clearInterval(timer);
+          reject(new Error("No se pudo cargar el sistema de cuentas de ToolHub."));
+        }
+      }, 50);
     });
   }
 
   function profileUrl() {
-    const base = window.ToolHubAccount?.profileUrl || new URL("profile.html", location.href).href;
+    const base = window.ToolHubAccount?.profileUrl || new URL("../../profile.html", scriptUrl).href;
     const url = new URL(base);
     url.searchParams.set("next", location.href);
     return url.href;
   }
 
   function prepareDialog() {
-    const dialog = document.getElementById("adminDialog");
     const card = document.getElementById("adminForm");
-    if (!dialog || !card || card.dataset.sessionAuth === "1") return;
+    if (!card || card.dataset.sessionAuth === "1") return;
     card.dataset.sessionAuth = "1";
-
     card.innerHTML = `
       <button class="asset-dialog-close" value="cancel" aria-label="Cerrar">×</button>
       <span class="asset-panel-kicker">ADMINISTRACIÓN</span>
@@ -53,6 +63,7 @@
     if (!status || !message || !actions) return;
 
     actions.replaceChildren();
+    message.className = "asset-admin-message";
     const allowed = Boolean(user && ADMIN_ROLES.has(role));
     status.classList.toggle("unlocked", allowed);
 
@@ -70,7 +81,7 @@
     if (!allowed) {
       status.textContent = "🔒 Cuenta sin permisos administrativos";
       message.textContent = `${user.email || "La cuenta actual"} no tiene rol Owner o Admin.`;
-      message.className = "asset-admin-message error";
+      message.classList.add("error");
       const profile = document.createElement("a");
       profile.className = "asset-secondary";
       profile.href = profileUrl();
@@ -82,7 +93,7 @@
     const label = role === "owner" ? "Owner" : "Admin";
     status.textContent = `🔓 ${label} activo${user.email ? ` · ${user.email}` : ""}`;
     message.textContent = "Las herramientas de gestión están habilitadas con tu sesión actual.";
-    message.className = "asset-admin-message ok";
+    message.classList.add("ok");
 
     const profile = document.createElement("a");
     profile.className = "asset-secondary";
@@ -91,19 +102,38 @@
     actions.appendChild(profile);
   }
 
+  async function mirrorSessionIntoLibrary(account, api) {
+    const accountClient = await account.getClient();
+    const libraryClient = api.getDb();
+    if (!libraryClient) return accountClient;
+
+    const { data } = await accountClient.auth.getSession();
+    const session = data?.session || null;
+    if (session?.access_token && session?.refresh_token) {
+      const { error } = await libraryClient.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      if (error) throw error;
+    } else {
+      try { await libraryClient.auth.signOut({ scope: "local" }); } catch {}
+    }
+    return accountClient;
+  }
+
   async function syncAccess() {
     prepareDialog();
     const api = window.ToolHubAssets;
-    const account = window.ToolHubAccount;
-    if (!api || !account) return false;
+    if (!api) return false;
 
     try {
+      const account = await ensureAccountModule();
       await account.ready();
       const user = await account.getUser();
+      const client = await mirrorSessionIntoLibrary(account, api);
       let role = null;
 
       if (user) {
-        const client = await account.getClient();
         const { data, error } = await client
           .from("toolhub_admins")
           .select("role")
@@ -141,7 +171,7 @@
   let attempts = 0;
   const timer = setInterval(async () => {
     attempts += 1;
-    if (await syncAccess() || attempts > 100) clearInterval(timer);
+    if (await syncAccess() || attempts > 120) clearInterval(timer);
   }, 50);
 
   document.addEventListener("toolhub-account-changed", () => setTimeout(syncAccess, 0));
