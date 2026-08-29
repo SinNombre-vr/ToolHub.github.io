@@ -6,7 +6,7 @@
   const base = "herramientas/assets-library/";
   const scripts = [
     `${base}assets-library-private-auth2.js?v=1`,
-    `${base}assets-library-private-core.js?v=3`,
+    `${base}assets-library-private-core-v4.js?v=1`,
     `${base}assets-library-private-session-ui.js?v=1`,
     `${base}assets-library-private-admin.js?v=3`
   ];
