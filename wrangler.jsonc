@@ -2,6 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "toolhub",
   "compatibility_date": "2026-08-29",
+  "preview_urls": true,
   "assets": {
     "directory": "./dist"
   }
