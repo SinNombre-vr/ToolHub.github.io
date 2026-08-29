@@ -3,12 +3,13 @@
 
   const scripts = [
     { src: "i18n-v2.js?v=2", attr: "data-toolhub-i18n" },
-    { src: "topbar-cleanup.js?v=1", attr: "data-toolhub-topbar-cleanup" },
+    { src: "topbar-cleanup.js?v=2", attr: "data-toolhub-topbar-cleanup" },
     { src: "script-main.js?v=24", attr: "data-toolhub-main" },
     { src: "toolhub-user.js?v=2", attr: "data-toolhub-user" },
     { src: "toolhub-account-label.js?v=1", attr: "data-toolhub-account-label" },
     { src: "herramientas/admin/toolhub-admin.js?v=1", attr: "data-toolhub-admin" },
-    { src: "toolhub-tree-menu.js?v=1", attr: "data-toolhub-tree-menu" }
+    { src: "toolhub-tree-menu.js?v=2", attr: "data-toolhub-tree-menu" },
+    { src: "toolhub-recent-assets.js?v=1", attr: "data-toolhub-recent-assets" }
   ];
 
   function load(index) {
