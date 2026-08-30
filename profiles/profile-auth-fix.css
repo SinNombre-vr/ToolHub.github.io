@@ -9,6 +9,13 @@
   display: none !important;
 }
 
+/* Google OAuth retirado temporalmente de ToolHub.
+   Se mantiene Discord + email sin alterar cuentas o identidades existentes. */
+#authGoogle,
+.auth2-provider-status {
+  display: none !important;
+}
+
 .profile-auth-tabs button {
   position: relative;
 }
