@@ -50,6 +50,16 @@
     return Date.now() - date.getTime() <= 24 * 60 * 60 * 1000;
   }
 
+  function makeAssetTitle(asset) {
+    const title = document.createElement("a");
+    title.className = "toolhub-recent-title toolhub-recent-title-link";
+    title.textContent = asset.name || "Asset sin nombre";
+    title.href = `biblioteca-assets.html?asset=${encodeURIComponent(String(asset.id || ""))}`;
+    title.title = "Ver únicamente este asset en el almacén";
+    title.style.textDecoration = "none";
+    return title;
+  }
+
   function renderStatus(text) {
     list.replaceChildren();
     const status = document.createElement("div");
@@ -77,13 +87,12 @@
     assets.forEach((asset) => {
       const item = document.createElement("article");
       item.className = "toolhub-recent-item";
+      item.dataset.assetId = String(asset.id || "");
 
       const content = document.createElement("div");
       content.className = "toolhub-recent-content";
 
-      const title = document.createElement("h3");
-      title.className = "toolhub-recent-title";
-      title.textContent = asset.name || "Asset sin nombre";
+      const title = makeAssetTitle(asset);
 
       const meta = document.createElement("div");
       meta.className = "toolhub-recent-meta";
