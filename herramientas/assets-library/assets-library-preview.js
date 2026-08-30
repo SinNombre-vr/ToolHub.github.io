@@ -12,7 +12,7 @@
 
   if (!document.querySelector("script[data-toolhub-asset-auth-session]")) {
     const authScript = document.createElement("script");
-    authScript.src = new URL("assets-library-auth-session.js?v=1", currentScriptUrl).href;
+    authScript.src = new URL("assets-library-auth-session.js?v=2", currentScriptUrl).href;
     authScript.defer = true;
     authScript.setAttribute("data-toolhub-asset-auth-session", "1");
     document.head.appendChild(authScript);
@@ -20,7 +20,7 @@
 
   if (!document.querySelector("script[data-toolhub-asset-deeplink]")) {
     const deepLinkScript = document.createElement("script");
-    deepLinkScript.src = new URL("assets-library-deeplink.js?v=1", currentScriptUrl).href;
+    deepLinkScript.src = new URL("assets-library-deeplink.js?v=2", currentScriptUrl).href;
     deepLinkScript.defer = true;
     deepLinkScript.setAttribute("data-toolhub-asset-deeplink", "1");
     document.head.appendChild(deepLinkScript);
@@ -28,7 +28,7 @@
 
   if (!document.querySelector("script[data-toolhub-asset-publisher]")) {
     const publisherScript = document.createElement("script");
-    publisherScript.src = new URL("assets-library-publisher.js?v=1", currentScriptUrl).href;
+    publisherScript.src = new URL("assets-library-publisher.js?v=2", currentScriptUrl).href;
     publisherScript.defer = true;
     publisherScript.setAttribute("data-toolhub-asset-publisher", "1");
     document.head.appendChild(publisherScript);
