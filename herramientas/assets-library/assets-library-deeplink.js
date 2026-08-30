@@ -20,32 +20,8 @@
 
   const style = document.createElement("style");
   style.id = "toolhubAssetDeepLinkStyles";
-  style.textContent = `
-    .asset-card[data-deeplink-hidden="1"] { display:none !important; }
-    .asset-deeplink-indicator {
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      margin-left:auto;
-      padding:7px 10px;
-      border:1px solid rgba(121,184,255,.28);
-      border-radius:999px;
-      background:rgba(121,184,255,.08);
-      color:#9bc9ff;
-      font-size:.72rem;
-      font-weight:800;
-      white-space:nowrap;
-    }
-    .asset-deeplink-indicator button {
-      border:0;
-      background:transparent;
-      color:inherit;
-      font:inherit;
-      cursor:pointer;
-      padding:0;
-    }
-  `;
-  document.head.appendChild(style);
+  style.textContent = `.asset-card[data-deeplink-hidden="1"]{display:none!important}.asset-deeplink-indicator{display:inline-flex;align-items:center;gap:8px;margin-left:auto;padding:7px 10px;border:1px solid rgba(121,184,255,.28);border-radius:999px;background:rgba(121,184,255,.08);color:#9bc9ff;font-size:.72rem;font-weight:800;white-space:nowrap}.asset-deeplink-indicator button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;padding:0}`;
+  if (!document.getElementById(style.id)) document.head.appendChild(style);
 
   let indicator = null;
   let scrolled = false;
@@ -58,84 +34,54 @@
     history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     indicator?.remove();
     indicator = null;
-    [...grid.querySelectorAll(".asset-card")].forEach((card) => {
-      card.removeAttribute("data-deeplink-hidden");
-    });
+    [...grid.querySelectorAll(".asset-card")].forEach((card) => card.removeAttribute("data-deeplink-hidden"));
   }
 
   function ensureIndicator(name) {
     if (!toolbar || indicator) return;
     indicator = document.createElement("span");
     indicator.className = "asset-deeplink-indicator";
-
     const label = document.createElement("span");
     label.textContent = name ? `Mostrando: ${name}` : "Asset seleccionado";
-
     const close = document.createElement("button");
     close.type = "button";
     close.textContent = "×";
     close.setAttribute("aria-label", "Mostrar todos los assets");
     close.title = "Mostrar todos los assets";
-    close.addEventListener("click", () => {
-      clearDeepLink();
-      clearFilters?.click();
-    });
-
+    close.addEventListener("click", () => { clearDeepLink(); clearFilters?.click(); });
     indicator.append(label, close);
     toolbar.appendChild(indicator);
   }
 
   function applyFilter(assets = []) {
-    if (!activeId) return;
-
+    if (!activeId) return false;
     const cards = [...grid.querySelectorAll(".asset-card")];
+    if (!cards.length) return false;
     let matches = 0;
     let matchCard = null;
-
     cards.forEach((card) => {
       const match = String(card.dataset.assetId || "") === activeId;
-      if (match) {
-        card.removeAttribute("data-deeplink-hidden");
-        matches += 1;
-        matchCard = card;
-      } else {
-        card.dataset.deeplinkHidden = "1";
-      }
+      if (match) { card.removeAttribute("data-deeplink-hidden"); matches += 1; matchCard = card; }
+      else card.dataset.deeplinkHidden = "1";
     });
-
-    const selected = Array.isArray(assets)
-      ? assets.find((asset) => String(asset?.id || "") === activeId)
-      : null;
-
+    const selected = Array.isArray(assets) ? assets.find((asset) => String(asset?.id || "") === activeId) : null;
     if (resultCount) resultCount.textContent = `${matches} ${matches === 1 ? "resultado" : "resultados"}`;
-
     if (matches) {
       if (empty) empty.hidden = true;
       ensureIndicator(selected?.name || matchCard?.querySelector(".asset-title")?.textContent?.trim() || "");
-      if (!scrolled && matchCard) {
-        scrolled = true;
-        requestAnimationFrame(() => matchCard.scrollIntoView({ behavior: "smooth", block: "start" }));
-      }
-    } else if (cards.length) {
+      if (!scrolled && matchCard) { scrolled = true; requestAnimationFrame(() => matchCard.scrollIntoView({ behavior: "smooth", block: "start" })); }
+    } else {
       if (empty) empty.hidden = false;
       if (emptyTitle) emptyTitle.textContent = "Asset no encontrado";
       if (emptyText) emptyText.textContent = "El asset enlazado ya no está disponible o no es visible públicamente.";
       ensureIndicator("");
     }
+    return true;
   }
 
-  document.addEventListener("toolhub-assets-rendered", (event) => {
-    applyFilter(Array.isArray(event.detail?.assets) ? event.detail.assets : []);
-  });
-
-  const observer = new MutationObserver(() => applyFilter());
-  observer.observe(grid, { childList: true });
-
-  if (clearFilters) {
-    clearFilters.addEventListener("click", () => {
-      clearDeepLink();
-    }, true);
-  }
-
-  if (grid.children.length) applyFilter();
+  document.addEventListener("toolhub-assets-rendered", (event) => applyFilter(Array.isArray(event.detail?.assets) ? event.detail.assets : []));
+  new MutationObserver(() => applyFilter()).observe(grid, { childList: true });
+  if (clearFilters) clearFilters.addEventListener("click", clearDeepLink, true);
+  let tries = 0;
+  const retry = setInterval(() => { tries += 1; if (applyFilter() || tries >= 20) clearInterval(retry); }, 250);
 })();
