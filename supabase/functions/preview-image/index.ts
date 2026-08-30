@@ -19,8 +19,23 @@ function isLocalOrigin(origin: string) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
 }
 
+function isCloudflareOrigin(origin: string) {
+  try {
+    const parsed = new URL(origin);
+    if (parsed.protocol !== "https:") return false;
+    const host = parsed.hostname.toLowerCase();
+    return host.endsWith(".workers.dev") || host.endsWith(".pages.dev");
+  } catch {
+    return false;
+  }
+}
+
+function isAllowedFrontendOrigin(origin: string) {
+  return origin === FRONTEND_ORIGIN || isLocalOrigin(origin) || isCloudflareOrigin(origin);
+}
+
 function corsHeaders(origin: string | null) {
-  const allowedOrigin = !origin || origin === FRONTEND_ORIGIN || isLocalOrigin(origin)
+  const allowedOrigin = !origin || isAllowedFrontendOrigin(origin)
     ? (origin || FRONTEND_ORIGIN)
     : FRONTEND_ORIGIN;
 
@@ -123,7 +138,7 @@ Deno.serve(async (request) => {
     return json({ error: "Método no permitido." }, 405, origin);
   }
 
-  if (origin && origin !== FRONTEND_ORIGIN && !isLocalOrigin(origin)) {
+  if (origin && !isAllowedFrontendOrigin(origin)) {
     return json({ error: "Origen no autorizado." }, 403, origin);
   }
 
