@@ -45,7 +45,7 @@
       padding:0;
     }
   `;
-  document.head.appendChild(style);
+  if (!document.getElementById(style.id)) document.head.appendChild(style);
 
   let indicator = null;
   let scrolled = false;
@@ -58,9 +58,7 @@
     history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
     indicator?.remove();
     indicator = null;
-    [...grid.querySelectorAll(".asset-card")].forEach((card) => {
-      card.removeAttribute("data-deeplink-hidden");
-    });
+    [...grid.querySelectorAll(".asset-card")].forEach((card) => card.removeAttribute("data-deeplink-hidden"));
   }
 
   function ensureIndicator(name) {
@@ -86,12 +84,13 @@
   }
 
   function applyFilter(assets = []) {
-    if (!activeId) return;
+    if (!activeId) return false;
 
     const cards = [...grid.querySelectorAll(".asset-card")];
+    if (!cards.length) return false;
+
     let matches = 0;
     let matchCard = null;
-
     cards.forEach((card) => {
       const match = String(card.dataset.assetId || "") === activeId;
       if (match) {
@@ -116,12 +115,13 @@
         scrolled = true;
         requestAnimationFrame(() => matchCard.scrollIntoView({ behavior: "smooth", block: "start" }));
       }
-    } else if (cards.length) {
+    } else {
       if (empty) empty.hidden = false;
       if (emptyTitle) emptyTitle.textContent = "Asset no encontrado";
       if (emptyText) emptyText.textContent = "El asset enlazado ya no está disponible o no es visible públicamente.";
       ensureIndicator("");
     }
+    return true;
   }
 
   document.addEventListener("toolhub-assets-rendered", (event) => {
@@ -132,10 +132,12 @@
   observer.observe(grid, { childList: true });
 
   if (clearFilters) {
-    clearFilters.addEventListener("click", () => {
-      clearDeepLink();
-    }, true);
+    clearFilters.addEventListener("click", clearDeepLink, true);
   }
 
-  if (grid.children.length) applyFilter();
+  let tries = 0;
+  const retry = setInterval(() => {
+    tries += 1;
+    if (applyFilter() || tries >= 20) clearInterval(retry);
+  }, 250);
 })();
