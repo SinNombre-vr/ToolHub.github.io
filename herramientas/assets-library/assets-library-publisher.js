@@ -36,7 +36,7 @@
       box-shadow:0 0 7px rgba(121,184,255,.45);
     }
   `;
-  document.head.appendChild(style);
+  if (!document.getElementById(style.id)) document.head.appendChild(style);
 
   const assetSubmitters = new Map();
   const profileNames = new Map();
@@ -77,10 +77,7 @@
         .from("assets")
         .select("id,submitted_by")
         .in("id", batch);
-      if (error) {
-        console.error("ToolHub publicadores: no se pudo leer submitted_by", error);
-        continue;
-      }
+      if (error) throw error;
       (Array.isArray(data) ? data : []).forEach((row) => {
         assetSubmitters.set(String(row.id), row.submitted_by ? String(row.submitted_by) : null);
       });
@@ -97,10 +94,7 @@
         .from("toolhub_profiles")
         .select("user_id,username,display_name")
         .in("user_id", batch);
-      if (error) {
-        console.error("ToolHub publicadores: no se pudieron leer perfiles", error);
-        continue;
-      }
+      if (error) throw error;
       (Array.isArray(data) ? data : []).forEach((profile) => {
         const name = String(profile.display_name || profile.username || "").trim();
         profileNames.set(String(profile.user_id), name || "Usuario ToolHub");
@@ -144,16 +138,15 @@
     }
     running = true;
     try {
-      const cards = [...grid.querySelectorAll(".asset-card[data-asset-id]")];
+      const cards = [...grid.querySelectorAll(".asset-card")]
+        .filter((card) => String(card.dataset.assetId || "").trim());
       if (!cards.length) return;
 
       const client = await getClient();
       const ids = cards.map((card) => String(card.dataset.assetId || "")).filter(Boolean);
       await resolveAssets(client, ids);
 
-      const userIds = ids
-        .map((id) => assetSubmitters.get(id))
-        .filter(Boolean);
+      const userIds = ids.map((id) => assetSubmitters.get(id)).filter(Boolean);
       await resolveProfiles(client, userIds);
 
       cards.forEach((card) => {
@@ -192,7 +185,15 @@
   });
 
   const observer = new MutationObserver(schedule);
-  observer.observe(grid, { childList: true });
+  observer.observe(grid, { childList: true, subtree: false });
+
+  const retryTimer = setInterval(() => {
+    if (grid.querySelector(".asset-card")) {
+      schedule();
+      if (grid.querySelector(".asset-publisher")) clearInterval(retryTimer);
+    }
+  }, 500);
+  setTimeout(() => clearInterval(retryTimer), 10000);
 
   schedule();
 })();
