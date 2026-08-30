@@ -14,7 +14,7 @@
 
   if (!rail || !head || !body || !list || !actions || !allLink) return;
 
-  allLink.href = "https://sinnombre-vr.github.io/ToolHub.github.io/biblioteca-assets.html";
+  allLink.href = "biblioteca-assets.html";
   allLink.textContent = "Ver todos los Assets →";
   if (refreshButton) refreshButton.remove();
 
@@ -58,6 +58,17 @@
       display:inline-flex;
       align-items:center;
       min-height:30px;
+    }
+
+    .toolhub-recent-title-link {
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .toolhub-recent-title-link:hover {
+      color:#79b8ff;
+      text-decoration:underline;
+      text-underline-offset:3px;
     }
   `;
   document.head.appendChild(style);
@@ -110,7 +121,6 @@
     const available = Math.max(0, rail.clientHeight - head.offsetHeight - actions.offsetHeight);
     if (!available) return 5;
 
-    // Aprovecha la columna completa sin alargar la página por encima del contenido principal.
     return Math.max(5, Math.floor(available / 100));
   }
 
@@ -121,16 +131,24 @@
     container.appendChild(fallback);
   }
 
+  function makeAssetTitle(asset) {
+    const title = document.createElement("a");
+    title.className = "toolhub-recent-title toolhub-recent-title-link";
+    title.textContent = asset.name || "Asset sin nombre";
+    title.href = `biblioteca-assets.html?asset=${encodeURIComponent(String(asset.id || ""))}`;
+    title.title = "Ver únicamente este asset en el almacén";
+    return title;
+  }
+
   function renderAsset(asset) {
     const item = document.createElement("article");
     item.className = "toolhub-recent-item";
+    item.dataset.assetId = String(asset.id || "");
 
     const content = document.createElement("div");
     content.className = "toolhub-recent-content";
 
-    const title = document.createElement("h3");
-    title.className = "toolhub-recent-title";
-    title.textContent = asset.name || "Asset sin nombre";
+    const title = makeAssetTitle(asset);
 
     const meta = document.createElement("div");
     meta.className = "toolhub-recent-meta";
@@ -201,7 +219,6 @@
           ? Math.min(capacity, cachedAssets.length)
           : cachedAssets.length;
 
-        // El cargador antiguo puede terminar después y volver temporalmente a cinco fichas.
         if (list.children.length !== expected) render(cachedAssets);
       });
     }
