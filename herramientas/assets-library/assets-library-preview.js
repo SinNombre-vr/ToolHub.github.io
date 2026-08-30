@@ -26,6 +26,14 @@
     document.head.appendChild(deepLinkScript);
   }
 
+  if (!document.querySelector("script[data-toolhub-asset-publisher]")) {
+    const publisherScript = document.createElement("script");
+    publisherScript.src = new URL("assets-library-publisher.js?v=1", currentScriptUrl).href;
+    publisherScript.defer = true;
+    publisherScript.setAttribute("data-toolhub-asset-publisher", "1");
+    document.head.appendChild(publisherScript);
+  }
+
   const originInput = document.querySelector("#assetAuthorUrl");
   const previewInput = document.querySelector("#assetPreview");
   const form = document.querySelector("#assetForm");
